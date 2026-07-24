@@ -1,0 +1,95 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Función para verificar si es Súper Administrador
+    function isSuperAdmin() {
+      return request.auth != null && (
+        request.auth.token.email == 'paco.iglesias@gmail.com' || 
+        request.auth.token.email == 'paco@cobertores.com' || 
+        request.auth.token.email == 'pacoismael@gmail.com'
+      );
+    }
+
+    // Función para verificar si el usuario tiene privilegios vigentes
+    function hasValidPrivilege(roleNeeded) {
+      return request.auth != null && 
+             exists(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)) && 
+             (get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt == null || 
+              get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt > request.time) && 
+             (get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data.role == roleNeeded || 
+              get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data.role == 'editor');
+    }
+
+    // Reglas para archivos de la intranet
+    match /intranet_files/{fileId} {
+      // Leer: Súper admin o cualquier persona con privilegio (lector o editor) vigente
+      allow read: if isSuperAdmin() || hasValidPrivilege('lector') || hasValidPrivilege('editor');
+      // Crear/Borrar/Modificar: Súper admin o cualquier editor vigente
+      allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+
+    // Reglas para gestión de privilegios
+    match /user_privileges/{emailId} {
+      // Leer: Súper Admin ve todo. El usuario solo ve el suyo.
+      allow read: if isSuperAdmin() || (request.auth != null && request.auth.token.email == emailId);
+      // Escribir: Solo Súper Admin puede dar o quitar permisos.
+      allow write: if isSuperAdmin();
+    }
+
+    // Reglas para leads/cotizaciones
+    match /leads/{leadId} {
+      // ANTI-SPAM: Solo permitir si el cuerpo tiene la estructura correcta y longitudes razonables
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'email', 'quantity', 'message', 'createdAt'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 2
+                    && request.resource.data.name.size() < 100
+                    && request.resource.data.phone is string
+                    && request.resource.data.phone.size() > 5
+                    && request.resource.data.phone.size() < 30
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() > 5
+                    && request.resource.data.email.size() < 100
+                    && request.resource.data.quantity is string
+                    && request.resource.data.message is string
+                    && request.resource.data.message.size() < 1000
+                    && !('__honey' in request.resource.data)
+                    && !('_honey' in request.resource.data);
+                    
+      // Solo el súper admin o un editor de la intranet puede leer/borrar cotizaciones
+      allow read, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+
+    // Reglas para productos (Catálogo Dinámico)
+    match /products/{productId} {
+      // Leer: Público (cualquiera puede ver el catálogo en la página)
+      allow read: if true;
+      // Escribir: Súper admin o editor
+      allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+
+    // Reglas para seguimiento de pedidos
+    match /orders/{folio} {
+      // Leer un pedido específico si sabes el folio (público)
+      allow get: if true;
+      // Listar no está permitido públicamente para evitar scraping. Solo administradores.
+      allow list, create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+
+    // Reglas para Noticias SEO
+    match /news/{newsId} {
+      // Leer: Público (cualquiera puede ver las noticias)
+      allow read: if true;
+      // Escribir: Súper admin o editor
+      allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+
+    // Reglas para system_settings (Configuraciones globales)
+    match /system_settings/{document=**} {
+      // Leer: Público (cualquiera puede ver configuración)
+      allow read: if true;
+      // Escribir: Solo Súper admin o editor
+      allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+  }
+}
