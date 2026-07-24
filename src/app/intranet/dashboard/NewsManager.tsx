@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Newspaper, Image as ImageIcon, Trash2, CheckCircle, Clock } from 'lucide-react';
+import { Newspaper, Image as ImageIcon, Trash2, CheckCircle, Clock, Rss, RefreshCw } from 'lucide-react';
 import { collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { db, storage } from '@/lib/firebase';
+import { httpsCallable } from 'firebase/functions';
+import { db, storage, functions } from '@/lib/firebase';
 import { toast } from 'react-hot-toast';
 import { logger } from '../../../lib/logger';
 
@@ -19,6 +20,7 @@ interface NewsItem {
 export default function NewsManager() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [syncingRss, setSyncingRss] = useState(false);
   const imgRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
@@ -34,6 +36,27 @@ export default function NewsManager() {
     });
     return () => unsub();
   }, []);
+
+  const handleSyncRss = async () => {
+    setSyncingRss(true);
+    try {
+      const triggerNewsFetch = httpsCallable<unknown, { sourcesChecked: number; itemsImported: number }>(functions, 'triggerNewsFetch');
+      const result = await triggerNewsFetch();
+      const { sourcesChecked, itemsImported } = result.data;
+      if (sourcesChecked === 0) {
+        toast.error('No hay fuentes RSS activas configuradas.');
+      } else if (itemsImported === 0) {
+        toast.success(`Revisadas ${sourcesChecked} fuentes, sin noticias nuevas por ahora.`);
+      } else {
+        toast.success(`${itemsImported} noticia(s) nueva(s) importada(s) de ${sourcesChecked} fuente(s).`);
+      }
+    } catch (error) {
+      logger.error(error);
+      toast.error('No se pudo actualizar el RSS. Revisa la consola de Firebase Functions.');
+    } finally {
+      setSyncingRss(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,6 +115,15 @@ export default function NewsManager() {
           </h2>
           <p className="text-slate-400 mt-1">Sube contenido vivo para posicionar mejor en Google.</p>
         </div>
+        <button
+          onClick={handleSyncRss}
+          disabled={syncingRss}
+          className="flex items-center gap-2 bg-white/5 hover:bg-amber-500/20 border border-white/10 hover:border-amber-500/40 text-slate-300 hover:text-amber-500 font-bold py-3 px-5 rounded-xl uppercase tracking-widest text-xs transition-colors disabled:opacity-50"
+          title="Trae noticias nuevas de las fuentes RSS activas ahora mismo, sin esperar al corte automático de 6 horas"
+        >
+          {syncingRss ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Rss className="w-4 h-4" />}
+          {syncingRss ? 'Actualizando...' : 'Actualizar RSS ahora'}
+        </button>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">

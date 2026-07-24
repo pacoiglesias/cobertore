@@ -21,8 +21,14 @@ service firebase.storage {
     }
 
     match /intranet/{allPaths=**} {
-      // Permitir leer a cualquier persona autenticada (la app controla qué links ven mediante Firestore)
-      allow read: if request.auth != null;
+      // FIX: antes "allow read: if request.auth != null" dejaba leer a
+      // CUALQUIER cuenta autenticada, no solo a personal con rol asignado.
+      // Firebase Auth permite auto-registro vía su API REST aunque el
+      // frontend no muestre un formulario de registro (a menos que esté
+      // desactivado en Firebase Console > Authentication > Settings), así
+      // que "autenticado" no es lo mismo que "tiene privilegios". Ahora
+      // exige el mismo chequeo de rol que ya se usa para escribir.
+      allow read: if isSuperAdmin() || isEditor();
       // Permitir subir solo a súper admins y editores autorizados
       allow write: if isSuperAdmin() || isEditor();
     }
@@ -36,8 +42,10 @@ service firebase.storage {
     match /catalog/{allPaths=**} {
       // Público para que la página web pueda mostrar las fotos
       allow read: if true;
-      // Solo usuarios autenticados pueden subir, máximo 5MB, y solo imágenes
-      allow write: if request.auth != null 
+      // FIX: antes cualquier usuario autenticado podía subir/reemplazar
+      // fotos del catálogo público. Ahora solo súper admin o editor,
+      // igual que el resto de reglas de escritura del proyecto.
+      allow write: if (isSuperAdmin() || isEditor())
                    && request.resource.size < 5 * 1024 * 1024
                    && request.resource.contentType.matches('image/.*');
     }
@@ -45,8 +53,10 @@ service firebase.storage {
     match /system_assets/{allPaths=**} {
       // Público para que el frontend pueda cargar el logo
       allow read: if true;
-      // Solo administradores pueden subir assets del sistema
-      allow write: if request.auth != null
+      // FIX: el comentario ya decía "Solo administradores pueden subir
+      // assets del sistema" pero la regla permitía a cualquier autenticado.
+      // Ahora sí coincide con lo que dice el comentario.
+      allow write: if isSuperAdmin()
                    && request.resource.size < 5 * 1024 * 1024
                    && request.resource.contentType.matches('image/.*');
     }

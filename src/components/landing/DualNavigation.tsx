@@ -122,7 +122,7 @@ export function DualNavigation() {
             variant="inmobiliaria"
             eyebrow="División Inmobiliaria"
             title="Bienes raíces & desarrollos industriales."
-            copy="Naves industriales, desarrollos comerciales y activos residenciales estratégicos, planeados con el mismo rigor operativo que ha definido a nuestra comercialización logística desde 1964. Patrimonio que se administra, no solo se construye."
+            copy="Naves industriales, desarrollos comerciales y activos residenciales estratégicos, planeados con el mismo rigor operativo que ha definido a nuestra comercialización logística desde 1962. Patrimonio que se administra, no solo se construye."
             bullets={[
               "Naves y parques industriales",
               "Desarrollos comerciales",

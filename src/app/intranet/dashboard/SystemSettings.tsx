@@ -45,7 +45,7 @@ export default function SystemSettings() {
       ];
       
       const defaultSeoTitle = 'Cobertores Mano FIL - Distribución Textil y Desarrollo Inmobiliario';
-      const defaultSeoDesc = 'Distribución masiva de cobertores, blancos y desarrollos inmobiliarios. Liderazgo corporativo y comercial desde 1964 en Tlaxcala para todo México.';
+      const defaultSeoDesc = 'Distribución masiva de cobertores, blancos y desarrollos inmobiliarios. Liderazgo corporativo y comercial desde 1962 en Tlaxcala para todo México.';
 
       if (docSnap.exists()) {
         const data = docSnap.data();

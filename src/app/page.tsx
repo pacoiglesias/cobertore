@@ -762,15 +762,15 @@ export default function LandingPage() {
               "@id": `https://cobertores.com/#product-${idx}`,
               "name": item.title,
               "image": `https://cobertores.com${item.imgUrl || item.img}`,
-              "description": item.desc,
-              "offers": {
-                "@type": "AggregateOffer",
-                "priceCurrency": "MXN",
-                "price": "Contact for quote",
-                "priceValidUntil": "2027-12-31",
-                "availability": "https://schema.org/InStock",
-                "url": "https://cobertores.com/#contacto"
-              }
+              "description": item.desc
+              // NOTA: se quitó el bloque "offers" que traía
+              // `"price": "Contact for quote"`. El campo `price` de
+              // schema.org exige un valor numérico -- un texto libre ahí
+              // es structured data inválido y puede hacer que Google
+              // rechace el rich result completo en vez de solo omitir el
+              // precio. Como no hay precio fijo público (cotización por
+              // volumen), lo correcto es omitir "offers" en vez de
+              // inventar un número o dejar texto no numérico.
             }))
           })
         }}

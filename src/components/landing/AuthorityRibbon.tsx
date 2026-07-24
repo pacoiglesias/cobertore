@@ -1,11 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Factory, Building2, ShieldCheck, MapPin } from 'lucide-react';
+import { Building2, ShieldCheck, MapPin } from 'lucide-react';
 
+// NOTA (2026-07-24): los 3 stats originales ("300,000 m²", "+15 países")
+// se quitaron porque no eran cifras verificables/reales. En vez de
+// inventar otras cifras "que se vean bien", se reemplazaron por frases
+// cualitativas que solo repiten hechos que ya están confirmados en el
+// resto del sitio (año de fundación en Heritage.tsx, alcance nacional en
+// page.tsx, doble división en Heritage.tsx) — nada nuevo sin verificar.
 const STATS = [
-  { icon: Building2, value: "300,000 m²", label: "Superficie desarrollada y administrada" },
-  { icon: ShieldCheck, value: "60+", label: "Años de operación ininterrumpida" },
-  { icon: MapPin, value: "+15 países", label: "Cobertura de exportación" },
+  { icon: ShieldCheck, value: "Trayectoria", label: "Manufactura textil desde 1962" },
+  { icon: MapPin, value: "Escala mayorista", label: "Distribución a nivel nacional" },
+  { icon: Building2, value: "Doble división", label: "Textil e inmobiliaria bajo un mismo grupo" },
 ];
 
 const fadeUp: any = {
@@ -30,10 +36,10 @@ export function AuthorityRibbon() {
           className="text-center mb-14"
         >
           <span className="inline-block font-mono text-[11px] tracking-[0.3em] uppercase text-amber-500 border border-amber-500/40 rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(245,158,11,0.15)] bg-amber-500/5 backdrop-blur-sm">
-            Fundada en 1964 — Más de 6 décadas de liderazgo industrial
+            Fundada en 1962 — Más de 6 décadas de liderazgo industrial
           </span>
         </motion.div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 lg:gap-6">
           {STATS.map((stat, i) => {
             const Icon = stat.icon;
             return (

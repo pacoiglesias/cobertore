@@ -1,8 +1,8 @@
 {
-  "name": "Intranet Mano Fil S.A.",
+  "name": "Mano Fil S.A. - Cobertores por Mayoreo",
   "short_name": "Mano Fil",
-  "description": "Sistema Segurizado de Mano Fil S.A.",
-  "start_url": "/intranet",
+  "description": "Fabricantes de cobertores y distribución textil por mayoreo desde Tlaxcala para todo México.",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#070b14",
   "theme_color": "#070b14",

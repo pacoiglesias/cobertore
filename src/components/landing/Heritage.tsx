@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const TIMELINE = [
   {
-    year: "1964",
+    year: "1962",
     title: "Fundación del taller textil",
     copy: "Inicio de operaciones de manufactura textil, con foco en calidad de hilado y confección a escala.",
   },
@@ -51,7 +51,7 @@ export function Heritage() {
             De un telar a un grupo empresarial.
           </h2>
           <p className="text-slate-400 font-light text-lg mt-8 leading-relaxed">
-            Mano Fil S.A. nació en 1964 como un taller textil familiar orientado a la calidad
+            Mano Fil S.A. nació en 1962 como un taller textil familiar orientado a la calidad
             manufacturera. Ese mismo rigor —precisión en el proceso, disciplina en la
             administración, visión de largo plazo— fue lo que, décadas después, nos permitió
             capitalizar nuestros activos y expandirnos hacia el desarrollo inmobiliario e

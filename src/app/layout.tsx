@@ -60,10 +60,10 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "MANO FIL Cobertores",
       images: [
         {
-          url: "/logo-oficial.png",
+          url: "/og-image.png",
           width: 1200,
           height: 630,
-          alt: "MANO FIL Cobertores - Ultra Suaves y Calientitos",
+          alt: "MANO FIL Cobertores - Fabricantes de Cobertores por Mayoreo desde Tlaxcala",
         }
       ],
       locale: "es_MX",
@@ -73,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: dynamicTitle,
       description: dynamicDescription,
-      images: ["/logo-oficial.png"],
+      images: ["/og-image.png"],
     },
     robots: {
       index: true,
@@ -102,7 +102,7 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#070b14" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
       <body className="min-h-full flex flex-col">
         <Toaster position="bottom-right" toastOptions={{

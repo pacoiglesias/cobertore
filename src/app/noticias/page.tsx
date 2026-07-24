@@ -1,14 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
-import { Newspaper, ChevronRight, Clock } from 'lucide-react';
+import { Newspaper } from 'lucide-react';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { ManoFilLogo } from '@/components/ManoFilLogo';
 import { NewsItem } from '@/lib/types';
 import { logger } from '../../lib/logger';
+import { NewsGrid } from './NewsGrid';
 
-// Configurar Next.js para regenerar esta ruta cada hora (ISR) y potenciar SEO
-export const revalidate = 3600;
+// NOTA: se quitó `export const revalidate = 3600` -- ISR no existe en
+// `output: 'export'` (sitio 100% estático), esa línea no hacía nada. La
+// frescura del contenido ahora la da `NewsGrid`, que vuelve a consultar
+// Firestore en el navegador después de la carga inicial.
 
 export const metadata = {
   title: "Noticias y Novedades Textiles | Mano Fil S.A.",
@@ -79,50 +82,7 @@ export default async function NoticiasPage() {
 
       {/* Grid de Noticias */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-20">
-        {news.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm">
-            <Newspaper className="w-16 h-16 text-slate-300 mx-auto mb-6" />
-            <h3 className="text-2xl font-bold text-slate-800 mb-2">Próximamente</h3>
-            <p className="text-slate-500">Estamos preparando nuestros primeros artículos de innovación textil.</p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {news.map((item: NewsItem) => (
-              <article key={item.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl transition-all group flex flex-col">
-                <div className="h-64 overflow-hidden relative">
-                  <img 
-                    src={item.imgUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000'} 
-                    alt={item.title} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  {item.sourceName && (
-                    <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
-                      {item.sourceName}
-                    </div>
-                  )}
-                </div>
-                <div className="p-8 flex flex-col flex-grow">
-                  <div className="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-widest mb-4">
-                    <Clock className="w-4 h-4" /> 
-                    {item.createdAt ? new Date(item.createdAt).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Reciente'}
-                  </div>
-                  <h2 className="text-2xl font-bold text-slate-900 mb-4 leading-tight">{item.title}</h2>
-                  <p className="text-slate-600 mb-8 leading-relaxed line-clamp-3">{item.summary}</p>
-                  
-                  <div className="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
-                    {item.originalUrl ? (
-                      <a href={item.originalUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-amber-600 hover:text-amber-500 flex items-center gap-1 transition-colors">
-                        Leer artículo completo <ChevronRight className="w-4 h-4" />
-                      </a>
-                    ) : (
-                      <p className="text-sm text-slate-500 leading-relaxed whitespace-pre-wrap line-clamp-2">{item.body}</p>
-                    )}
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
+        <NewsGrid initialNews={news} />
       </div>
       
       {/* Footer Público Sencillo */}

@@ -1,59 +1,100 @@
 import * as functions from 'firebase-functions/v2';
+import { HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue, Firestore } from 'firebase-admin/firestore';
 import Parser from 'rss-parser';
 
 admin.initializeApp();
 
 const parser = new Parser();
 
-export const fetchNewsPeriodically = functions.scheduler.onSchedule({
-  schedule: 'every 6 hours',
-  timeZone: 'America/Mexico_City',
-}, async (event) => {
-  const db = getFirestore();
-  
-  // 1. Fetch RSS sources from system settings
+const SUPER_ADMIN_EMAILS = [
+  'paco.iglesias@gmail.com',
+  'paco@cobertores.com',
+  'pacoismael@gmail.com',
+];
+
+// Mismas 3 fuentes que SystemSettings.tsx propone como default en el
+// dashboard. Si nadie ha guardado `newsSources` todavia en
+// `system_settings/global`, usamos estas para que el pipeline funcione
+// desde el primer dia en vez de quedarse en silencio con una lista vacia.
+const DEFAULT_NEWS_SOURCES = [
+  { id: '1', name: 'Tlaxcala (El Sol)', url: 'https://www.elsoldetlaxcala.com.mx/rss.xml', active: true },
+  { id: '2', name: 'Deportes (ESPN)', url: 'https://www.espn.com.mx/espn/rss/news', active: true },
+  { id: '3', name: 'Espectaculos (TVNotas)', url: 'https://www.tvnotas.com.mx/rss.xml', active: true },
+];
+
+interface NewsSource {
+  id: string;
+  name: string;
+  url: string;
+  active: boolean;
+}
+
+// Verifica super admin (whitelist) o editor vigente (Firestore), igual que
+// firestore.rules / storage.rules -- se repite aqui porque las Cloud
+// Functions no pueden "heredar" las Security Rules, corren con permisos de
+// administrador y deben validar el rol ellas mismas.
+async function assertIsAdminOrEditor(db: Firestore, email: string | undefined) {
+  if (!email) {
+    throw new HttpsError('unauthenticated', 'Debes iniciar sesion.');
+  }
+  if (SUPER_ADMIN_EMAILS.includes(email)) return;
+
+  const privDoc = await db.collection('user_privileges').doc(email).get();
+  if (!privDoc.exists) {
+    throw new HttpsError('permission-denied', 'No tienes privilegios asignados.');
+  }
+  const data = privDoc.data();
+  const notExpired = !data?.expiresAt || data.expiresAt.toDate() > new Date();
+  const hasRole = data?.role === 'editor' || data?.role === 'lector';
+  if (!notExpired || !hasRole) {
+    throw new HttpsError('permission-denied', 'Tu privilegio expiro o no tiene el rol requerido.');
+  }
+}
+
+async function runNewsFetch(db: Firestore): Promise<{ sourcesChecked: number; itemsImported: number }> {
   const settingsDoc = await db.collection('system_settings').doc('global').get();
-  const newsSources = settingsDoc.data()?.newsSources || [];
-  
-  const activeSources = newsSources.filter((s: any) => s.active);
+  const storedSources: NewsSource[] | undefined = settingsDoc.data()?.newsSources;
+  const newsSources = storedSources && storedSources.length > 0 ? storedSources : DEFAULT_NEWS_SOURCES;
+
+  const activeSources = newsSources.filter((s: NewsSource) => s.active);
 
   if (activeSources.length === 0) {
     console.log('No active RSS sources found.');
-    return;
+    return { sourcesChecked: 0, itemsImported: 0 };
   }
 
   console.log(`Found ${activeSources.length} active sources. Fetching...`);
+  let itemsImported = 0;
 
   for (const source of activeSources) {
     try {
       const feed = await parser.parseURL(source.url);
-      
-      // We only take the latest 3 items per source to avoid flooding
+
+      // Tomamos solo los ultimos 3 items por fuente para no inundar el feed
       const items = feed.items.slice(0, 3);
-      
+
       for (const item of items) {
-        // Hash the link or title to use as ID
+        // Hash del link o titulo para usarlo como ID (evita duplicados)
         const docId = Buffer.from(item.link || item.title || Date.now().toString()).toString('base64').replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
-        
+
         const newsRef = db.collection('news').doc(docId);
         const exists = (await newsRef.get()).exists;
-        
+
         if (!exists) {
-          // Extract an image if possible
+          // Extraer una imagen si es posible
           let imgUrl = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000'; // fallback
           if (item.enclosure?.url) {
             imgUrl = item.enclosure.url;
           } else if (item.content) {
-            // regex to find img tag
             const match = item.content.match(/<img[^>]+src="([^">]+)"/);
             if (match && match[1]) {
               imgUrl = match[1];
             }
           }
 
-          // Clean HTML from summary
+          // Limpiar HTML del resumen
           const cleanSummary = (item.contentSnippet || item.content || '').replace(/<[^>]*>?/gm, '').substring(0, 150) + '...';
 
           await newsRef.set({
@@ -63,9 +104,10 @@ export const fetchNewsPeriodically = functions.scheduler.onSchedule({
             sourceName: source.name,
             originalUrl: item.link,
             imgUrl: imgUrl,
-            createdAt: FieldValue.serverTimestamp()
+            createdAt: FieldValue.serverTimestamp(),
           });
           console.log(`Imported news: ${item.title}`);
+          itemsImported++;
         }
       }
     } catch (err) {
@@ -73,5 +115,24 @@ export const fetchNewsPeriodically = functions.scheduler.onSchedule({
     }
   }
 
-  console.log('Finished fetching news.');
+  console.log(`Finished fetching news. ${itemsImported} new items imported.`);
+  return { sourcesChecked: activeSources.length, itemsImported };
+}
+
+export const fetchNewsPeriodically = functions.scheduler.onSchedule({
+  schedule: 'every 6 hours',
+  timeZone: 'America/Mexico_City',
+}, async () => {
+  const db = getFirestore();
+  await runNewsFetch(db);
+});
+
+// Trigger manual desde la intranet ("Actualizar RSS ahora"), en vez de
+// esperar hasta 6 horas al siguiente corte del cron. Protegido: solo
+// super admin o editor pueden dispararlo.
+export const triggerNewsFetch = functions.https.onCall(async (request) => {
+  const db = getFirestore();
+  await assertIsAdminOrEditor(db, request.auth?.token?.email as string | undefined);
+  const result = await runNewsFetch(db);
+  return result;
 });
