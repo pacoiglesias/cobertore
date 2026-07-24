@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "cobertores-web"
-  }
+    "default": "cobertores-web",
+    "cobertores": "cobertores-web"
+  },
+  "targets": {},
+  "etags": {}
 }
