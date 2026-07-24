@@ -6,6 +6,7 @@ import { db } from '../../lib/firebase';
 import { Search, Package, Clock, CheckCircle2, Truck, XCircle, UserX } from 'lucide-react';
 import { ManoFilLogo } from '../../components/ManoFilLogo';
 import Link from 'next/link';
+import { logger } from '../../lib/logger';
 
 interface OrderInfo {
   folio: string;
@@ -45,7 +46,7 @@ export default function SeguimientoPage() {
         });
       }
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       setError('Error al consultar el sistema. Intenta nuevamente.');
     } finally {
       setLoading(false);

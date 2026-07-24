@@ -5,6 +5,7 @@ import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { ManoFilLogo } from '@/components/ManoFilLogo';
 import { NewsItem } from '@/lib/types';
+import { logger } from '../../lib/logger';
 
 // Configurar Next.js para regenerar esta ruta cada hora (ISR) y potenciar SEO
 export const revalidate = 3600;
@@ -36,7 +37,7 @@ async function getNews(): Promise<NewsItem[]> {
       };
     });
   } catch (error) {
-    console.error("Error fetching news during SSG build:", error);
+    logger.error("Error fetching news during SSG build:", error);
     return [];
   }
 }

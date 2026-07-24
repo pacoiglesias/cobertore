@@ -7,6 +7,7 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp
 import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { logger } from '../../../lib/logger';
 
 interface OfficialDocument {
   id: string;
@@ -68,7 +69,7 @@ export default function OfficialDocumentsManager({
       })) as OfficialDocument[];
       setDocuments(docsData);
     } catch (error) {
-      console.error("Error fetching documents:", error);
+      logger.error("Error fetching documents:", error);
     } finally {
       setIsLoading(false);
     }
@@ -111,7 +112,7 @@ export default function OfficialDocumentsManager({
       resetForm();
       fetchDocuments();
     } catch (error) {
-      console.error("Error saving document:", error);
+      logger.error("Error saving document:", error);
       alert("Hubo un error al guardar el documento.");
     }
   };
@@ -132,7 +133,7 @@ export default function OfficialDocumentsManager({
         await deleteDoc(doc(db, 'official_documents', id));
         fetchDocuments();
       } catch (error) {
-        console.error("Error deleting document:", error);
+        logger.error("Error deleting document:", error);
       }
     }
   };
@@ -163,7 +164,7 @@ export default function OfficialDocumentsManager({
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Oficio_${folio}.pdf`);
     } catch (error) {
-      console.error("Error al generar PDF:", error);
+      logger.error("Error al generar PDF:", error);
       alert("Hubo un error al generar el PDF. Verifica que todas las imágenes hayan cargado correctamente.");
     } finally {
       setIsGenerating(false);
@@ -209,7 +210,7 @@ export default function OfficialDocumentsManager({
         pdf.save(`Oficio_${folio}.pdf`);
       }
     } catch (error) {
-      console.error("Error al generar PDF:", error);
+      logger.error("Error al generar PDF:", error);
       alert("Hubo un error al compartir el PDF.");
     } finally {
       setIsGenerating(false);

@@ -4,6 +4,7 @@ import { collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, Timesta
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase';
 import { toast } from 'react-hot-toast';
+import { logger } from '../../../lib/logger';
 
 interface NewsItem {
   id: string;
@@ -60,7 +61,7 @@ export default function NewsManager() {
       setForm({ title: '', summary: '', body: '' });
       imgRef.current.value = '';
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error("Error al publicar la noticia.");
     } finally {
       setUploading(false);
@@ -76,7 +77,7 @@ export default function NewsManager() {
       await deleteDoc(doc(db, 'news', id));
       toast.success("Noticia eliminada.");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error("Error al eliminar la noticia.");
     }
   };

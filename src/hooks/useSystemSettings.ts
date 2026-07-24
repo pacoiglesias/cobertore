@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { logger } from '../lib/logger';
 
 export interface SystemSettings {
   logoUrl?: string;
@@ -20,7 +21,7 @@ export function useSystemSettings() {
       }
       setLoading(false);
     }, (error) => {
-      console.error("Error fetching system settings:", error);
+      logger.error("Error fetching system settings:", error);
       setLoading(false);
     });
 

@@ -17,6 +17,7 @@ import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { BarChart as BarChartIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from 'recharts';
+import { logger } from '../../../lib/logger';
 
 interface IntranetFile {
   id: string;
@@ -221,7 +222,7 @@ export default function Dashboard() {
         storagePath: storageRef.fullPath
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error("Error al subir archivo. Revisa tus permisos o la conexión.");
     } finally {
       setUploading(false);
@@ -236,7 +237,7 @@ export default function Dashboard() {
       await deleteObject(ref(storage, storagePath));
       await deleteDoc(doc(db, 'intranet_files', id));
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       toast.error('Error eliminando el archivo.');
     }
   };
@@ -276,7 +277,7 @@ export default function Dashboard() {
     try {
       await setDoc(doc(db, 'intranet_files', fileId), { name: newName }, { merge: true });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error("Error al renombrar. Revisar permisos.");
     }
   };
@@ -310,7 +311,7 @@ export default function Dashboard() {
       if (productImgRef.current) productImgRef.current.value = '';
       toast.success('Producto subido exitosamente.');
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error("Error al subir el producto.");
     } finally {
       setUploading(false);
@@ -325,7 +326,7 @@ export default function Dashboard() {
       if (storagePath) await deleteObject(ref(storage, storagePath));
       await deleteDoc(doc(db, 'products', productId));
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error("No se pudo borrar el producto.");
     }
   };
@@ -351,7 +352,7 @@ export default function Dashboard() {
       setNewEmail('');
       toast.success(`Privilegios actualizados para ${newEmail}`);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error("Error guardando privilegios.");
     }
   };

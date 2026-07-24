@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { logger } from '../lib/logger';
 
 export async function generateMetadata(): Promise<Metadata> {
   let dynamicTitle = "Cobertores Ultra Cálidos para Invierno | MANO FIL Cobertores.com";
@@ -30,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
       if (data.seoDescription) dynamicDescription = data.seoDescription;
     }
   } catch (error) {
-    console.error("Error fetching global SEO settings:", error);
+    logger.error("Error fetching global SEO settings:", error);
   }
 
   return {
@@ -151,9 +152,9 @@ export default function RootLayout({
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
                   navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                    console.log('ServiceWorker registration successful');
+                    logger.log('ServiceWorker registration successful');
                   }, function(err) {
-                    console.log('ServiceWorker registration failed: ', err);
+                    logger.log('ServiceWorker registration failed: ', err);
                   });
                 });
               }

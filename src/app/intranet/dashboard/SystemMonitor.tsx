@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Activity, ShieldCheck, Database, Zap, RefreshCw, CheckCircle, AlertCircle, Trash2, Wifi, WifiOff } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { logger } from '../../../lib/logger';
 
 export default function SystemMonitor() {
   const [dbStatus, setDbStatus] = useState<'checking' | 'online' | 'error'>('checking');
@@ -27,7 +28,7 @@ export default function SystemMonitor() {
       setLatency(Math.round(end - start));
       setDbStatus('online');
     } catch (error) {
-      console.error("Connection check failed:", error);
+      logger.error("Connection check failed:", error);
       setDbStatus('error');
     }
   };

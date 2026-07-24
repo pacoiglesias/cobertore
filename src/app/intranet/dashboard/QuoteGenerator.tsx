@@ -5,6 +5,7 @@ import { db, storage } from '../../../lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import emailjs from '@emailjs/browser';
+import { logger } from '../../../lib/logger';
 
 interface CatalogProduct {
   id: string;
@@ -44,7 +45,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
           if (data.logoUrl) setGlobalLogoUrl(data.logoUrl);
         }
       } catch (e) {
-        console.error("Error fetching global logo", e);
+        logger.error("Error fetching global logo", e);
       }
     };
     fetchSettings();
@@ -133,7 +134,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Cotizacion_${clientName.replace(/[^a-z0-9]/gi, '_') || 'Mano_Fil'}.pdf`);
     } catch (e) {
-      console.error("PDF Error:", e);
+      logger.error("PDF Error:", e);
       alert('Error al generar PDF. Verifica que las imágenes carguen correctamente.');
     } finally {
       setIsGenerating(false);
@@ -179,7 +180,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
         pdf.save(`Cotizacion_${clientName.replace(/[^a-z0-9]/gi, '_') || 'Mano_Fil'}.pdf`);
       }
     } catch (e) {
-      console.error("Share Error:", e);
+      logger.error("Share Error:", e);
       alert('Error al compartir el PDF.');
     } finally {
       setIsGenerating(false);
@@ -241,7 +242,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       setClientEmailInput('');
       setFolio(generateNewFolio());
     } catch (e) {
-      console.error("Email Error:", e);
+      logger.error("Email Error:", e);
       alert('Error al enviar la cotización.');
     } finally {
       setIsGenerating(false);

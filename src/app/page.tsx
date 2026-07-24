@@ -14,6 +14,7 @@ import { Heritage } from '../components/landing/Heritage';
 import { Sustainability } from '../components/landing/Sustainability';
 import { RefreshCw } from 'lucide-react';
 import { CatalogProduct, NewsItem } from '../lib/types';
+import { logger } from '../lib/logger';
 
 
 const playSuccessSound = () => {
@@ -55,7 +56,7 @@ const playSuccessSound = () => {
     oscillator.start(now);
     oscillator.stop(now + 0.3);
   } catch (e) {
-    console.log("Audio not supported");
+    logger.log("Audio not supported");
   }
 };
 
@@ -247,7 +248,7 @@ export default function LandingPage() {
     const unsubscribeNews = onSnapshot(newsQuery, (snapshot) => {
       setLatestNews(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).slice(0, 3) as unknown as NewsItem[]);
     }, (error) => {
-      console.error("Error fetching news for SEO:", error);
+      logger.error("Error fetching news for SEO:", error);
     });
 
     // Anti-spam email assembly
@@ -326,14 +327,14 @@ export default function LandingPage() {
           'rnWVm41Zez5G-ehqq'
         );
       } catch (emailError) {
-        console.error("Error enviando notificación de correo (EmailJS):", emailError);
+        logger.error("Error enviando notificación de correo (EmailJS):", emailError);
       }
 
       localStorage.setItem('last_lead_submit', now.toString());
       setFormData({ name: '', phone: '', email: '', quantity: '', message: '', _honey: '' });
       toast.success("¡Mensaje enviado con éxito! Nos pondremos en contacto contigo a la brevedad.");
     } catch (error) {
-      console.error("Error submitting form: ", error);
+      logger.error("Error submitting form: ", error);
       toast.error("Hubo un error al enviar el mensaje. Intenta de nuevo.");
     } finally {
       setSubmitting(false);

@@ -4,6 +4,7 @@ import { db, storage } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ManoFilLogo } from '@/components/ManoFilLogo';
+import { logger } from '../../../lib/logger';
 
 type RssSource = {
   id: string;
@@ -89,7 +90,7 @@ export default function SystemSettings() {
       setSuccessMsg('¡Logo actualizado globalmente con éxito!');
       setLogoFile(null);
     } catch (error) {
-      console.error("Error al subir el logo:", error);
+      logger.error("Error al subir el logo:", error);
       setErrorMsg('Ocurrió un error al intentar guardar el logo.');
     } finally {
       setIsUploading(false);
@@ -108,7 +109,7 @@ export default function SystemSettings() {
       setSeoSuccessMsg('¡Etiquetas SEO guardadas correctamente!');
       setTimeout(() => setSeoSuccessMsg(''), 3000);
     } catch (error) {
-      console.error("Error guardando SEO:", error);
+      logger.error("Error guardando SEO:", error);
     } finally {
       setIsSavingSeo(false);
     }
@@ -146,7 +147,7 @@ export default function SystemSettings() {
       setRssSuccessMsg('¡Fuentes RSS guardadas correctamente!');
       setTimeout(() => setRssSuccessMsg(''), 3000);
     } catch (error) {
-      console.error("Error guardando RSS:", error);
+      logger.error("Error guardando RSS:", error);
     } finally {
       setIsSavingRss(false);
     }
