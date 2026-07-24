@@ -1,0 +1,376 @@
+===== Revision 2026-07-24_1750 ===== 
+ 
+--- Build del sitio --- 
+
+> cobertore@0.1.0 build
+> next build
+
+▲ Next.js 16.2.11 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 11.6s
+  Running TypeScript ...
+  Finished TypeScript in 12.3s ...
+  Collecting page data using 14 workers ...
+  Generating static pages using 14 workers (0/13) ...
+  Generating static pages using 14 workers (3/13) 
+  Generating static pages using 14 workers (6/13) 
+  Generating static pages using 14 workers (9/13) 
+✓ Generating static pages using 14 workers (13/13) in 3.1s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /cookies
+├ ○ /intranet
+├ ○ /intranet/dashboard
+├ ○ /noticias
+├ ○ /privacidad
+├ ○ /robots.txt
+├ ○ /seguimiento
+├ ○ /sitemap.xml
+└ ○ /terminos
+
+
+○  (Static)  prerendered as static content
+
+RESULTADO: OK 
+ 
+--- Build de functions --- 
+
+> build
+> tsc
+
+RESULTADO: OK 
+ 
+--- TypeScript (tsc --noEmit) --- 
+RESULTADO: OK 
+ 
+--- ESLint --- 
+
+C:\Users\pacoi\Downloads\cobertore\src\app\cookies\page.tsx
+  51:178  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  51:193  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  56:224  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  56:243  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\NewsManager.tsx
+    2:30  warning  'ImageIcon' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  166:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\OfficialDocumentsManager.tsx
+  55:5  error  Error: Cannot access variable before it is declared
+
+`fetchDocuments` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\OfficialDocumentsManager.tsx:55:5
+  53 |
+  54 |   useEffect(() => {
+> 55 |     fetchDocuments();
+     |     ^^^^^^^^^^^^^^ `fetchDocuments` accessed before it is declared
+  56 |     // Default date to today
+  57 |     const today = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+  58 |     setDate(`Santa Ana Chiautempan, Tlax. a ${today}`);
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\OfficialDocumentsManager.tsx:62:3
+  60 |   }, []);
+  61 |
+> 62 |   const fetchDocuments = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |     try {
+     | ^^^^^^^^^
+> 64 |       const q = query(collection(db, 'official_documents'), orderBy('createdAt', 'desc'));
+     …
+     | ^^^^^^^^^
+> 75 |     }
+     | ^^^^^^^^^
+> 76 |   };
+     | ^^^^^ `fetchDocuments` is declared here
+  77 |
+  78 |   const resetForm = () => {
+  79 |     setEditingId(null);  react-hooks/immutability
+  58:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\OfficialDocumentsManager.tsx:58:5
+  56 |     // Default date to today
+  57 |     const today = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+> 58 |     setDate(`Santa Ana Chiautempan, Tlax. a ${today}`);
+     |     ^^^^^^^ Avoid calling setState() directly within an effect
+  59 |     setFolio(generateSecureFolio());
+  60 |   }, []);
+  61 |                              react-hooks/set-state-in-effect
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\QuoteGenerator.tsx
+    2:63  warning  'Building2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+    2:82  warning  'UserIcon' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    2:92  warning  'AlertCircle' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   65:20  warning  'setBankName' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   66:23  warning  'setBankAccount' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   67:21  warning  'setBankClabe' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   68:19  warning  'setBankRfc' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+   80:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\QuoteGenerator.tsx:80:5
+  78 |
+  79 |   useEffect(() => {
+> 80 |     setFolio(generateNewFolio());
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  81 |   }, []);
+  82 |
+  83 |   const handleAddItem = (e: React.FormEvent) => {  react-hooks/set-state-in-effect
+  374:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @next/next/no-img-element
+  385:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @next/next/no-img-element
+  439:38  warning  'index' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  443:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @next/next/no-img-element
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\SystemMonitor.tsx
+   2:33  warning  'Database' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  37:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\SystemMonitor.tsx:37:5
+  35 |
+  36 |   useEffect(() => {
+> 37 |     checkConnection();
+     |     ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  38 |     // Re-check every 30 seconds
+  39 |     const interval = setInterval(checkConnection, 30000);
+  40 |     return () => clearInterval(interval);  react-hooks/set-state-in-effect
+  54:17  error    'registration' is never reassigned. Use 'const' instead                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          prefer-const
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\SystemSettings.tsx
+  215:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\page.tsx
+    9:65   warning  'UserIcon' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+    9:169  warning  'Globe' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   10:8    warning  'Link' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   17:22   warning  'BarChartIcon' is defined but never used                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  101:56   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  174:6    warning  React Hook useEffect has a missing dependency: 'SUPER_ADMINS'. Either include it or remove the dependency array                                                                                                                                                                          react-hooks/exhaustive-deps
+  176:9    warning  'handleLogout' is assigned a value but never used                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  181:9    warning  'handleInstallClick' is assigned a value but never used                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  587:21   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  685:21   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  685:36   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  732:83   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  732:106  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  820:87   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  939:25   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\page.tsx
+    7:60  warning  'Building2' is defined but never used                                                                                                                  @typescript-eslint/no-unused-vars
+   33:14  warning  'err' is defined but never used                                                                                                                        @typescript-eslint/no-unused-vars
+   33:19  error    Unexpected any. Specify a different type                                                                                                               @typescript-eslint/no-explicit-any
+  112:13  error    Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\pacoi\Downloads\cobertore\src\app\noticias\NewsGrid.tsx
+  83:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\pacoi\Downloads\cobertore\src\app\page.tsx
+    5:10   warning  'Building2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+    5:30   warning  'Leaf' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+    5:36   warning  'Award' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+    5:64   warning  'ChevronRight' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+    5:103  warning  'TrendingUp' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+   15:10   warning  'RefreshCw' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   22:60   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   58:12   warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  222:24   warning  'setToastMessage' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  255:5    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\pacoi\Downloads\cobertore\src\app\page.tsx:255:5
+  253 |
+  254 |     // Anti-spam email assembly
+> 255 |     setSafeEmail(['ventas', '@', 'cobertores.com'].join(''));
+      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  256 |
+  257 |     return () => {
+  258 |       window.removeEventListener('scroll', handleScroll);  react-hooks/set-state-in-effect
+  264:9    warning  'handleSyncData' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  269:17   error    'registration' is never reassigned. Use 'const' instead                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              prefer-const
+  309:15   warning  '_honey' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  424:11   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @next/next/no-img-element
+  526:64   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+  540:19   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @next/next/no-img-element
+  600:21   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @next/next/no-img-element
+  760:100  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+
+C:\Users\pacoi\Downloads\cobertore\src\app\privacidad\page.tsx
+  41:67   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  41:82   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  47:173  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  47:192  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\pacoi\Downloads\cobertore\src\app\seguimiento\page.tsx
+  158:17  error  Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\pacoi\Downloads\cobertore\src\app\terminos\page.tsx
+  41:107  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  41:113  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  58:37   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  58:52   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  58:56   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  58:65   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\pacoi\Downloads\cobertore\src\components\ManoFilLogo.tsx
+  13:3  warning  'variant' is assigned a value but never used                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  14:3  warning  'showText' is assigned a value but never used                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  21:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\pacoi\Downloads\cobertore\src\components\landing\AuthorityRibbon.tsx
+  17:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\pacoi\Downloads\cobertore\src\components\landing\DualNavigation.tsx
+   3:36  warning  'MapPin' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   3:44  warning  'TrendingUp' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   5:15  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  24:93  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  39:7   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\pacoi\Downloads\cobertore\src\components\landing\Heritage.tsx
+  27:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\pacoi\Downloads\cobertore\src\components\landing\Sustainability.tsx
+  5:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\pacoi\Downloads\cobertore\src\lib\types.ts
+  22:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 85 problems (39 errors, 46 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+
+(revisa el reporte para el detalle; ESLint no bloquea el resultado general) 
+ 
+--- npm audit (raiz) --- 
+# npm audit report
+
+postcss  <=8.5.17
+Severity: high
+PostCSS has XSS via Unescaped </style> in its CSS Stringify Output - https://github.com/advisories/GHSA-qx2v-qp2m-jg93
+PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments - https://github.com/advisories/GHSA-6g55-p6wh-862q
+PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure - https://github.com/advisories/GHSA-r28c-9q8g-f849
+fix available via `npm audit fix --force`
+Will install next@9.3.3, which is a breaking change
+node_modules/next/node_modules/postcss
+  next  9.3.4-canary.0 - 16.3.0-preview.7
+  Depends on vulnerable versions of postcss
+  Depends on vulnerable versions of sharp
+  node_modules/next
+
+sharp  <0.35.0
+Severity: high
+sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591 - https://github.com/advisories/GHSA-f88m-g3jw-g9cj
+fix available via `npm audit fix --force`
+Will install next@9.3.3, which is a breaking change
+node_modules/next/node_modules/sharp
+
+3 high severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+ 
+--- npm audit (functions) --- 
+# npm audit report
+
+brace-expansion  <=5.0.7
+Severity: high
+brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash - https://github.com/advisories/GHSA-mh99-v99m-4gvg
+fix available via `npm audit fix`
+node_modules/glob/node_modules/brace-expansion
+  minimatch  2.0.0 - 10.0.2
+  Depends on vulnerable versions of brace-expansion
+  node_modules/glob/node_modules/minimatch
+    glob  4.3.0 - 10.5.0
+    Depends on vulnerable versions of minimatch
+    node_modules/glob
+      rimraf  2.3.0 - 3.0.2 || 4.2.0 - 5.0.10
+      Depends on vulnerable versions of glob
+      node_modules/rimraf
+        google-gax  5.0.5 - 5.0.8
+        Depends on vulnerable versions of rimraf
+        node_modules/google-gax
+
+uuid  <11.1.1
+Severity: moderate
+uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq
+fix available via `npm audit fix --force`
+Will install firebase-admin@10.3.0, which is a breaking change
+node_modules/uuid
+  gaxios  6.4.0 - 6.7.1
+  Depends on vulnerable versions of uuid
+  node_modules/gaxios
+  teeny-request  3.9.1 - 9.0.0
+  Depends on vulnerable versions of uuid
+  node_modules/teeny-request
+    @google-cloud/storage  2.2.0 - 2.5.0 || >=5.19.0
+    Depends on vulnerable versions of retry-request
+    Depends on vulnerable versions of teeny-request
+    node_modules/@google-cloud/storage
+      firebase-admin  7.0.0 - 8.2.0 || >=11.0.0
+      Depends on vulnerable versions of @google-cloud/storage
+      node_modules/firebase-admin
+        firebase-functions  2.2.0 - 2.3.1 || >=5.0.0
+        Depends on vulnerable versions of firebase-admin
+        node_modules/firebase-functions
+    retry-request  7.0.0 - 7.0.2
+    Depends on vulnerable versions of teeny-request
+    node_modules/retry-request
+
+12 vulnerabilities (7 moderate, 5 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+ 
+--- git status --- 
+On branch security-and-polish
+Your branch is up to date with 'origin/security-and-polish'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	deleted:    firebase-debug.log
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	CHANGELOG.md
+	prompt-auditoria-cobertores.md
+	respaldo-cobertore.bat
+	revisar-cobertore.bat
+	revisiones/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+--- Ultimos 5 commits --- 
+0995120 fix: aplicar cambios de RSS, graficos y ranking; quitar staging duplicado
+b643523 fix: aplicar cambios de RSS, graficos y ranking; quitar staging duplicado
+d4a4f96 feat: RSS con trigger manual, fix schema producto, og-image real, iconos correctos, stats sin cifras falsas
+264c865 security: restringir escritura de quotes/, headers HTTP, logger silenciado en prod
+5abbce0 chore: actualizar funciones y config de firebase
