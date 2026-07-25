@@ -37,11 +37,10 @@ function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt,
         isTextil ? "bg-[#0a0f1d] border-white/5 hover:border-amber-500/30" : "bg-[#070b14] border-white/5 hover:border-amber-500/30"
       }`}
     >
-      <Image
+      <img
         src={image}
         alt={alt}
-        fill
-        className="object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-700 grayscale group-hover:grayscale-0 mix-blend-luminosity"
+        className="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-700 grayscale group-hover:grayscale-0 mix-blend-luminosity absolute inset-0"
       />
       <div
         className={`absolute inset-0 ${

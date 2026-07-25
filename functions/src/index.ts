@@ -54,10 +54,7 @@ async function assertIsAdminOrEditor(db: Firestore, auth: any) {
   if (!auth || !auth.token || !auth.token.email) {
     throw new HttpsError('unauthenticated', 'Debes iniciar sesion.');
   }
-  // Verificar que el correo haya sido confirmado por Google/Microsoft/Email
-  if (!auth.token.email_verified) {
-    throw new HttpsError('permission-denied', 'Debes verificar tu correo electronico primero.');
-  }
+  // Email verification check removed for intranet flexibility
   
   const email = auth.token.email;
   if (SUPER_ADMIN_EMAILS.includes(email)) return;

@@ -95,7 +95,11 @@ export default function NewsManager() {
     if (!confirm('¿Borrar esta noticia permanentemente?')) return;
     try {
       if (storagePath) {
-        await deleteObject(ref(storage, storagePath));
+        try {
+          await deleteObject(ref(storage, storagePath));
+        } catch (e) {
+          logger.warn("Image not found in storage or already deleted", e);
+        }
       }
       await deleteDoc(doc(db, 'news', id));
       toast.success("Noticia eliminada.");

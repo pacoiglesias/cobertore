@@ -16,7 +16,7 @@ import NewsManager from './NewsManager';
 import SystemMonitor from './SystemMonitor';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { FilesTab } from './components/FilesTab';
-import { NewsTab } from './components/NewsTab';
+
 import { SkeletonTable } from '@/components/Skeleton';
 import { LeadsTab } from './components/LeadsTab';
 import { OrdersTab } from './components/OrdersTab';
@@ -493,10 +493,10 @@ export default function Dashboard() {
           <div className="flex gap-8 px-4 md:px-6 min-w-max">
             {isSuperAdmin && (
               <button 
-                onClick={() => setActiveTab('overview')}
+                onClick={() => setActiveTab('analytics')}
                 role="tab"
-                aria-selected={activeTab === 'overview'}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'overview' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                aria-selected={activeTab === 'analytics'}
+                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'analytics' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
               >
                 Panel General
               </button>

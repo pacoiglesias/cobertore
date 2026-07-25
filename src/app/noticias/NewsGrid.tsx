@@ -27,7 +27,7 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
     async function refreshFromFirestore() {
       setRefreshing(true);
       try {
-        const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'), limit(50));
+        const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'), limit(150));
         const snap = await getDocs(q);
         const fresh: NewsItem[] = snap.docs.map((doc) => {
           const data = doc.data();
@@ -81,12 +81,10 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
         {news.map((item: NewsItem) => (
           <article key={item.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl transition-all group flex flex-col">
             <div className="h-64 overflow-hidden relative">
-              <Image
+              <img
                 src={item.imgUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000'}
                 alt={item.title}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 absolute inset-0"
               />
               {item.sourceName && (
                 <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
