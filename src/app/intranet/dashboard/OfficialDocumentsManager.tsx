@@ -154,7 +154,7 @@ export default function OfficialDocumentsManager({
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
-        format: 'a4'
+        format: 'letter'
       });
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -186,7 +186,7 @@ export default function OfficialDocumentsManager({
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
-        format: 'a4'
+        format: 'letter'
       });
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -373,14 +373,14 @@ export default function OfficialDocumentsManager({
         <div className="bg-[#070b14] p-4 rounded-3xl border border-white/5 overflow-x-auto flex items-start justify-center">
           
            {/* Contenedor exacto A4 para html2canvas: width: 794px, min-height: 1123px */}
-          <div id="official-document-pdf" ref={pdfRef} className="relative flex flex-col overflow-hidden" style={{ width: '794px', minHeight: '1123px', backgroundColor: '#ffffff', color: '#000000', padding: '64px' }}>
+          <div id="official-document-pdf" ref={pdfRef} className="relative flex flex-col overflow-hidden" style={{ width: '816px', minHeight: '1056px', backgroundColor: '#ffffff', color: '#000000', padding: '64px' }}>
             
             {/* Marca de agua (Watermark) transparente */}
             <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-[0.03] z-0">
               <ManoFilLogo variant="dark" className="w-[450px]" />
             </div>
 
-            <div className="relative z-10 flex flex-col h-full" style={{ height: '995px' }}>
+            <div className="relative z-10 flex flex-col h-full" style={{ height: '928px' }}>
               
               {/* Header Corporativo (Limpio y Blanco) */}
               <div className="flex justify-between items-start mb-10 pb-6" style={{ borderBottom: '2px solid #f1f5f9' }}>
@@ -415,14 +415,14 @@ export default function OfficialDocumentsManager({
               </div>
 
               {/* Cuerpo del Documento */}
-              <div className="flex-grow mb-8" style={{ color: '#1e293b' }}>
+              <div className="mb-8" style={{ color: '#1e293b' }}>
                 {body ? formatBody(body) : (
                   <p className="italic text-center mt-20" style={{ color: '#cbd5e1' }}>El cuerpo del documento aparecerá aquí...</p>
                 )}
               </div>
 
               {/* Despedida y Firma */}
-              <div className="mt-auto mb-10 pt-4">
+              <div className="mt-16 mb-10 pt-4">
                 <p className="text-justify leading-relaxed mb-12" style={{ color: '#1e293b', fontSize: '14px' }}>
                   Sin más por el momento, quedo a su entera disposición para cualquier aclaración o duda al respecto.
                 </p>

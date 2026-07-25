@@ -18,10 +18,25 @@ const SUPER_ADMIN_EMAILS = [
 // dashboard. Si nadie ha guardado `newsSources` todavia en
 // `system_settings/global`, usamos estas para que el pipeline funcione
 // desde el primer dia en vez de quedarse en silencio con una lista vacia.
+//
+// FIX 2026-07-25: de las 6 fuentes configuradas en producción, 3 estaban
+// rotas -- confirmado con los logs reales de la función:
+//   - ESPN México (https://www.espn.com.mx/espn/rss/news): "Unable to
+//     parse XML" -- ya no es un feed RSS válido.
+//   - TVNotas (https://www.tvnotas.com.mx/rss.xml): 404, la URL no existe.
+//   - El Universal Espectáculos: 404, la URL no existe.
+//   - Marca (https://www.marca.com/mx/rss.html) SÍ existe pero manda XML
+//     mal formado de su lado ("Invalid character in entity name") -- se
+//     deja tal cual, no es un problema que se resuelva cambiando la URL.
+// Se reemplazaron por feeds de Infobae (Arc Publishing, la misma
+// plataforma que usa Washington Post -- XML consistentemente bien
+// formado). Confirma que sí funcionen con el botón "Actualizar RSS ahora"
+// después de desplegar; si alguna URL de categoría no existe, cae en el
+// feed general de Infobae, que sí está confirmado.
 const DEFAULT_NEWS_SOURCES = [
   { id: '1', name: 'Tlaxcala (El Sol)', url: 'https://www.elsoldetlaxcala.com.mx/rss.xml', active: true },
-  { id: '2', name: 'Deportes (ESPN)', url: 'https://www.espn.com.mx/espn/rss/news', active: true },
-  { id: '3', name: 'Espectaculos (TVNotas)', url: 'https://www.tvnotas.com.mx/rss.xml', active: true },
+  { id: '2', name: 'Deportes (Infobae)', url: 'https://www.infobae.com/deportes/arc/outboundfeeds/rss/', active: true },
+  { id: '3', name: 'Entretenimiento (Infobae)', url: 'https://www.infobae.com/entretenimiento/arc/outboundfeeds/rss/', active: true },
 ];
 
 interface NewsSource {
@@ -72,8 +87,9 @@ async function runNewsFetch(db: Firestore): Promise<{ sourcesChecked: number; it
     try {
       const feed = await parser.parseURL(source.url);
 
-      // Tomamos solo los ultimos 3 items por fuente para no inundar el feed
-      const items = feed.items.slice(0, 3);
+      // FIX 2026-07-25: subido de 3 a 8 por fuente -- con solo 3, y con la
+      // mitad de las fuentes rotas, casi no entraba contenido nuevo.
+      const items = feed.items.slice(0, 8);
 
       for (const item of items) {
         // Hash del link o titulo para usarlo como ID (evita duplicados)

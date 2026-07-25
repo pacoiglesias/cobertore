@@ -40,8 +40,8 @@ export default function SystemSettings() {
       
       const defaultSources = [
         { id: '1', name: 'Tlaxcala (El Sol)', url: 'https://www.elsoldetlaxcala.com.mx/rss.xml', active: true },
-        { id: '2', name: 'Deportes (ESPN)', url: 'https://www.espn.com.mx/espn/rss/news', active: true },
-        { id: '3', name: 'Espectáculos (TVNotas)', url: 'https://www.tvnotas.com.mx/rss.xml', active: true },
+        { id: '2', name: 'Deportes (Infobae)', url: 'https://www.infobae.com/deportes/arc/outboundfeeds/rss/', active: true },
+        { id: '3', name: 'Entretenimiento (Infobae)', url: 'https://www.infobae.com/entretenimiento/arc/outboundfeeds/rss/', active: true },
       ];
       
       const defaultSeoTitle = 'Cobertores Mano FIL - Distribución Textil y Desarrollo Inmobiliario';

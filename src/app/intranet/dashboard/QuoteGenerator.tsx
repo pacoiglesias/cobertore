@@ -125,7 +125,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       });
       
       const imgData = canvas.toDataURL('image/jpeg', 0.95);
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdf = new jsPDF('p', 'mm', 'letter');
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
@@ -157,7 +157,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       });
       
       const imgData = canvas.toDataURL('image/jpeg', 0.95);
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdf = new jsPDF('p', 'mm', 'letter');
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
@@ -208,7 +208,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       });
       
       const imgData = canvas.toDataURL('image/jpeg', 0.95);
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdf = new jsPDF('p', 'mm', 'letter');
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
@@ -360,7 +360,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
         <div 
           id="quote-template-pdf" 
           className="relative flex flex-col shadow-2xl" 
-          style={{ width: '794px', minHeight: '1123px', padding: '60px', backgroundColor: '#ffffff', color: '#0f172a' }}
+          style={{ width: '816px', minHeight: '1056px', padding: '60px', backgroundColor: '#ffffff', color: '#0f172a' }}
         >
           {/* Decorative Top Border */}
           <div className="absolute top-0 left-0 w-full h-2" style={{ background: 'linear-gradient(to right, #0f172a, #b45309, #0f172a)' }}></div>
@@ -415,7 +415,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
             </div>
 
             {/* Table */}
-            <div className="flex-grow mb-12">
+            <div className="mb-12">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr>
@@ -479,7 +479,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
             </div>
 
             {/* Terms and Bank Info */}
-            <div className="mt-auto grid grid-cols-2 gap-12 mb-16 pt-8" style={{ borderTop: '1px solid #e2e8f0' }}>
+            <div className="mt-16 grid grid-cols-2 gap-12 mb-16 pt-8" style={{ borderTop: '1px solid #e2e8f0' }}>
               <div>
                 <h4 className="text-[9px] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: '#0f172a' }}>Términos y Condiciones</h4>
                 <ul className="text-[9px] space-y-2 list-none p-0 leading-relaxed" style={{ color: '#475569' }}>
