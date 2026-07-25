@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Upload, Image as ImageIcon, CheckCircle, AlertCircle, Search, Rss, Plus, Trash2, Shield, Landmark } from 'lucide-react';
+import { Settings, Upload, Image as ImageIcon, CheckCircle, AlertCircle, Search, Rss, Plus, Trash2, Shield, Landmark, Phone } from 'lucide-react';
 import { db, storage } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -33,6 +33,16 @@ export default function SystemSettings() {
   const [isSavingBank, setIsSavingBank] = useState(false);
   const [bankSuccessMsg, setBankSuccessMsg] = useState('');
 
+  // Contacto (WhatsApp flotante, correo, direccion, horario) -- alimenta a
+  // SystemProvider.tsx, que ya estaba leyendo estos campos pero nadie
+  // los editaba desde ningun lado.
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [officeHours, setOfficeHours] = useState('');
+  const [isSavingContact, setIsSavingContact] = useState(false);
+  const [contactSuccessMsg, setContactSuccessMsg] = useState('');
+
   // RSS States
   const [rssSources, setRssSources] = useState<RssSource[]>([]);
   const [newRssName, setNewRssName] = useState('');
@@ -62,6 +72,14 @@ export default function SystemSettings() {
       const defaultBankClabe = '000000000000000000';
       const defaultBankRfc = 'RFC000000000';
 
+      // El numero real ya se veia en los pies de Cotizaciones/Oficios
+      // (+52 246 464 2891) -- se usa ese como default, no el de ejemplo
+      // que traia SystemProvider.tsx (555-1234-5678).
+      const defaultWhatsapp = '522464642891';
+      const defaultEmail = 'ventas@cobertores.com';
+      const defaultAddress = 'Santa Ana Chiautempan, Tlaxcala, México';
+      const defaultHours = 'Lunes a Viernes de 9:00 a 18:00 hrs';
+
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.logoUrl) setLogoPreview(data.logoUrl);
@@ -74,6 +92,10 @@ export default function SystemSettings() {
         setBankAccount(data.bankAccount !== undefined ? data.bankAccount : defaultBankAccount);
         setBankClabe(data.bankClabe !== undefined ? data.bankClabe : defaultBankClabe);
         setBankRfc(data.bankRfc !== undefined ? data.bankRfc : defaultBankRfc);
+        setWhatsappNumber(data.whatsappNumber !== undefined ? data.whatsappNumber : defaultWhatsapp);
+        setContactEmail(data.contactEmail !== undefined ? data.contactEmail : defaultEmail);
+        setAddress(data.address !== undefined ? data.address : defaultAddress);
+        setOfficeHours(data.officeHours !== undefined ? data.officeHours : defaultHours);
       } else {
         setSeoTitle(defaultSeoTitle);
         setSeoDescription(defaultSeoDesc);
@@ -83,6 +105,10 @@ export default function SystemSettings() {
         setBankAccount(defaultBankAccount);
         setBankClabe(defaultBankClabe);
         setBankRfc(defaultBankRfc);
+        setWhatsappNumber(defaultWhatsapp);
+        setContactEmail(defaultEmail);
+        setAddress(defaultAddress);
+        setOfficeHours(defaultHours);
       }
     };
     fetchSettings();
@@ -157,6 +183,26 @@ export default function SystemSettings() {
       logger.error("Error guardando datos bancarios:", error);
     } finally {
       setIsSavingBank(false);
+    }
+  };
+
+  const handleSaveContact = async () => {
+    setIsSavingContact(true);
+    setContactSuccessMsg('');
+    try {
+      const settingsRef = doc(db, 'system_settings', 'global');
+      await setDoc(settingsRef, {
+        whatsappNumber,
+        contactEmail,
+        address,
+        officeHours
+      }, { merge: true });
+      setContactSuccessMsg('¡Datos de contacto guardados! El botón de WhatsApp se actualiza al instante.');
+      setTimeout(() => setContactSuccessMsg(''), 4000);
+    } catch (error) {
+      logger.error("Error guardando datos de contacto:", error);
+    } finally {
+      setIsSavingContact(false);
     }
   };
 
@@ -399,6 +445,83 @@ export default function SystemSettings() {
             className="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
           >
             {isSavingBank ? 'Guardando...' : 'Guardar Datos Bancarios'}
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-slate-900/50 rounded-3xl border border-white/5 p-8 backdrop-blur-xl">
+        <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          <Phone className="w-5 h-5 text-amber-500" /> Contacto y WhatsApp
+        </h3>
+
+        <div className="space-y-6">
+          <div className="bg-amber-500/10 border border-amber-500/20 text-amber-200/80 rounded-2xl p-4 text-xs flex items-start gap-3">
+            <Shield className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold">El botón flotante de WhatsApp usa este número</p>
+              <p className="mt-1 leading-relaxed">
+                Se aplica al instante en todo el sitio en cuanto guardas -- no necesitas
+                recompilar ni desplegar.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-slate-300 text-sm font-medium">WhatsApp (con código de país, sin espacios ni +)</label>
+              <input
+                type="text"
+                value={whatsappNumber}
+                onChange={(e) => setWhatsappNumber(e.target.value)}
+                placeholder="Ej: 522464642891"
+                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white font-mono focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-slate-300 text-sm font-medium">Correo de contacto</label>
+              <input
+                type="email"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+                placeholder="ventas@cobertores.com"
+                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-slate-300 text-sm font-medium">Dirección</label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-slate-300 text-sm font-medium">Horario de oficina</label>
+              <input
+                type="text"
+                value={officeHours}
+                onChange={(e) => setOfficeHours(e.target.value)}
+                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+          </div>
+
+          {contactSuccessMsg && (
+            <div className="flex items-center gap-2 text-green-400 bg-green-400/10 p-4 rounded-xl border border-green-400/20 text-sm">
+              <CheckCircle className="w-5 h-5" /> {contactSuccessMsg}
+            </div>
+          )}
+
+          <button
+            onClick={handleSaveContact}
+            disabled={isSavingContact}
+            className="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
+          >
+            {isSavingContact ? 'Guardando...' : 'Guardar Contacto'}
           </button>
         </div>
       </div>

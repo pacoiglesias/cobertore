@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X } from 'lucide-react';
+import { useSystemSettings } from './providers/SystemProvider';
 
 interface WhatsAppButtonProps {
   /** Phone number with country code, e.g., "522464642891" */
@@ -14,13 +15,19 @@ interface WhatsAppButtonProps {
 /**
  * Botón flotante de WhatsApp en esquina inferior derecha.
  * Se oculta durante el primer segundo para no interferir con la carga.
+ *
+ * El número real ahora se lee de system_settings/global (editable desde
+ * el dashboard, Configuración → Contacto y WhatsApp) -- antes estaba
+ * quemado aquí y solo se podía cambiar editando código.
  */
 export function WhatsAppButton({
-  phoneNumber = '522464642891',
+  phoneNumber,
   message = 'Hola, me interesa cotizar cobertores por mayoreo.',
 }: WhatsAppButtonProps) {
+  const { settings } = useSystemSettings();
   const [isVisible, setIsVisible] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const numeroReal = phoneNumber || settings.whatsappNumber || '522464642891';
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 2000);
@@ -38,7 +45,7 @@ export function WhatsAppButton({
     }
   }, [isVisible]);
 
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://wa.me/${numeroReal}?text=${encodeURIComponent(message)}`;
 
   return (
     <AnimatePresence>
