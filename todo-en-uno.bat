@@ -9,8 +9,6 @@ echo ============================================================
 echo.
 
 REM ===== Paso 0: Verificar que la sesion de Firebase siga viva =====
-REM Sin esto, podias perder 3-5 minutos compilando todo y enterarte
-REM hasta el final, en el deploy, que habia que reloguearte.
 echo ===== Paso 0: Verificando sesion de Firebase =====
 call firebase projects:list >nul 2>&1
 if errorlevel 1 (
@@ -24,6 +22,8 @@ if errorlevel 1 (
 echo   OK - sesion de Firebase activa.
 
 REM ===== Paso 1: Respaldo automatico (tag de git + zip) =====
+REM Esto se hace ANTES de tocar cualquier archivo nuevo -- pase lo que
+REM pase despues, siempre puedes volver a este punto exacto.
 echo.
 echo ===== Paso 1: Creando respaldo automatico =====
 for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /value') do set "dt=%%I"
@@ -40,8 +40,10 @@ powershell -NoProfile -Command ^
   "Compress-Archive -Path 'src','functions\src','functions\package.json','functions\tsconfig.json','public','firestore.rules','storage.rules','firebase.json','package.json' -DestinationPath 'respaldos\%TAGNAME%.zip' -Force" >nul 2>&1
 echo %TIMESTAMP% - %TAGNAME% >> respaldos\historial.txt
 echo   OK - respaldo "%TAGNAME%" creado (tag de git + zip en respaldos\).
+echo   Si algo sale mal de aqui en adelante, puedes volver a este punto con:
+echo     git checkout %TAGNAME%
 
-REM ===== Paso 2: Encontrar el ZIP de cambios mas reciente =====
+REM ===== Paso 2: Encontrar el ZIP de cambios y CONFIRMAR antes de tocar nada =====
 echo.
 echo ===== Paso 2: Buscando el ZIP de cambios mas reciente en Descargas =====
 set "ULTIMO_ZIP="
@@ -51,9 +53,22 @@ for /f "delims=" %%F in ('dir /b /o:-d "C:\Users\pacoi\Downloads\cobertore*.zip"
 if not defined ULTIMO_ZIP (
     echo   No encontre ningun zip "cobertore*.zip" en Descargas. Saltando este paso.
 ) else (
-    echo   Usando: %ULTIMO_ZIP%
-    echo   Si NO es el correcto, presiona Ctrl+C AHORA para cancelar.
-    timeout /t 6
+    echo   Encontre: %ULTIMO_ZIP%
+    echo.
+    echo   Estos son EXACTAMENTE los archivos que se van a crear o sobrescribir.
+    echo   Nada mas se toca -- esto NUNCA borra archivos que no esten en esta lista:
+    echo   ------------------------------------------------------------
+    tar -tf "C:\Users\pacoi\Downloads\%ULTIMO_ZIP%"
+    echo   ------------------------------------------------------------
+    echo.
+    set /p CONFIRMA="  Escribe S y Enter para aplicar estos archivos, o cualquier otra cosa para cancelar: "
+    if /i not "!CONFIRMA!"=="S" (
+        echo.
+        echo   Cancelado. No se toco NINGUN archivo del proyecto.
+        echo   ^(El respaldo del Paso 1 ya quedo hecho de todos modos.^)
+        pause
+        exit /b 0
+    )
     tar -xf "C:\Users\pacoi\Downloads\%ULTIMO_ZIP%" -C "C:\Users\pacoi\Downloads\cobertore"
     if errorlevel 1 (
         echo   [ERROR] tar no pudo extraer el zip. Copia este mensaje para Claude.
@@ -93,6 +108,7 @@ echo ===== Paso 5: Compilando el sitio (npm run build) =====
 call npm run build
 if errorlevel 1 (
     echo   [ERROR] El build del sitio fallo. Copia TODO lo de arriba y pasaselo a Claude.
+    echo   Tu respaldo sigue intacto en: %TAGNAME%
     pause
     exit /b 1
 )
@@ -105,6 +121,7 @@ cd functions
 call npm run build
 if errorlevel 1 (
     echo   [ERROR] El build de functions fallo. Copia TODO lo de arriba y pasaselo a Claude.
+    echo   Tu respaldo sigue intacto en: %TAGNAME%
     cd ..
     pause
     exit /b 1
@@ -181,5 +198,6 @@ echo.
 echo ============================================================
 echo   TODO LISTO. Revisa https://www.cobertores.com en unos minutos.
 echo   Respaldo de este punto: %TAGNAME%
+echo   Si algo se ve mal: git checkout %TAGNAME%
 echo ============================================================
 pause
