@@ -51,14 +51,6 @@ export default function OfficialDocumentsManager({
     return `MF-OF-${segment1}-${segment2}`;
   };
 
-  useEffect(() => {
-    fetchDocuments();
-    // Default date to today
-    const today = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
-    setDate(`Santa Ana Chiautempan, Tlax. a ${today}`);
-    setFolio(generateSecureFolio());
-  }, []);
-
   const fetchDocuments = async () => {
     try {
       const q = query(collection(db, 'official_documents'), orderBy('createdAt', 'desc'));
@@ -75,6 +67,14 @@ export default function OfficialDocumentsManager({
     }
   };
 
+  useEffect(() => {
+    fetchDocuments();
+    // Default date to today
+    const today = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+    setDate(`Santa Ana Chiautempan, Tlax. a ${today}`);
+    setFolio(generateSecureFolio());
+  }, []);
+
   const resetForm = () => {
     setEditingId(null);
     setTitle('');
@@ -85,10 +85,13 @@ export default function OfficialDocumentsManager({
     setFolio(generateSecureFolio());
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isEditor) return;
-
+  // Guarda (o actualiza) el documento en Firestore. Se usa tanto desde el
+  // botón "Guardar Nuevo Documento" como automáticamente al descargar el
+  // PDF -- así "Descargar" y "aparecer en el Historial" son un solo paso,
+  // en vez de dos botones separados que es fácil olvidar hacer ambos.
+  const saveDocument = async (): Promise<void> => {
+    if (!isEditor && !isSuperAdmin) return; // sin permiso, no se guarda (igual que las Firestore Rules)
+    if (!title && !recipient && !body) return; // formulario vacío, nada que guardar
     try {
       if (editingId) {
         await updateDoc(doc(db, 'official_documents', editingId), {
@@ -99,7 +102,7 @@ export default function OfficialDocumentsManager({
           folio
         });
       } else {
-        await addDoc(collection(db, 'official_documents'), {
+        const newDoc = await addDoc(collection(db, 'official_documents'), {
           title,
           recipient,
           body,
@@ -108,9 +111,22 @@ export default function OfficialDocumentsManager({
           author: userEmail,
           createdAt: serverTimestamp()
         });
+        setEditingId(newDoc.id); // para que un siguiente Descargar/Guardar actualice, no duplique
       }
-      resetForm();
       fetchDocuments();
+    } catch (error) {
+      logger.error("Error guardando el documento automáticamente:", error);
+      // No mostramos alert aquí para no interrumpir la descarga del PDF,
+      // que sí funcionó -- solo el guardado en el historial falló.
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isEditor && !isSuperAdmin) return;
+    try {
+      await saveDocument();
+      resetForm();
     } catch (error) {
       logger.error("Error saving document:", error);
       alert("Hubo un error al guardar el documento.");
@@ -162,6 +178,7 @@ export default function OfficialDocumentsManager({
       
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Oficio_${folio}.pdf`);
+      await saveDocument();
     } catch (error) {
       logger.error("Error al generar PDF:", error);
       alert("Hubo un error al generar el PDF. Verifica que todas las imágenes hayan cargado correctamente.");
@@ -207,6 +224,7 @@ export default function OfficialDocumentsManager({
         alert("Tu dispositivo no soporta el envío directo a WhatsApp. Se descargará el PDF.");
         pdf.save(`Oficio_${folio}.pdf`);
       }
+      await saveDocument();
     } catch (error) {
       logger.error("Error al generar PDF:", error);
       alert("Hubo un error al compartir el PDF.");
@@ -304,7 +322,7 @@ export default function OfficialDocumentsManager({
 
             <button 
               type="submit" 
-              disabled={!isEditor}
+              disabled={!isEditor && !isSuperAdmin}
               className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <Plus className="w-4 h-4"/> {editingId ? 'Actualizar Documento' : 'Guardar Nuevo Documento'}

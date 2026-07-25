@@ -29,20 +29,31 @@ echo ===== Revision %TIMESTAMP% ===== > "%REPORTE%"
 echo. >> "%REPORTE%"
 
 echo.
-echo ===== [1/6] Build del sitio =====
+echo ===== [1/7] Limpiando cache de build (.next, out, functions\lib) =====
+REM Sin esto, el build podria decir "exitoso" reusando una compilacion
+REM vieja cacheada, sin reflejar tus cambios reales (nos paso una vez).
+if exist ".next" rmdir /s /q ".next"
+if exist "out" rmdir /s /q "out"
+if exist "functions\lib" rmdir /s /q "functions\lib"
+echo   OK - cache limpiado.
+echo Cache limpiado (.next, out, functions\lib) >> "%REPORTE%"
+echo. >> "%REPORTE%"
+
+echo.
+echo ===== [2/7] Build del sitio =====
 echo --- Build del sitio --- >> "%REPORTE%"
 call npm run build >> "%REPORTE%" 2>&1
 if errorlevel 1 (
     echo   [FALLO] El build del sitio tiene errores. Ver detalle abajo.
     echo RESULTADO: FALLO >> "%REPORTE%"
 ) else (
-    echo   OK - build del sitio limpio.
+    echo   OK - build del sitio limpio ^(desde cero, sin cache^).
     echo RESULTADO: OK >> "%REPORTE%"
 )
 echo. >> "%REPORTE%"
 
 echo.
-echo ===== [2/6] Build de las Cloud Functions =====
+echo ===== [3/7] Build de las Cloud Functions =====
 echo --- Build de functions --- >> "%REPORTE%"
 cd functions
 call npm run build >> "..\%REPORTE%" 2>&1
@@ -50,14 +61,14 @@ if errorlevel 1 (
     echo   [FALLO] El build de functions tiene errores.
     echo RESULTADO: FALLO >> "..\%REPORTE%"
 ) else (
-    echo   OK - build de functions limpio.
+    echo   OK - build de functions limpio ^(desde cero, sin cache^).
     echo RESULTADO: OK >> "..\%REPORTE%"
 )
 cd ..
 echo. >> "%REPORTE%"
 
 echo.
-echo ===== [3/6] Chequeo de tipos (TypeScript) =====
+echo ===== [4/7] Chequeo de tipos (TypeScript) =====
 echo --- TypeScript (tsc --noEmit) --- >> "%REPORTE%"
 call npx tsc --noEmit -p tsconfig.json >> "%REPORTE%" 2>&1
 if errorlevel 1 (
@@ -70,7 +81,7 @@ if errorlevel 1 (
 echo. >> "%REPORTE%"
 
 echo.
-echo ===== [4/6] ESLint =====
+echo ===== [5/7] ESLint =====
 echo --- ESLint --- >> "%REPORTE%"
 call npx eslint "src/**/*.{ts,tsx}" >> "%REPORTE%" 2>&1
 echo (revisa el reporte para el detalle; ESLint no bloquea el resultado general) >> "%REPORTE%"
@@ -78,7 +89,7 @@ echo   Hecho - revisa el reporte para el detalle completo.
 echo. >> "%REPORTE%"
 
 echo.
-echo ===== [5/6] Vulnerabilidades conocidas (npm audit) =====
+echo ===== [6/7] Vulnerabilidades conocidas (npm audit) =====
 echo --- npm audit (raiz) --- >> "%REPORTE%"
 call npm audit --omit=dev >> "%REPORTE%" 2>&1
 echo. >> "%REPORTE%"
@@ -90,7 +101,7 @@ echo   Hecho - revisa el reporte para el detalle completo.
 echo. >> "%REPORTE%"
 
 echo.
-echo ===== [6/6] Estado de git =====
+echo ===== [7/7] Estado de git =====
 echo --- git status --- >> "%REPORTE%"
 git status >> "%REPORTE%" 2>&1
 echo --- Ultimos 5 commits --- >> "%REPORTE%"

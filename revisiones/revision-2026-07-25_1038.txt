@@ -1,4 +1,6 @@
-===== Revision 2026-07-24_2211 ===== 
+===== Revision 2026-07-25_1038 ===== 
+ 
+Cache limpiado (.next, out, functions\lib) 
  
 --- Build del sitio --- 
 
@@ -9,15 +11,15 @@
 - Environments: .env.local
 
   Creating an optimized production build ...
-✓ Compiled successfully in 13.4s
+✓ Compiled successfully in 12.6s
   Running TypeScript ...
-  Finished TypeScript in 11.3s ...
+  Finished TypeScript in 8.7s ...
   Collecting page data using 14 workers ...
   Generating static pages using 14 workers (0/13) ...
   Generating static pages using 14 workers (3/13) 
   Generating static pages using 14 workers (6/13) 
   Generating static pages using 14 workers (9/13) 
-✓ Generating static pages using 14 workers (13/13) in 5.0s
+✓ Generating static pages using 14 workers (13/13) in 3.2s
   Finalizing page optimization ...
 
 Route (app)
@@ -61,37 +63,7 @@ C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\NewsManager.tsx
   166:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
 
 C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\OfficialDocumentsManager.tsx
-  55:5  error  Error: Cannot access variable before it is declared
-
-`fetchDocuments` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
-
-C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\OfficialDocumentsManager.tsx:55:5
-  53 |
-  54 |   useEffect(() => {
-> 55 |     fetchDocuments();
-     |     ^^^^^^^^^^^^^^ `fetchDocuments` accessed before it is declared
-  56 |     // Default date to today
-  57 |     const today = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
-  58 |     setDate(`Santa Ana Chiautempan, Tlax. a ${today}`);
-
-C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\OfficialDocumentsManager.tsx:62:3
-  60 |   }, []);
-  61 |
-> 62 |   const fetchDocuments = async () => {
-     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 63 |     try {
-     | ^^^^^^^^^
-> 64 |       const q = query(collection(db, 'official_documents'), orderBy('createdAt', 'desc'));
-     …
-     | ^^^^^^^^^
-> 75 |     }
-     | ^^^^^^^^^
-> 76 |   };
-     | ^^^^^ `fetchDocuments` is declared here
-  77 |
-  78 |   const resetForm = () => {
-  79 |     setEditingId(null);  react-hooks/immutability
-  58:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+  71:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
 
 Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
 * Update external systems with the latest state from React.
@@ -99,14 +71,14 @@ Effects are intended to synchronize state between React and external systems suc
 
 Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
 
-C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\OfficialDocumentsManager.tsx:58:5
-  56 |     // Default date to today
-  57 |     const today = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
-> 58 |     setDate(`Santa Ana Chiautempan, Tlax. a ${today}`);
-     |     ^^^^^^^ Avoid calling setState() directly within an effect
-  59 |     setFolio(generateSecureFolio());
-  60 |   }, []);
-  61 |                              react-hooks/set-state-in-effect
+C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\OfficialDocumentsManager.tsx:71:5
+  69 |
+  70 |   useEffect(() => {
+> 71 |     fetchDocuments();
+     |     ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  72 |     // Default date to today
+  73 |     const today = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+  74 |     setDate(`Santa Ana Chiautempan, Tlax. a ${today}`);  react-hooks/set-state-in-effect
 
 C:\Users\pacoi\Downloads\cobertore\src\app\intranet\dashboard\QuoteGenerator.tsx
     2:63  warning  'Building2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
@@ -256,7 +228,7 @@ C:\Users\pacoi\Downloads\cobertore\src\components\landing\Sustainability.tsx
 C:\Users\pacoi\Downloads\cobertore\src\lib\types.ts
   22:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
-✖ 81 problems (36 errors, 45 warnings)
+✖ 80 problems (35 errors, 45 warnings)
   1 error and 0 warnings potentially fixable with the `--fix` option.
 
 (revisa el reporte para el detalle; ESLint no bloquea el resultado general) 
@@ -349,26 +321,22 @@ On branch security-and-polish
 Your branch is up to date with 'origin/security-and-polish'.
 
 Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
+  (use "git add/rm <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
+	deleted:    functions/lib/src/index.js
+	deleted:    functions/lib/src/index.js.map
+	modified:   revisar-cobertore.bat
 	modified:   src/app/intranet/dashboard/OfficialDocumentsManager.tsx
-	modified:   src/app/intranet/dashboard/QuoteGenerator.tsx
-	modified:   src/app/intranet/dashboard/page.tsx
-	modified:   src/app/intranet/page.tsx
-	modified:   src/app/layout.tsx
-	modified:   src/app/page.tsx
-	modified:   src/app/seguimiento/page.tsx
-	modified:   src/components/landing/DualNavigation.tsx
 
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
-	revisiones/revision-2026-07-24_2211.txt
-	tar
+	revisiones/revision-2026-07-25_1035.txt
+	revisiones/revision-2026-07-25_1038.txt
 
 no changes added to commit (use "git add" and/or "git commit -a")
 --- Ultimos 5 commits --- 
+d83d943 fix: RSS con fuentes de Infobae, tamano Carta en PDFs, logger corregido
+32e1349 fix: aplicar logger, menu movil, PDF, y regla de official_documents
 57d8320 fix: aplicar cambios de RSS, graficos y ranking; quitar staging duplicado
 0995120 fix: aplicar cambios de RSS, graficos y ranking; quitar staging duplicado
 b643523 fix: aplicar cambios de RSS, graficos y ranking; quitar staging duplicado
-d4a4f96 feat: RSS con trigger manual, fix schema producto, og-image real, iconos correctos, stats sin cifras falsas
-264c865 security: restringir escritura de quotes/, headers HTTP, logger silenciado en prod
