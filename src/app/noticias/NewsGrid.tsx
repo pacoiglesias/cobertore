@@ -20,6 +20,7 @@ interface NewsGridProps {
 export function NewsGrid({ initialNews }: NewsGridProps) {
   const [news, setNews] = useState<NewsItem[]>(initialNews);
   const [refreshing, setRefreshing] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   useEffect(() => {
     let cancelled = false;
@@ -59,6 +60,10 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
     };
   }, []);
 
+  const handleLoadMore = () => {
+    setVisibleCount(prev => prev + 12);
+  };
+
   if (news.length === 0) {
     return (
       <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm">
@@ -69,6 +74,8 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
     );
   }
 
+  const visibleNews = news.slice(0, visibleCount);
+
   return (
     <div>
       {refreshing && (
@@ -78,7 +85,7 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
         </p>
       )}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {news.map((item: NewsItem) => (
+        {visibleNews.map((item: NewsItem) => (
           <article key={item.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl transition-all group flex flex-col">
             <div className="h-64 overflow-hidden relative">
               <img
@@ -117,6 +124,17 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
           </article>
         ))}
       </div>
+      
+      {visibleCount < news.length && (
+        <div className="mt-12 text-center">
+          <button 
+            onClick={handleLoadMore}
+            className="bg-white border-2 border-slate-200 hover:border-amber-500 text-slate-700 hover:text-amber-600 font-bold py-3 px-8 rounded-full transition-all hover:shadow-lg shadow-sm"
+          >
+            Cargar Más Noticias ({news.length - visibleCount} restantes)
+          </button>
+        </div>
+      )}
     </div>
   );
 }

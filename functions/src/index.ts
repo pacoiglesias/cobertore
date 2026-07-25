@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions/v2';
 import { HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { getFirestore, FieldValue, Firestore } from 'firebase-admin/firestore';
+import { getStorage } from 'firebase-admin/storage';
 import Parser from 'rss-parser';
 
 admin.initializeApp();
@@ -182,4 +183,32 @@ export const onLeadCreated = onDocumentCreated('leads/{leadId}', async (event) =
 
   // Nota: Para enviar correos reales, se requiere habilitar la Extension "Trigger Email" 
   // de Firebase, configurando SMTP, y escribir en la coleccion "mail", o usar SendGrid.
+});
+
+// Fase 9: Backups Automáticos de Base de Datos
+// Se ejecuta todos los domingos a la medianoche
+export const backupDatabase = functions.scheduler.onSchedule({
+  schedule: 'every sunday 00:00',
+  timeZone: 'America/Mexico_City',
+}, async () => {
+  const db = getFirestore();
+  const bucket = getStorage().bucket();
+  
+  const collectionsToBackup = ['quotes_history', 'official_documents', 'leads', 'user_privileges'];
+  const backupData: Record<string, any[]> = {};
+  
+  for (const collectionName of collectionsToBackup) {
+    const snap = await db.collection(collectionName).get();
+    backupData[collectionName] = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+  
+  const dateStr = new Date().toISOString().split('T')[0];
+  const fileName = `backups/db_backup_${dateStr}.json`;
+  
+  const file = bucket.file(fileName);
+  await file.save(JSON.stringify(backupData, null, 2), {
+    contentType: 'application/json'
+  });
+  
+  console.log(`Respaldo exitoso creado en Storage: ${fileName}`);
 });
