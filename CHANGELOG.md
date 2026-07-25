@@ -1,5 +1,19 @@
 # Changelog — Cobertores Web (Mano Fil S.A.)
 
+## [0.3.1] — 2026-07-25 (Fase 8 Enterprise & Bugfixes)
+
+### Added
+- **Paginación en Cotizaciones**: Implementación de Infinite Scroll manual ("Cargar más") en `QuotesHistoryManager` limitando a 20 documentos por petición.
+- **Animaciones UI Premium**: Se integró `framer-motion` para transiciones fluidas en la Landing Page, Dual Navigation y la línea del tiempo móvil de Herencia Industrial.
+
+### Fixed
+- **App Check Permission Denied**: Se reestableció exitosamente la inicialización de `ReCaptchaV3Provider` en `firebase.ts`. Las reglas de Firestore ahora procesan el token y permiten nuevamente crear, editar y visualizar Oficios y Cotizaciones de forma segura.
+- **Bugs en RSS Manager**: 
+  - Se corrigió el error "Error al eliminar la noticia" agregando un bloque `try/catch` envolvente en `deleteObject` (Storage) dentro de `NewsManager.tsx`, ya que los items importados por RSS no poseen archivo de imagen físico y colapsaban el proceso de borrado.
+  - Se corrigió "No se pudo actualizar el RSS" removiendo el requerimiento estricto `email_verified` en la Cloud Function `triggerNewsFetch`, asegurando que usuarios tipo 'Editor' creados de forma manual en consola puedan detonar el importador.
+- **Renderizado Estático de Imágenes**: Tras problemas en despliegues SSG (`output: 'export'`), se revirtió el uso del componente `<Image>` de Next.js regresando al tag estándar `<img>` HTML en `DualNavigation.tsx` y listado de productos, restaurando las gráficas caídas en producción.
+- Crawler RSS ampliado para importar hasta 150 elementos configurables desde Firebase.
+
 ## [0.2.0] — 2026-07-25
 
 ### Added
