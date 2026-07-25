@@ -149,6 +149,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       pdf.save(`Cotizacion_${clientName.replace(/[^a-z0-9]/gi, '_') || 'Mano_Fil'}.pdf`);
       
       // Save to history
+      const pdfBlob = pdf.output('blob');
       await saveQuoteToHistory(pdfBlob);
       toast.success('Cotización generada y guardada en el historial');
     } catch (e) {

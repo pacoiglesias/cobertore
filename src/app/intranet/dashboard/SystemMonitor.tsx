@@ -3,12 +3,14 @@ import { Activity, ShieldCheck, Zap, RefreshCw, CheckCircle, AlertCircle, Trash2
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { logger } from '../../../lib/logger';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 export default function SystemMonitor() {
   const [dbStatus, setDbStatus] = useState<'checking' | 'online' | 'error'>('checking');
   const [latency, setLatency] = useState<number | null>(null);
   const [isRepairing, setIsRepairing] = useState(false);
   const [repairSuccess, setRepairSuccess] = useState('');
+  const [showConfirm, setShowConfirm] = useState(false);
 
   // Comprobar variables de entorno
   const envVars = [
@@ -41,6 +43,11 @@ export default function SystemMonitor() {
   }, []);
 
   const handleRepair = () => {
+    setShowConfirm(true);
+  };
+
+  const executeRepair = () => {
+    setShowConfirm(false);
     setIsRepairing(true);
     setRepairSuccess('');
 
@@ -168,6 +175,16 @@ export default function SystemMonitor() {
         </div>
       </div>
 
+      <ConfirmDialog
+        open={showConfirm}
+        title="¿Limpiar cachés y reparar sistema?"
+        message="Esta acción borrará los datos temporales del navegador y forzará una resincronización. Tu sesión podría cerrarse."
+        confirmLabel="Sí, reparar"
+        cancelLabel="Cancelar"
+        variant="warning"
+        onConfirm={executeRepair}
+        onCancel={() => setShowConfirm(false)}
+      />
     </div>
   );
 }

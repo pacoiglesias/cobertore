@@ -164,7 +164,7 @@ export default function NewsManager() {
               {news.map(n => (
                 <div key={n.id} className="bg-slate-900/50 border border-white/5 p-4 rounded-3xl flex flex-col hover:border-amber-500/30 transition-all group overflow-hidden relative">
                   <img src={n.imgUrl} alt={n.title} className="w-full h-32 object-cover rounded-2xl mb-4 group-hover:scale-105 transition-transform duration-500" />
-                  <h4 className="text-white font-bold mb-1 leading-tight">{n.title}</h4>
+                  <h3 className="text-white font-bold mb-1 leading-tight">{n.title}</h3>
                   <p className="text-xs text-slate-400 line-clamp-2 mb-3">{n.summary}</p>
                   <div className="mt-auto flex justify-between items-center pt-3 border-t border-white/5">
                     <span className="text-[10px] text-amber-500 uppercase tracking-widest font-bold flex items-center gap-1">

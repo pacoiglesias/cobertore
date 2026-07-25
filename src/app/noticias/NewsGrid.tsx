@@ -94,7 +94,11 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
             <div className="p-8 flex flex-col flex-grow">
               <div className="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-widest mb-4">
                 <Clock className="w-4 h-4" />
-                {item.createdAt ? new Date(item.createdAt).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Reciente'}
+                {item.createdAt 
+                  ? (typeof item.createdAt === 'object' && 'toDate' in (item.createdAt as any) 
+                      ? (item.createdAt as any).toDate() 
+                      : new Date(item.createdAt as string)).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) 
+                  : 'Reciente'}
               </div>
               <h2 className="text-2xl font-bold text-slate-900 mb-4 leading-tight">{item.title}</h2>
               <p className="text-slate-600 mb-8 leading-relaxed line-clamp-3">{item.summary}</p>

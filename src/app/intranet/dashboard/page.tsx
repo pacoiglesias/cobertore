@@ -70,6 +70,7 @@ export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'files' | 'leads' | 'orders' | 'users' | 'catalog' | 'quote-generator' | 'quotes-history' | 'documents' | 'settings' | 'news' | 'monitor' | 'analytics'>('files');
+  const [leadSearchTerm, setLeadSearchTerm] = useState('');
   
   // Data States
   const [files, setFiles] = useState<IntranetFile[]>([]);
@@ -643,6 +644,16 @@ export default function Dashboard() {
               </button>
             </div>
             
+            <div className="mb-8">
+              <input 
+                type="text" 
+                placeholder="Buscar prospectos por nombre, teléfono o mensaje..." 
+                value={leadSearchTerm}
+                onChange={(e) => setLeadSearchTerm(e.target.value)}
+                className="w-full bg-[#0a0f1d] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors"
+              />
+            </div>
+
             {/* GRÁFICA DE ANALÍTICAS */}
             {leads.length > 0 && (
               <div className="bg-[#0a0f1d] border border-white/5 p-6 rounded-3xl mb-8">
@@ -690,7 +701,11 @@ export default function Dashboard() {
                   </p>
                 </div>
               )}
-              {leads.map(lead => (
+              {leads.filter(lead => 
+                (lead.name || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) || 
+                (lead.message || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) ||
+                (lead.phone || '').includes(leadSearchTerm)
+              ).map(lead => (
                 <div key={lead.id} className="bg-[#0a0f1d] border border-white/5 p-6 rounded-2xl flex flex-col md:flex-row gap-6 items-start md:items-center justify-between hover:border-amber-500/30 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">

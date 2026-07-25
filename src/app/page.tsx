@@ -378,6 +378,7 @@ export default function LandingPage() {
             <button 
               onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
               className="flex items-center gap-1 text-slate-300 hover:text-amber-500 text-xs font-bold uppercase tracking-wider transition-colors mr-2"
+              aria-label={lang === 'es' ? 'Cambiar idioma a Inglés' : 'Change language to Spanish'}
             >
               <Globe className="w-4 h-4" /> {lang === 'es' ? 'EN' : 'ES'}
             </button>
@@ -608,7 +609,7 @@ export default function LandingPage() {
                   <div className="p-6 flex flex-col flex-grow">
                     <span className="text-amber-500 text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
                       <Clock className="w-3 h-3" />
-                      {news.createdAt?.toDate().toLocaleDateString('es-MX')}
+                      {news.createdAt ? (typeof news.createdAt === 'object' && 'toDate' in (news.createdAt as any) ? (news.createdAt as any).toDate() : new Date(news.createdAt as string)).toLocaleDateString('es-MX') : ''}
                     </span>
                     <h3 className="text-xl font-bold text-white mb-3 leading-tight">{news.title}</h3>
                     <p className="text-slate-400 text-sm mb-6 flex-grow line-clamp-3">{news.summary}</p>
@@ -665,28 +666,28 @@ export default function LandingPage() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="lead-name" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Nombre o Empresa *</label>
-                    <input id="lead-name" type="text" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. Grupo Industrial M..." />
+                    <input id="lead-name" type="text" required minLength={2} maxLength={100} value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. Grupo Industrial M..." />
                   </div>
                   <div>
                     <label htmlFor="lead-phone" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Teléfono / WhatsApp *</label>
-                    <input id="lead-phone" type="tel" required value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="+52 123 456 7890" />
+                    <input id="lead-phone" type="tel" required minLength={10} maxLength={20} pattern="[\d\s\-\+]+" value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="+52 123 456 7890" />
                   </div>
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="lead-email" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Correo Electrónico *</label>
-                    <input id="lead-email" type="email" required value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="tu@empresa.com" />
+                    <input id="lead-email" type="email" required maxLength={100} value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="tu@empresa.com" />
                   </div>
                   <div>
                     <label htmlFor="lead-quantity" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Volumen Requerido *</label>
-                    <input id="lead-quantity" type="text" required value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. 20,000 piezas" />
+                    <input id="lead-quantity" type="text" required minLength={1} maxLength={50} value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. 20,000 piezas" />
                   </div>
                 </div>
                 
                 <div>
                   <label htmlFor="lead-message" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Detalles del Proyecto *</label>
-                  <textarea id="lead-message" required value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder="Especifica modelos de interés, fecha de entrega y destino..."></textarea>
+                  <textarea id="lead-message" required minLength={10} maxLength={1000} value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder="Especifica modelos de interés, fecha de entrega y destino..."></textarea>
                 </div>
                 
                 <button type="submit" disabled={submitting} className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-4 rounded-xl uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
@@ -699,7 +700,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer Minimalista */}
-      <footer className="bg-[#03050a] text-slate-400 py-16 md:py-24 border-t border-white/5 relative overflow-hidden z-10">
+      <footer id="footer" className="bg-[#03050a] text-slate-400 py-16 md:py-24 border-t border-white/5 relative overflow-hidden z-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 relative z-10">
           
           <div className="lg:col-span-1">
