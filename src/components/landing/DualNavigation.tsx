@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronRight, Building2, Factory } from 'lucide-react';
 
@@ -36,10 +37,11 @@ function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt,
         isTextil ? "bg-[#0a0f1d] border-white/5 hover:border-amber-500/30" : "bg-[#070b14] border-white/5 hover:border-amber-500/30"
       }`}
     >
-      <img
+      <Image
         src={image}
         alt={alt}
-        className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-700 grayscale group-hover:grayscale-0 mix-blend-luminosity"
+        fill
+        className="object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-700 grayscale group-hover:grayscale-0 mix-blend-luminosity"
       />
       <div
         className={`absolute inset-0 ${

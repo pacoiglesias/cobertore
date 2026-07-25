@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { Newspaper, ChevronRight, Clock } from 'lucide-react';
 import { db } from '@/lib/firebase';
@@ -80,10 +81,12 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
         {news.map((item: NewsItem) => (
           <article key={item.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl transition-all group flex flex-col">
             <div className="h-64 overflow-hidden relative">
-              <img
+              <Image
                 src={item.imgUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000'}
                 alt={item.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
               {item.sourceName && (
                 <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">

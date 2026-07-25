@@ -15,9 +15,16 @@ import SystemSettings from './SystemSettings';
 import NewsManager from './NewsManager';
 import SystemMonitor from './SystemMonitor';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
+import { FilesTab } from './components/FilesTab';
+import { LeadsTab } from './components/LeadsTab';
+import { OrdersTab } from './components/OrdersTab';
+import { ProductsTab } from './components/ProductsTab';
+import { getFileIcon, formatSize } from './components/utils';
 import { toast } from 'react-hot-toast';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import { logger } from '../../../lib/logger';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface IntranetFile {
   id: string;
@@ -33,7 +40,7 @@ interface IntranetFile {
 interface UserPrivilege {
   id?: string;
   email: string;
-  role: 'editor' | 'lector';
+  role: 'editor' | 'lector' | 'almacen';
   expiresAt: Timestamp | null;
 }
 
@@ -97,8 +104,8 @@ export default function Dashboard() {
   const SUPER_ADMINS = ['paco@cobertores.com', 'paco.iglesias@gmail.com', 'pacoismael@gmail.com'];
   const isSuperAdmin = user?.email ? SUPER_ADMINS.includes(user.email) : false;
   
-  // Check if current user has editor rights via privileges
   const [isEditor, setIsEditor] = useState(false);
+  const [isAlmacen, setIsAlmacen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   useEffect(() => {
@@ -124,8 +131,12 @@ export default function Dashboard() {
           if (privSnap.exists()) {
             const privData = privSnap.data() as UserPrivilege;
             const isNotExpired = !privData.expiresAt || privData.expiresAt.toDate() > new Date();
-            if (isNotExpired && privData.role === 'editor') {
-              setIsEditor(true);
+            if (isNotExpired) {
+              if (privData.role === 'editor') setIsEditor(true);
+              if (privData.role === 'almacen') {
+                setIsAlmacen(true);
+                setActiveTab('orders'); // Force Almacén to land on Orders tab
+              }
             }
           }
         } else {
@@ -193,20 +204,7 @@ export default function Dashboard() {
     }
   };
 
-  const formatSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
-  const getFileIcon = (type: string) => {
-    if (type.includes('image')) return <ImageIcon className="w-6 h-6 text-blue-400 group-hover:text-amber-500 transition-colors" />;
-    if (type.includes('pdf')) return <FileText className="w-6 h-6 text-red-400 group-hover:text-amber-500 transition-colors" />;
-    return <File className="w-6 h-6 text-slate-400 group-hover:text-amber-500 transition-colors" />;
-  };
-
+  // Utilities are now imported from ./components/utils
   // --- FILE MANAGEMENT ---
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0 || !user || !isEditor) return;
@@ -375,6 +373,50 @@ export default function Dashboard() {
     }
   };
 
+  const exportCatalogPDF = () => {
+    try {
+      const doc = new jsPDF();
+      doc.setFontSize(20);
+      doc.setTextColor(234, 179, 8); // Amber 500
+      doc.text("Catálogo Mano Fil S.A.", 105, 20, { align: "center" });
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100, 116, 139); // Slate 500
+      doc.text(`Generado el: ${new Date().toLocaleDateString()}`, 105, 28, { align: "center" });
+
+      let yPos = 40;
+      doc.setTextColor(0, 0, 0);
+
+      products.forEach((prod, index) => {
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 20;
+        }
+        
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${index + 1}. ${prod.title}`, 20, yPos);
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        yPos += 7;
+        doc.text(`Peso/Etiqueta: ${prod.weight} | Medidas: ${prod.measures} | Comp: ${prod.composition}`, 20, yPos);
+        
+        yPos += 7;
+        doc.setFont("helvetica", "italic");
+        doc.text(`Descripción: ${prod.desc.substring(0, 100)}${prod.desc.length > 100 ? '...' : ''}`, 20, yPos);
+        
+        yPos += 15;
+      });
+
+      doc.save(`Catalogo-ManoFil-${new Date().toISOString().split('T')[0]}.pdf`);
+      toast.success("Catálogo exportado exitosamente");
+    } catch (error) {
+      logger.error("Error al generar PDF:", error);
+      toast.error("Error al generar el PDF del catálogo");
+    }
+  };
+
 
   if (loading) {
     return (
@@ -446,25 +488,29 @@ export default function Dashboard() {
       {/* Tabs */}
       <div className="border-b border-white/5 bg-[#0a0f1d]">
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex gap-8">
-          <button 
-            onClick={() => setActiveTab('files')}
-            className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'files' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-          >
-            Repositorio
-          </button>
-          {(isSuperAdmin || isEditor) && (
+          {!isAlmacen && (
+            <button 
+              onClick={() => setActiveTab('files')}
+              className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'files' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+            >
+              Repositorio
+            </button>
+          )}
+          {(isSuperAdmin || isEditor || isAlmacen) && (
+            <button 
+              onClick={() => setActiveTab('orders')}
+              className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'orders' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+            >
+              Seguimiento Pedidos
+            </button>
+          )}
+          {(isSuperAdmin || isEditor) && !isAlmacen && (
             <>
               <button 
                 onClick={() => setActiveTab('leads')}
                 className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'leads' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
               >
                 Prospectos Web
-              </button>
-              <button 
-                onClick={() => setActiveTab('orders')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'orders' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-              >
-                Seguimiento Pedidos
               </button>
               <button 
                 onClick={() => setActiveTab('quote-generator')}
@@ -530,74 +576,36 @@ export default function Dashboard() {
       </div>
 
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-12">
-        {activeTab === 'analytics' && <AnalyticsDashboard />}
+        {activeTab === 'analytics' && (
+          <AnalyticsDashboard 
+            leadsCount={leads.length} 
+            ordersCount={orders.length} 
+            productsCount={products.length} 
+          />
+        )}
         
         {/* TABS CONTENT: FILES */}
         {activeTab === 'files' && (
-          <div>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-              <div>
-                <h2 className="text-3xl font-serif text-white mb-2">Repositorio de Archivos</h2>
-                <p className="text-slate-400">Documentos internos y políticas de empresa blindadas.</p>
-              </div>
-              {isEditor && (
-                <div>
-                  <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
-                  <button 
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={uploading}
-                    className="bg-amber-600 hover:bg-amber-500 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 transition-all disabled:opacity-50"
-                  >
-                    {uploading ? <><Loader2 className="w-4 h-4 animate-spin" /> {uploadProgress}</> : <><Upload className="w-4 h-4" /> Subir Archivo Nuevo</>}
-                  </button>
-                </div>
-              )}
-            </div>
+          <FilesTab 
+            files={files}
+            isEditor={isEditor}
+            uploading={uploading}
+            uploadProgress={uploadProgress}
+            fileInputRef={fileInputRef}
+            handleFileUpload={handleFileUpload}
+            handleRenameFile={handleRenameFile}
+            handleDeleteFile={handleDeleteFile}
+            setPreviewFile={setPreviewFile}
+            getFileIcon={getFileIcon}
+            formatSize={formatSize}
+          />
+        )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {files.map((file) => (
-                <div key={file.id} className="bg-[#0a0f1d] border border-white/5 hover:border-amber-500/30 rounded-2xl p-6 flex flex-col group transition-all relative overflow-hidden shadow-lg">
-                  {isEditor && (
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => handleRenameFile(file.id, file.name)} className="p-2 bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg transition-colors" title="Renombrar">
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleDeleteFile(file.id, file.storagePath)} className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Eliminar">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-6 border border-white/5">
-                    {getFileIcon(file.type)}
-                  </div>
-                  
-                  <h3 className="text-white font-medium mb-1 pr-16 break-words">{file.name}</h3>
-                  <div className="text-[10px] text-slate-500 mb-6 flex-grow space-y-1">
-                    <p>Subido por: <span className="text-slate-400">{file.uploadedBy}</span></p>
-                    <p>{file.createdAt?.toDate().toLocaleDateString('es-MX')} • {file.createdAt?.toDate().toLocaleTimeString('es-MX', {hour: '2-digit', minute:'2-digit'})}</p>
-                  </div>
-                  
-                  <div className="flex items-center justify-between pt-4 border-t border-white/5 mt-auto">
-                    <span className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">{formatSize(file.size)}</span>
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => setPreviewFile(file)} className="text-blue-500 hover:text-white p-2 bg-blue-500/10 hover:bg-blue-600 rounded-lg transition-colors flex items-center gap-2 text-xs font-bold uppercase" title="Previsualizar">
-                        <Eye className="w-4 h-4" />
-                      </button>
-                      <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-amber-500 hover:text-white p-2 bg-amber-500/10 hover:bg-amber-600 rounded-lg transition-colors flex items-center gap-2 text-xs font-bold uppercase" title="Descargar">
-                        <Download className="w-4 h-4" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* PREVIEWER MODAL */}
-            {previewFile && (
-              <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 md:p-8">
-                <div className="w-full max-w-5xl flex justify-between items-center mb-4">
-                  <h3 className="text-white font-medium text-lg">{previewFile.name}</h3>
+        {/* PREVIEWER MODAL */}
+        {previewFile && (
+          <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 md:p-8">
+            <div className="w-full max-w-5xl flex justify-between items-center mb-4">
+              <h3 className="text-white font-medium text-lg">{previewFile.name}</h3>
                   <div className="flex gap-4">
                     <a href={previewFile.url} target="_blank" rel="noopener noreferrer" className="bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest flex items-center gap-2 transition-colors">
                       <Download className="w-4 h-4"/> Descargar Original
@@ -624,195 +632,20 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
-          </div>
-        )}
 
-        {/* TABS CONTENT: LEADS (PROSPECTOS WEB) */}
+        {/* TABS CONTENT: LEADS */}
         {activeTab === 'leads' && (isSuperAdmin || isEditor) && (
-          <div>
-            <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div>
-                <h2 className="text-3xl font-serif text-white mb-2">Prospectos de Cotización (Web)</h2>
-                <p className="text-slate-400">Leads capturados desde el formulario de contacto público.</p>
-              </div>
-              <button 
-                onClick={exportLeadsToCSV}
-                disabled={leads.length === 0}
-                className="bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 transition-all disabled:opacity-50"
-              >
-                <Download className="w-4 h-4" /> Exportar a CSV
-              </button>
-            </div>
-            
-            <div className="mb-8">
-              <input 
-                type="text" 
-                placeholder="Buscar prospectos por nombre, teléfono o mensaje..." 
-                value={leadSearchTerm}
-                onChange={(e) => setLeadSearchTerm(e.target.value)}
-                className="w-full bg-[#0a0f1d] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors"
-              />
-            </div>
-
-            {/* GRÁFICA DE ANALÍTICAS */}
-            {leads.length > 0 && (
-              <div className="bg-[#0a0f1d] border border-white/5 p-6 rounded-3xl mb-8">
-                <h3 className="text-white font-bold mb-6 text-sm uppercase tracking-widest text-slate-400">Volumen de Prospectos Mensual</h3>
-                <div className="h-64 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={leads.reduce((acc, lead) => {
-                        if (!lead.createdAt) return acc;
-                        const date = lead.createdAt.toDate();
-                        const month = date.toLocaleString('es-MX', { month: 'short', year: 'numeric' }).toUpperCase();
-                        const existing = acc.find(item => item.name === month);
-                        if (existing) {
-                          existing.prospectos += 1;
-                        } else {
-                          acc.push({ name: month, prospectos: 1 });
-                        }
-                        return acc;
-                      }, [] as { name: string, prospectos: number }[]).reverse()}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-                      <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} allowDecimals={false} />
-                      <Tooltip 
-                        cursor={{fill: '#ffffff05'}}
-                        contentStyle={{ backgroundColor: '#070b14', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
-                        itemStyle={{ color: '#f59e0b', fontWeight: 'bold' }}
-                      />
-                      <Bar dataKey="prospectos" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              {leads.length === 0 && (
-                <div className="p-16 text-center border-2 border-dashed border-white/5 bg-slate-900/20 rounded-3xl">
-                  <div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Users className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Sin prospectos web</h3>
-                  <p className="text-slate-400 max-w-md mx-auto">
-                    Los contactos que llenen el formulario en la página pública aparecerán aquí automáticamente para que puedas darles seguimiento.
-                  </p>
-                </div>
-              )}
-              {leads.filter(lead => 
-                (lead.name || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) || 
-                (lead.message || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) ||
-                (lead.phone || '').includes(leadSearchTerm)
-              ).map(lead => (
-                <div key={lead.id} className="bg-[#0a0f1d] border border-white/5 p-6 rounded-2xl flex flex-col md:flex-row gap-6 items-start md:items-center justify-between hover:border-amber-500/30 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
-                      <MessageSquare className="w-6 h-6 text-blue-500" />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-medium text-lg">{lead.name}</h4>
-                      <p className="text-slate-400 text-sm">{lead.phone}</p>
-                    </div>
-                  </div>
-                  <div className="flex-grow md:text-center">
-                    <span className="text-xs text-slate-500 uppercase tracking-widest block mb-1">Volumen</span>
-                    <span className="text-amber-500 font-bold">{lead.quantity}</span>
-                  </div>
-                  <div className="max-w-md text-sm text-slate-300 italic border-l border-white/10 pl-4 py-2">
-                    "{lead.message}"
-                  </div>
-                  <div className="text-right text-[10px] text-slate-500 uppercase font-bold tracking-widest shrink-0">
-                    {lead.createdAt?.toDate().toLocaleDateString('es-MX')}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <LeadsTab 
+            leads={leads}
+            leadSearchTerm={leadSearchTerm}
+            setLeadSearchTerm={setLeadSearchTerm}
+            exportLeadsToCSV={exportLeadsToCSV}
+          />
         )}
 
         {/* TABS CONTENT: ORDERS (SEGUIMIENTO) */}
-        {activeTab === 'orders' && (isSuperAdmin || isEditor) && (
-          <div>
-            <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div>
-                <h2 className="text-3xl font-serif text-white mb-2">Control de Pedidos (Tracking)</h2>
-                <p className="text-slate-400">Actualiza el estatus de las cotizaciones para que el cliente lo consulte en la web.</p>
-              </div>
-              <button 
-                onClick={async () => {
-                  const folio = prompt("Ingresa el Folio de la Cotización (ej. COT-12345):");
-                  if (!folio) return;
-                  const client = prompt("Nombre del Cliente:");
-                  if (!client) return;
-                  const finalFolio = folio.toUpperCase().trim();
-                  await setDoc(doc(db, 'orders', finalFolio), {
-                    folio: finalFolio,
-                    clientName: client,
-                    status: 'Cotizado',
-                    updatedAt: Timestamp.now()
-                  });
-                }}
-                className="bg-amber-600 hover:bg-amber-500 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 transition-all"
-              >
-                <Plus className="w-4 h-4" /> Registrar Nuevo Pedido
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              {orders.length === 0 && (
-                <div className="p-16 text-center border-2 border-dashed border-white/5 bg-slate-900/20 rounded-3xl">
-                  <div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <FileText className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Aún no hay pedidos</h3>
-                  <p className="text-slate-400 max-w-md mx-auto">
-                    No tienes ningún pedido registrado en el sistema. Haz clic en "Registrar Nuevo Pedido" para comenzar el seguimiento.
-                  </p>
-                </div>
-              )}
-              {orders.map(order => (
-                <div key={order.id} className="bg-[#0a0f1d] border border-white/5 p-6 rounded-2xl flex flex-col md:flex-row gap-6 items-start md:items-center justify-between hover:border-amber-500/30 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center border border-indigo-500/20">
-                      <Clock className="w-6 h-6 text-indigo-500" />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-bold text-lg">{order.folio}</h4>
-                      <p className="text-slate-400 text-sm">{order.clientName}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex-grow flex items-center gap-4">
-                    <select
-                      value={order.status}
-                      onChange={async (e) => {
-                        await setDoc(doc(db, 'orders', order.id), { status: e.target.value, updatedAt: Timestamp.now() }, { merge: true });
-                      }}
-                      className="bg-[#070b14] border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none w-48"
-                    >
-                      <option value="Cotizado">Cotizado (En Espera)</option>
-                      <option value="En Producción">En Producción</option>
-                      <option value="Listo para Carga">Listo para Carga</option>
-                      <option value="Entregado">Entregado</option>
-                      <option value="Cancelado">Cancelado</option>
-                      <option value="Abandonado">Abandonado / No Responde</option>
-                    </select>
-                  </div>
-                  
-                  <div className="text-right text-[10px] text-slate-500 uppercase font-bold tracking-widest flex items-center gap-4">
-                    <span>Actualizado: {order.updatedAt?.toDate().toLocaleDateString('es-MX')}</span>
-                    <button onClick={async () => {
-                      if(confirm('¿Eliminar este pedido del rastreo?')) await deleteDoc(doc(db, 'orders', order.id));
-                    }} className="text-red-500 hover:text-red-400 p-2">
-                      <Trash2 className="w-4 h-4"/>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {activeTab === 'orders' && (isSuperAdmin || isEditor || isAlmacen) && (
+          <OrdersTab orders={orders} />
         )}
 
         {/* TABS CONTENT: QUOTE GENERATOR */}
@@ -866,6 +699,7 @@ export default function Dashboard() {
                     <select value={newRole} onChange={e=>setNewRole(e.target.value as any)} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none appearance-none">
                       <option value="lector" className="text-black">Lector (Solo Descargar)</option>
                       <option value="editor" className="text-black">Editor (Subir, Borrar, Modificar)</option>
+                      <option value="almacen" className="text-black">Almacén (Solo Ver Pedidos)</option>
                     </select>
                   </div>
                   <div>
@@ -893,12 +727,14 @@ export default function Dashboard() {
                     return (
                       <div key={priv.id} className={`bg-[#0a0f1d] border ${isExpired ? 'border-red-500/30' : 'border-white/10'} p-5 rounded-2xl flex items-center justify-between`}>
                         <div className="flex items-center gap-4">
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${priv.role === 'editor' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'}`}>
-                            {priv.role === 'editor' ? <Upload className="w-5 h-5"/> : <Download className="w-5 h-5"/>}
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${priv.role === 'editor' ? 'bg-amber-500/10 text-amber-500' : priv.role === 'almacen' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-blue-500/10 text-blue-500'}`}>
+                            {priv.role === 'editor' ? <Upload className="w-5 h-5"/> : priv.role === 'almacen' ? <Package className="w-5 h-5"/> : <Download className="w-5 h-5"/>}
                           </div>
                           <div>
                             <h4 className="text-white font-medium">{priv.email}</h4>
-                            <p className="text-xs text-slate-400 uppercase tracking-widest font-bold mt-1">Rol: {priv.role}</p>
+                            <div className="flex gap-2 items-center">
+                              <span className={`text-[10px] uppercase tracking-widest font-bold ${priv.role === 'editor' ? 'text-amber-500' : priv.role === 'almacen' ? 'text-emerald-500' : 'text-blue-500'}`}>{priv.role}</span>
+                            </div>
                           </div>
                         </div>
                         <div className="text-right flex items-center gap-4">
@@ -923,84 +759,16 @@ export default function Dashboard() {
 
         {/* TABS CONTENT: CATALOGO */}
         {activeTab === 'catalog' && (isSuperAdmin || isEditor) && (
-          <div>
-            <div className="mb-12">
-              <h2 className="text-3xl font-serif text-white mb-2">Gestión del Catálogo</h2>
-              <p className="text-slate-400">Sube cobertores para que aparezcan en la página pública.</p>
-            </div>
-
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Formulario */}
-              <div className="lg:col-span-1 bg-[#0a0f1d] border border-white/10 p-6 rounded-3xl">
-                <h3 className="text-white font-bold mb-6 flex items-center gap-2"><ImageIcon className="w-5 h-5 text-amber-500"/> Subir Producto</h3>
-                <form onSubmit={handleProductUpload} className="space-y-4">
-                  <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Nombre del Producto</label>
-                    <input type="text" value={productForm.title} onChange={e=>setProductForm({...productForm, title: e.target.value})} required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="Ej. Tilma Ecológica"/>
-                  </div>
-                  <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Etiqueta/Peso</label>
-                    <input type="text" value={productForm.weight} onChange={e=>setProductForm({...productForm, weight: e.target.value})} required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="Ej. 1.5 kg"/>
-                  </div>
-                  <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Descripción</label>
-                    <textarea value={productForm.desc} onChange={e=>setProductForm({...productForm, desc: e.target.value})} required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="Descripción corta..."></textarea>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Medidas</label>
-                      <input type="text" value={productForm.measures} onChange={e=>setProductForm({...productForm, measures: e.target.value})} required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="2m x 1.50m"/>
-                    </div>
-                    <div>
-                      <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Composición</label>
-                      <input type="text" value={productForm.composition} onChange={e=>setProductForm({...productForm, composition: e.target.value})} required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="100% Acrílico"/>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Foto (Requerida)</label>
-                    <input type="file" ref={productImgRef} accept="image/*" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-slate-400 text-sm outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-amber-500/10 file:text-amber-500 hover:file:bg-amber-500 hover:file:text-white transition-all"/>
-                  </div>
-                  <button type="submit" disabled={uploading} className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl uppercase tracking-widest text-xs transition-colors disabled:opacity-50">
-                    {uploading ? 'Subiendo...' : 'Publicar Producto'}
-                  </button>
-                </form>
-              </div>
-
-              {/* Lista */}
-              <div className="lg:col-span-2 space-y-4">
-                {products.length === 0 ? (
-                  <div className="p-16 text-center border-2 border-dashed border-white/5 bg-slate-900/20 rounded-3xl h-full flex flex-col items-center justify-center">
-                    <div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Package className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">Catálogo Vacío</h3>
-                    <p className="text-slate-400 max-w-md mx-auto mb-6">
-                      Agrega tu primer producto en el panel izquierdo para que los clientes puedan verlo en la página pública.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {products.map(product => (
-                      <div key={product.id} className="bg-[#0a0f1d] border border-white/10 p-4 rounded-2xl flex gap-4 hover:border-amber-500/30 transition-colors">
-                        <img src={product.imgUrl} alt={product.title} className="w-24 h-24 object-cover rounded-xl" />
-                        <div className="flex-grow flex flex-col justify-between">
-                          <div>
-                            <h4 className="text-white font-medium">{product.title}</h4>
-                            <p className="text-[10px] text-amber-500 uppercase tracking-widest font-bold">{product.weight}</p>
-                          </div>
-                          <div className="text-right">
-                            <button onClick={() => handleDeleteProduct(product.id, product.storagePath)} className="p-2 text-red-500 bg-red-500/10 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Borrar">
-                              <Trash2 className="w-4 h-4"/>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <ProductsTab 
+            products={products}
+            productForm={productForm}
+            setProductForm={setProductForm}
+            uploading={uploading}
+            productImgRef={productImgRef}
+            handleProductUpload={handleProductUpload}
+            handleDeleteProduct={handleDeleteProduct}
+            exportCatalogPDF={exportCatalogPDF}
+          />
         )}
 
         {activeTab === 'settings' && isSuperAdmin && (

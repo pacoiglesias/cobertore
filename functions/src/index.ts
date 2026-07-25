@@ -153,3 +153,30 @@ export const triggerNewsFetch = functions.https.onCall(async (request) => {
   const result = await runNewsFetch(db);
   return result;
 });
+
+// Fase 6: Notificaciones CRM (Nuevos Leads)
+// Se dispara cuando un cliente deja sus datos en la Landing Page
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+
+export const onLeadCreated = onDocumentCreated('leads/{leadId}', async (event) => {
+  const snapshot = event.data;
+  if (!snapshot) return;
+
+  const leadData = snapshot.data();
+  const db = getFirestore();
+
+  console.log(`Nuevo lead registrado: ${leadData.name} - ${leadData.phone}`);
+
+  // Registramos la notificacion internamente para el dashboard
+  await db.collection('notifications').add({
+    type: 'new_lead',
+    title: 'Nuevo Prospecto Recibido',
+    message: `El cliente ${leadData.name} ha solicitado una cotización.`,
+    leadId: event.params.leadId,
+    readBy: [],
+    createdAt: FieldValue.serverTimestamp()
+  });
+
+  // Nota: Para enviar correos reales, se requiere habilitar la Extension "Trigger Email" 
+  // de Firebase, configurando SMTP, y escribir en la coleccion "mail", o usar SendGrid.
+});

@@ -17,46 +17,46 @@ const mockDataDivisions = [
   { name: 'Inmobiliaria', clicks: 300 },
 ];
 
-export function AnalyticsDashboard() {
+export function AnalyticsDashboard({ leadsCount, ordersCount, productsCount }: { leadsCount: number, ordersCount: number, productsCount: number }) {
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-white mb-2">Panel de Analíticas</h2>
-        <p className="text-slate-400 text-sm">Resumen de tráfico y conversiones. <span className="text-amber-500 font-medium">Nota:</span> Google Analytics 4 (GA4) está activo recolectando datos. Para visualizar métricas reales en vivo aquí, se requiere vincular la API de Google Analytics o BigQuery.</p>
+        <p className="text-slate-400 text-sm">Resumen de tráfico y conversiones del sistema interno.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-[#0a0f1d] border border-white/10 p-6 rounded-2xl">
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest">Visitas Semanales</h3>
+            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest">Total Prospectos</h3>
             <Users className="w-5 h-5 text-blue-500" />
           </div>
-          <p className="text-3xl font-black text-white font-mono">1,955</p>
-          <p className="text-xs text-green-500 mt-2 flex items-center gap-1"><TrendingUp className="w-3 h-3" /> +12% vs sem. pasada</p>
+          <p className="text-3xl font-black text-white font-mono">{leadsCount}</p>
+          <p className="text-xs text-green-500 mt-2 flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Registrados en la plataforma</p>
         </div>
         <div className="bg-[#0a0f1d] border border-white/10 p-6 rounded-2xl">
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest">Cotizaciones Generadas</h3>
+            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest">Total Pedidos</h3>
             <FileText className="w-5 h-5 text-amber-500" />
           </div>
-          <p className="text-3xl font-black text-white font-mono">34</p>
-          <p className="text-xs text-green-500 mt-2 flex items-center gap-1"><TrendingUp className="w-3 h-3" /> +5% este mes</p>
+          <p className="text-3xl font-black text-white font-mono">{ordersCount}</p>
+          <p className="text-xs text-green-500 mt-2 flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Pedidos activos en seguimiento</p>
         </div>
         <div className="bg-[#0a0f1d] border border-white/10 p-6 rounded-2xl">
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest">Tasa de Rebote</h3>
+            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest">Productos Catálogo</h3>
             <MousePointerClick className="w-5 h-5 text-purple-500" />
           </div>
-          <p className="text-3xl font-black text-white font-mono">32%</p>
-          <p className="text-xs text-slate-500 mt-2">Promedio 2.4 min/sesión</p>
+          <p className="text-3xl font-black text-white font-mono">{productsCount}</p>
+          <p className="text-xs text-slate-500 mt-2">Productos publicados online</p>
         </div>
         <div className="bg-[#0a0f1d] border border-white/10 p-6 rounded-2xl">
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest">Módulo Estrella</h3>
+            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-widest">Tasa de Conversión</h3>
             <TrendingUp className="w-5 h-5 text-green-500" />
           </div>
-          <p className="text-xl font-bold text-white">División Textil</p>
-          <p className="text-xs text-slate-500 mt-2">57% del tráfico total</p>
+          <p className="text-xl font-bold text-white">{leadsCount > 0 ? Math.round((ordersCount / leadsCount) * 100) : 0}%</p>
+          <p className="text-xs text-slate-500 mt-2">Prospectos a Pedidos</p>
         </div>
       </div>
 
