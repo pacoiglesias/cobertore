@@ -8,6 +8,21 @@ import { db } from '@/lib/firebase';
 import { NewsItem } from '@/lib/types';
 import { logger } from '@/lib/logger';
 
+function BlurImage({ src, alt, className }: { src: string, alt: string, className?: string }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  return (
+    <div className={`relative overflow-hidden ${className}`}>
+      <div className={`absolute inset-0 bg-slate-200 dark:bg-slate-800 animate-pulse transition-opacity duration-500 ${isLoaded ? 'opacity-0' : 'opacity-100'}`} />
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setIsLoaded(true)}
+        className={`w-full h-full object-cover transition-all duration-700 ${isLoaded ? 'scale-100 blur-0 opacity-100' : 'scale-110 blur-xl opacity-0'} absolute inset-0`}
+      />
+    </div>
+  );
+}
+
 interface NewsGridProps {
   initialNews: NewsItem[];
 }
@@ -88,10 +103,10 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
         {visibleNews.map((item: NewsItem) => (
           <article key={item.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl transition-all group flex flex-col">
             <div className="h-64 overflow-hidden relative">
-              <img
+              <BlurImage
                 src={item.imgUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000'}
                 alt={item.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 absolute inset-0"
+                className="w-full h-full group-hover:scale-105 transition-transform duration-700 absolute inset-0"
               />
               {item.sourceName && (
                 <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
@@ -112,13 +127,9 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
               <p className="text-slate-600 mb-8 leading-relaxed line-clamp-3">{item.summary}</p>
 
               <div className="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
-                {item.originalUrl ? (
-                  <a href={item.originalUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-amber-600 hover:text-amber-500 flex items-center gap-1 transition-colors">
-                    Leer artículo completo <ChevronRight className="w-4 h-4" />
-                  </a>
-                ) : (
-                  <p className="text-sm text-slate-500 leading-relaxed whitespace-pre-wrap line-clamp-2">{item.body}</p>
-                )}
+                <a href={`/noticias/${item.id}`} className="text-sm font-bold text-amber-600 hover:text-amber-500 flex items-center gap-1 transition-colors">
+                  Leer artículo completo <ChevronRight className="w-4 h-4" />
+                </a>
               </div>
             </div>
           </article>

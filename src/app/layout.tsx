@@ -92,6 +92,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -100,7 +103,8 @@ export default function RootLayout({
   return (
     <html
       lang="es-MX"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-[#070b14] text-slate-300`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <meta name="theme-color" content="#070b14" />
@@ -109,109 +113,115 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className="min-h-full flex flex-col">
-        <Toaster position="bottom-right" toastOptions={{
-          style: {
-            background: '#1e293b',
-            color: '#fff',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '16px'
-          },
-          success: { iconTheme: { primary: '#f59e0b', secondary: '#1e293b' } }
-        }} />
-        {/* Google Analytics */}
-        <Script
-          strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
-                page_path: window.location.pathname,
-              });
-            `,
-          }}
-        />
-        {/* Silenciar logs de consola en producción */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                console.log = function() {};
-                console.info = function() {};
-                console.debug = function() {};
-              }
-            `
-          }}
-        />
-        {/* PWA Service Worker Registration */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                    // Nota: este es un <script> inline (HTML crudo), no forma parte
-                    // del bundle de React -- no tiene acceso a logger. Debe usar
-                    // console directo. (bug anterior: usaba logger.log aqui y
-                    // tronaba con "ReferenceError: logger is not defined" cada vez
-                    // que cargaba cualquier pagina).
-                  }, function(err) {
-                    console.error('ServiceWorker registration failed: ', err);
-                  });
+      <body className="min-h-full flex flex-col bg-slate-50 dark:bg-[#070b14] text-slate-900 dark:text-slate-300 transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <Toaster position="bottom-right" toastOptions={{
+            style: {
+              background: '#1e293b',
+              color: '#fff',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '16px'
+            },
+            success: { iconTheme: { primary: '#f59e0b', secondary: '#1e293b' } }
+          }} />
+          {/* Google Analytics */}
+          <Script
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          />
+          <Script
+            id="google-analytics"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                  page_path: window.location.pathname,
                 });
-              }
-            `
-          }}
-        />
-        {/* JSON-LD Schema para SEO Local y Corporativo */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": ["ManufacturingBusiness", "WholesaleStore", "B2BBusiness"],
-              "name": "Mano Fil S.A.",
-              "image": "https://cobertores.com/logo-oficial.png",
-              "@id": "https://cobertores.com",
-              "url": "https://cobertores.com",
-              "telephone": "+522464642891",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Calle El Grullo",
-                "addressLocality": "Santa Ana Chiautempan",
-                "addressRegion": "Tlaxcala",
-                "postalCode": "90800",
-                "addressCountry": "MX"
-              },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": 19.3135,
-                "longitude": -98.1969
-              },
-              "foundingDate": "1962",
-              "description": "Fábrica textil de cobertores y tilmas por mayoreo en México. Calidad industrial B2B y suministro a gran escala."
-            })
-          }}
-        />
-        <SystemProvider>
-          <div className="flex flex-col min-h-screen">
-            <main className="flex-grow">
-              <ErrorBoundary>
-                {children}
-              </ErrorBoundary>
-            </main>
-          </div>
-          
-          <WhatsAppButton />
-          <Toaster position="bottom-right" />
-        </SystemProvider>
+              `,
+            }}
+          />
+          {/* Silenciar logs de consola en producción */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                  console.log = function() {};
+                  console.info = function() {};
+                  console.debug = function() {};
+                }
+              `
+            }}
+          />
+          {/* PWA Service Worker Registration */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                if ('serviceWorker' in navigator) {
+                  window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                      // Nota: este es un <script> inline (HTML crudo), no forma parte
+                      // del bundle de React -- no tiene acceso a logger. Debe usar
+                      // console directo. (bug anterior: usaba logger.log aqui y
+                      // tronaba con "ReferenceError: logger is not defined" cada vez
+                      // que cargaba cualquier pagina).
+                    }, function(err) {
+                      console.error('ServiceWorker registration failed: ', err);
+                    });
+                  });
+                }
+              `
+            }}
+          />
+          {/* JSON-LD Schema para SEO Local y Corporativo */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": ["ManufacturingBusiness", "WholesaleStore", "B2BBusiness"],
+                "name": "Mano Fil S.A.",
+                "image": "https://cobertores.com/logo-oficial.png",
+                "@id": "https://cobertores.com",
+                "url": "https://cobertores.com",
+                "telephone": "+522464642891",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Calle El Grullo",
+                  "addressLocality": "Santa Ana Chiautempan",
+                  "addressRegion": "Tlaxcala",
+                  "postalCode": "90800",
+                  "addressCountry": "MX"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 19.3135,
+                  "longitude": -98.1969
+                },
+                "foundingDate": "1962",
+                "description": "Fábrica textil de cobertores y tilmas por mayoreo en México. Calidad industrial B2B y suministro a gran escala."
+              })
+            }}
+          />
+          <SystemProvider>
+            <div className="flex flex-col min-h-screen">
+              <main className="flex-grow">
+                <ErrorBoundary>
+                  {children}
+                </ErrorBoundary>
+              </main>
+            </div>
+            
+            <div className="fixed bottom-6 left-6 z-50">
+              <ThemeToggle />
+            </div>
+            
+            <WhatsAppButton />
+            <Toaster position="bottom-right" />
+          </SystemProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
