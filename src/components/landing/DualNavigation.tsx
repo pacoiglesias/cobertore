@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, ChevronRight, MapPin, TrendingUp, Building2, Factory } from 'lucide-react';
+import { ArrowRight, ChevronRight, Building2, Factory } from 'lucide-react';
 
 const fadeUp: any = {
   hidden: { opacity: 0, y: 24 },

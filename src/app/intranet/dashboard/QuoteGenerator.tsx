@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Plus, Trash2, Share2, MapPin, Mail, Phone, Building2, User as UserIcon, AlertCircle, Send } from 'lucide-react';
+import { Download, Plus, Trash2, Share2, MapPin, Mail, Phone, Send } from 'lucide-react';
 import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { db, storage } from '../../../lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { toast } from 'react-hot-toast';
 import emailjs from '@emailjs/browser';
 import { logger } from '../../../lib/logger';
 import { useSystemSettings } from '../../../hooks/useSystemSettings';
@@ -146,6 +147,10 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Cotizacion_${clientName.replace(/[^a-z0-9]/gi, '_') || 'Mano_Fil'}.pdf`);
+      
+      // Save to history
+      await saveQuoteToHistory(pdfBlob);
+      toast.success('Cotización generada y guardada en el historial');
     } catch (e) {
       logger.error("PDF Error:", e);
       alert('Error al generar PDF. Verifica que las imágenes carguen correctamente.');
@@ -191,6 +196,10 @@ export function QuoteGenerator({ products, userEmail }: Props) {
         alert("Tu dispositivo o navegador no soporta compartir archivos directamente. Se descargará el PDF.");
         pdf.save(`Cotizacion_${clientName.replace(/[^a-z0-9]/gi, '_') || 'Mano_Fil'}.pdf`);
       }
+      
+      // Save to history
+      await saveQuoteToHistory(pdfBlob);
+      toast.success('Cotización compartida y guardada en el historial');
     } catch (e) {
       logger.error("Share Error:", e);
       alert('Error al compartir el PDF.');
@@ -237,8 +246,8 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       
       // 2. Send Email via EmailJS
       await emailjs.send(
-        'service_xhdjd9e', 
-        'template_g523gds', 
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!, 
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!, 
         {
           name: clientName || 'Cliente Estimado',
           phone: sellerName,
@@ -246,10 +255,13 @@ export function QuoteGenerator({ products, userEmail }: Props) {
           quantity: items.length.toString(),
           message: `Adjuntamos la cotización oficial de Mano Fil S.A. Puedes descargar tu PDF seguro en el siguiente enlace: ${downloadUrl} (Cotización preparada por ${sellerName} - ${sellerEmail})`,
         }, 
-        'rnWVm41Zez5G-ehqq'
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       );
       
-      alert('¡Cotización enviada exitosamente por correo!');
+      // Save to history
+      await saveQuoteToHistory(pdfBlob, downloadUrl);
+      
+      toast.success(`Cotización enviada a ${clientEmailInput} y guardada en el historial`);
       setClientEmailInput('');
       setFolio(generateNewFolio());
     } catch (e) {
@@ -257,6 +269,34 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       alert('Error al enviar la cotización.');
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const saveQuoteToHistory = async (pdfBlob: Blob, existingUrl?: string) => {
+    try {
+      let downloadUrl = existingUrl;
+      
+      // If we don't have an existing URL (e.g. from generatePDF or sharePDF), upload it
+      if (!downloadUrl) {
+        const storageRef = ref(storage, `quotes/${folio}.pdf`);
+        await uploadBytes(storageRef, pdfBlob);
+        downloadUrl = await getDownloadURL(storageRef);
+      }
+
+      await setDoc(doc(db, 'quotes_history', folio), {
+        folio,
+        clientName: clientName || 'Sin Nombre',
+        sellerName,
+        sellerEmail,
+        total,
+        subtotal,
+        pdfUrl: downloadUrl,
+        itemsCount: items.length,
+        createdAt: serverTimestamp(),
+      });
+    } catch (e) {
+      logger.error('Error saving quote to history:', e);
+      // We don't throw, we just log it so it doesn't break the main flow
     }
   };
 
@@ -461,7 +501,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
                         <td className="py-3 px-2 text-[11px] font-mono text-right" style={{ color: '#475569', borderBottom: '1px solid #f1f5f9' }}>${item.price.toFixed(2)}</td>
                         <td className="py-3 px-2 text-[11px] font-bold font-mono text-right" style={{ color: '#0f172a', borderBottom: '1px solid #f1f5f9' }}>${(item.price * item.quantity).toFixed(2)}</td>
                         <td className="py-3 px-1 text-right" data-html2canvas-ignore style={{ borderBottom: '1px solid #f1f5f9' }}>
-                          <button onClick={() => handleRemoveItem(item.id)} className="text-red-400 hover:text-red-600">
+                          <button onClick={() => handleRemoveItem(item.id)} aria-label="Eliminar producto de la cotización" className="text-red-400 hover:text-red-600">
                             <Trash2 className="w-3 h-3"/>
                           </button>
                         </td>

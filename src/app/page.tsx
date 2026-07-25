@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Factory, Leaf, Award, MapPin, Phone, Mail, ChevronRight, ArrowRight, ShieldCheck, TrendingUp, Globe, Hammer, Star, Send, Loader2, Clock, Menu, X } from 'lucide-react';
+import { Factory, MapPin, Phone, Mail, ArrowRight, ShieldCheck, Globe, Hammer, Star, Send, Loader2, Clock, Menu, X } from 'lucide-react';
 import { ManoFilLogo } from '../components/ManoFilLogo';
 import { addDoc, collection, Timestamp, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -13,7 +13,7 @@ import { AuthorityRibbon } from '../components/landing/AuthorityRibbon';
 import { DualNavigation } from '../components/landing/DualNavigation';
 import { Heritage } from '../components/landing/Heritage';
 import { Sustainability } from '../components/landing/Sustainability';
-import { RefreshCw } from 'lucide-react';
+
 import { CatalogProduct, NewsItem } from '../lib/types';
 import { logger } from '../lib/logger';
 
@@ -56,6 +56,7 @@ const playSuccessSound = () => {
     
     oscillator.start(now);
     oscillator.stop(now + 0.3);
+    setTimeout(() => audioCtx.close(), 1500);
   } catch (e) {
     logger.log("Audio not supported");
   }
@@ -221,7 +222,7 @@ export default function LandingPage() {
   
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
 
   // Dynamic Catalog State
   const [catalogProducts, setCatalogProducts] = useState<CatalogProduct[]>([]);
@@ -263,21 +264,7 @@ export default function LandingPage() {
     };
   }, []);
 
-  const handleSyncData = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(const registration of registrations) {
-          registration.unregister();
-        }
-      });
-    }
-    toast.success("Sincronizando datos...");
-    setTimeout(() => {
-      window.location.reload();
-    }, 1500);
-  };
+
 
   useEffect(() => {
     if (submitSuccess) {
@@ -317,8 +304,8 @@ export default function LandingPage() {
       // ENVIAR NOTIFICACIÓN POR CORREO (EmailJS)
       try {
         await emailjs.send(
-          'service_xhdjd9e', 
-          'template_g523gds', 
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!, 
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!, 
           {
             name: cleanData.name,
             phone: cleanData.phone,
@@ -326,7 +313,7 @@ export default function LandingPage() {
             quantity: cleanData.quantity,
             message: cleanData.message,
           }, 
-          'rnWVm41Zez5G-ehqq'
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
         );
       } catch (emailError) {
         logger.error("Error enviando notificación de correo (EmailJS):", emailError);
@@ -369,20 +356,6 @@ export default function LandingPage() {
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-amber-600/10 blur-[120px]"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[50%] rounded-full bg-blue-600/10 blur-[120px]"></div>
       </div>
-
-      {/* Toast Notificación WIP */}
-      <AnimatePresence>
-        {toastMessage && (
-          <motion.div 
-            initial={{ opacity: 0, y: -50, x: '-50%' }}
-            animate={{ opacity: 1, y: 20, x: '-50%' }}
-            exit={{ opacity: 0, y: -50, x: '-50%' }}
-            className="fixed top-20 left-1/2 z-[100] bg-amber-500 text-slate-950 px-6 py-3 rounded-full font-bold shadow-[0_0_30px_rgba(245,158,11,0.5)] flex items-center gap-2 text-sm"
-          >
-            <Hammer className="w-4 h-4" /> {toastMessage}
-          </motion.div>
-        )}
-      </AnimatePresence>
 
 
       {/* HEADER NAVBAR - Glassmorphism extremo */}
@@ -687,33 +660,33 @@ export default function LandingPage() {
             ) : (
               <form onSubmit={handleFormSubmit} className="space-y-6">
                 {/* HONEYPOT (Anti-Spam) */}
-                <input type="text" style={{display: 'none'}} value={formData._honey} onChange={e=>setFormData({...formData, _honey: e.target.value})} tabIndex={-1} autoComplete="off" />
+                <input aria-hidden="true" type="text" style={{display: 'none'}} value={formData._honey} onChange={e=>setFormData({...formData, _honey: e.target.value})} tabIndex={-1} autoComplete="off" />
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Nombre o Empresa *</label>
-                    <input type="text" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. Grupo Industrial M..." />
+                    <label htmlFor="lead-name" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Nombre o Empresa *</label>
+                    <input id="lead-name" type="text" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. Grupo Industrial M..." />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Teléfono / WhatsApp *</label>
-                    <input type="tel" required value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="+52 123 456 7890" />
+                    <label htmlFor="lead-phone" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Teléfono / WhatsApp *</label>
+                    <input id="lead-phone" type="tel" required value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="+52 123 456 7890" />
                   </div>
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Correo Electrónico *</label>
-                    <input type="email" required value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="tu@empresa.com" />
+                    <label htmlFor="lead-email" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Correo Electrónico *</label>
+                    <input id="lead-email" type="email" required value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="tu@empresa.com" />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Volumen Requerido *</label>
-                    <input type="text" required value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. 20,000 piezas" />
+                    <label htmlFor="lead-quantity" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Volumen Requerido *</label>
+                    <input id="lead-quantity" type="text" required value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. 20,000 piezas" />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Detalles del Proyecto *</label>
-                  <textarea required value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder="Especifica modelos de interés, fecha de entrega y destino..."></textarea>
+                  <label htmlFor="lead-message" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Detalles del Proyecto *</label>
+                  <textarea id="lead-message" required value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder="Especifica modelos de interés, fecha de entrega y destino..."></textarea>
                 </div>
                 
                 <button type="submit" disabled={submitting} className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-4 rounded-xl uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50">

@@ -83,13 +83,14 @@ async function runNewsFetch(db: Firestore): Promise<{ sourcesChecked: number; it
   console.log(`Found ${activeSources.length} active sources. Fetching...`);
   let itemsImported = 0;
 
+  const rssItemsLimit: number = settingsDoc.data()?.rssItemsLimit || 20;
+
   for (const source of activeSources) {
     try {
       const feed = await parser.parseURL(source.url);
 
-      // FIX 2026-07-25: subido de 3 a 8 por fuente -- con solo 3, y con la
-      // mitad de las fuentes rotas, casi no entraba contenido nuevo.
-      const items = feed.items.slice(0, 8);
+      // Ahora el límite es configurable desde la base de datos (por defecto 20)
+      const items = feed.items.slice(0, rssItemsLimit);
 
       for (const item of items) {
         // Hash del link o titulo para usarlo como ID (evita duplicados)

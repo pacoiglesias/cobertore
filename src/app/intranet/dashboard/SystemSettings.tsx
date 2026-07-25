@@ -39,6 +39,7 @@ export default function SystemSettings() {
   const [newRssUrl, setNewRssUrl] = useState('');
   const [isSavingRss, setIsSavingRss] = useState(false);
   const [rssSuccessMsg, setRssSuccessMsg] = useState('');
+  const [rssItemsLimit, setRssItemsLimit] = useState<number>(20);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -68,6 +69,7 @@ export default function SystemSettings() {
         setSeoTitle(data.seoTitle !== undefined ? data.seoTitle : defaultSeoTitle);
         setSeoDescription(data.seoDescription !== undefined ? data.seoDescription : defaultSeoDesc);
         setRssSources(data.newsSources !== undefined ? data.newsSources : defaultSources);
+        setRssItemsLimit(data.rssItemsLimit !== undefined ? data.rssItemsLimit : 20);
         setBankName(data.bankName !== undefined ? data.bankName : defaultBankName);
         setBankAccount(data.bankAccount !== undefined ? data.bankAccount : defaultBankAccount);
         setBankClabe(data.bankClabe !== undefined ? data.bankClabe : defaultBankClabe);
@@ -76,6 +78,7 @@ export default function SystemSettings() {
         setSeoTitle(defaultSeoTitle);
         setSeoDescription(defaultSeoDesc);
         setRssSources(defaultSources);
+        setRssItemsLimit(20);
         setBankName(defaultBankName);
         setBankAccount(defaultBankAccount);
         setBankClabe(defaultBankClabe);
@@ -184,7 +187,8 @@ export default function SystemSettings() {
     try {
       const settingsRef = doc(db, 'system_settings', 'global');
       await setDoc(settingsRef, { 
-        newsSources: rssSources 
+        newsSources: rssSources,
+        rssItemsLimit: Number(rssItemsLimit)
       }, { merge: true });
       setRssSuccessMsg('¡Fuentes RSS guardadas correctamente!');
       setTimeout(() => setRssSuccessMsg(''), 3000);
@@ -468,6 +472,21 @@ export default function SystemSettings() {
                 ))}
               </ul>
             )}
+          </div>
+
+          <div className="mt-6 flex items-center justify-between bg-slate-800/30 rounded-2xl border border-slate-700 p-4">
+            <div>
+              <p className="text-white font-medium text-sm">Límite de noticias por fuente</p>
+              <p className="text-slate-500 text-xs mt-1">Cuántas noticias descargar de cada sitio (máximo 50).</p>
+            </div>
+            <input 
+              type="number" 
+              min="1" 
+              max="50"
+              value={rssItemsLimit}
+              onChange={(e) => setRssItemsLimit(parseInt(e.target.value) || 20)}
+              className="w-24 bg-[#0f172a] border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-amber-500 transition-colors text-center font-bold"
+            />
           </div>
 
           {rssSuccessMsg && (

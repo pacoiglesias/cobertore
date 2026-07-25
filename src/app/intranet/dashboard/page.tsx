@@ -6,15 +6,15 @@ import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, Timestamp, setDoc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { auth, db, storage } from '../../../lib/firebase';
-import { LogOut, FileText, Download, Shield, Building2, User as UserIcon, Upload, Trash2, Image as ImageIcon, File, Loader2, Users, MessageSquare, Clock, Edit, Eye, X, Globe, FileSignature, Smartphone, Plus, Package } from 'lucide-react';
+import { LogOut, FileText, Download, Shield, Building2, Upload, Trash2, Image as ImageIcon, File, Loader2, Users, MessageSquare, Clock, Edit, Eye, X, FileSignature, Smartphone, Plus, Package } from 'lucide-react';
 import Link from 'next/link';
 import { QuoteGenerator } from './QuoteGenerator';
+import { QuotesHistoryManager } from './QuotesHistoryManager';
 import OfficialDocumentsManager from './OfficialDocumentsManager';
 import SystemSettings from './SystemSettings';
 import NewsManager from './NewsManager';
 import SystemMonitor from './SystemMonitor';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
-import { BarChart as BarChartIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import { logger } from '../../../lib/logger';
@@ -69,7 +69,7 @@ interface CatalogProduct {
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'files' | 'leads' | 'orders' | 'users' | 'catalog' | 'quote-generator' | 'documents' | 'settings' | 'news' | 'monitor' | 'analytics'>('files');
+  const [activeTab, setActiveTab] = useState<'files' | 'leads' | 'orders' | 'users' | 'catalog' | 'quote-generator' | 'quotes-history' | 'documents' | 'settings' | 'news' | 'monitor' | 'analytics'>('files');
   
   // Data States
   const [files, setFiles] = useState<IntranetFile[]>([]);
@@ -93,7 +93,7 @@ export default function Dashboard() {
   const [previewFile, setPreviewFile] = useState<IntranetFile | null>(null);
 
   // Auth & Roles
-  const SUPER_ADMINS = ['paco@cobertores.com', 'paco.iglesias@gmail.com'];
+  const SUPER_ADMINS = ['paco@cobertores.com', 'paco.iglesias@gmail.com', 'pacoismael@gmail.com'];
   const isSuperAdmin = user?.email ? SUPER_ADMINS.includes(user.email) : false;
   
   // Check if current user has editor rights via privileges
@@ -138,21 +138,29 @@ export default function Dashboard() {
     const filesQuery = query(collection(db, 'intranet_files'), orderBy('createdAt', 'desc'));
     const unsubscribeFiles = onSnapshot(filesQuery, (snapshot) => {
       setFiles(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IntranetFile[]);
+    }, (err) => {
+      logger.error('Error en listener:', err);
     });
 
     const leadsQuery = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
     const unsubscribeLeads = onSnapshot(leadsQuery, (snapshot) => {
       setLeads(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Lead[]);
+    }, (err) => {
+      logger.error('Error en listener:', err);
     });
 
     const productsQuery = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
     const unsubscribeProducts = onSnapshot(productsQuery, (snapshot) => {
       setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as CatalogProduct[]);
+    }, (err) => {
+      logger.error('Error en listener:', err);
     });
 
     const ordersQuery = query(collection(db, 'orders'), orderBy('updatedAt', 'desc'));
     const unsubOrders = onSnapshot(ordersQuery, (snapshot) => {
       setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Order[]);
+    }, (err) => {
+      logger.error('Error en listener:', err);
     });
 
     let unsubscribePrivs = () => {};
@@ -160,6 +168,8 @@ export default function Dashboard() {
       const privsQuery = collection(db, 'user_privileges');
       unsubscribePrivs = onSnapshot(privsQuery, (snapshot) => {
         setPrivileges(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as UserPrivilege[]);
+      }, (err) => {
+        logger.error('Error en listener:', err);
       });
     }
 
@@ -174,15 +184,12 @@ export default function Dashboard() {
   }, [router, isSuperAdmin]);
 
   const handleLogout = async () => {
-    await signOut(auth);
-    router.replace('/intranet');
-  };
-
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') setDeferredPrompt(null);
+    try {
+      await signOut(auth);
+      router.replace('/intranet');
+    } catch (error) {
+      toast.error('Error al cerrar sesión');
+    }
   };
 
   const formatSize = (bytes: number) => {
@@ -287,43 +294,6 @@ export default function Dashboard() {
   const [productForm, setProductForm] = useState({ title: '', weight: '', desc: '', measures: '', composition: '' });
   const productImgRef = useRef<HTMLInputElement>(null);
 
-  // TEMPORAL: crea en Firestore los 4 productos que hoy se muestran en la
-  // web pública desde datos estáticos de respaldo (no desde la base de
-  // datos real). Usa las imágenes que ya existen como archivos públicos,
-  // sin volver a subir nada. Una vez usado, el botón que lo llama
-  // desaparece solo (solo se muestra si el catálogo está vacío). Se puede
-  // borrar esta función junto con el botón cuando ya no se necesite.
-  const handleSeedInitialProducts = async () => {
-    if (!isEditor && !isSuperAdmin) return;
-    if (!confirm('Esto va a crear los 4 productos actuales de la web como registros reales en el catálogo. ¿Continuar?')) return;
-
-    setUploading(true);
-    setUploadProgress('Cargando productos iniciales...');
-    const initialProducts = [
-      { title: 'Tilma Económica', weight: '1.300 KG', desc: 'Tejido compacto y duradero. Soporta uso industrial y lavados constantes.', measures: '', composition: '', imgUrl: '/products/tilma-eco-1-3kg.webp' },
-      { title: 'Manta Térmica', weight: '2.000 KG', desc: 'Aislamiento térmico de grado superior. El mayor gramaje del catálogo.', measures: '', composition: '', imgUrl: '/products/manta-eco-2kg.webp' },
-      { title: 'Tilma Ribeteada', weight: '1.150 KG', desc: 'Acabados reforzados por ultrasonido perimetral. Vida útil prolongada.', measures: '', composition: '', imgUrl: '/products/tilma-ribeteada.webp' },
-      { title: 'Tilma Ligera', weight: '1.000 KG', desc: 'Optimización de peso y volumen. Perfecta para distribución ágil.', measures: '', composition: '', imgUrl: '/products/tilma-eco-1kg.webp' },
-    ];
-
-    try {
-      for (const p of initialProducts) {
-        await addDoc(collection(db, 'products'), {
-          ...p,
-          storagePath: '', // son archivos publicos estaticos, no de Firebase Storage -- no hay nada que borrar de Storage si se elimina este producto despues
-          createdAt: Timestamp.now()
-        });
-      }
-      toast.success('¡Listo! Los 4 productos ya están en el catálogo real.');
-    } catch (error) {
-      logger.error(error);
-      toast.error('No se pudieron cargar los productos iniciales.');
-    } finally {
-      setUploading(false);
-      setUploadProgress('');
-    }
-  };
-
   const handleProductUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!productImgRef.current?.files || productImgRef.current.files.length === 0 || !isEditor) return;
@@ -397,7 +367,11 @@ export default function Dashboard() {
   const handleDeletePrivilege = async (email: string) => {
     if (!isSuperAdmin) return;
     if (!confirm(`¿Revocar acceso a ${email}?`)) return;
-    await deleteDoc(doc(db, 'user_privileges', email));
+    try {
+      await deleteDoc(doc(db, 'user_privileges', email));
+    } catch (error) {
+      toast.error('Error al eliminar privilegio');
+    }
   };
 
 
@@ -496,6 +470,12 @@ export default function Dashboard() {
                 className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'quote-generator' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'} flex items-center gap-2`}
               >
                 <FileSignature className="w-4 h-4"/> Crear Cotización
+              </button>
+              <button 
+                onClick={() => setActiveTab('quotes-history')}
+                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'quotes-history' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'} flex items-center gap-2`}
+              >
+                <FileText className="w-4 h-4"/> Historial Cotizaciones
               </button>
               <button 
                 onClick={() => setActiveTab('catalog')}
@@ -831,6 +811,13 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* TABS CONTENT: QUOTES HISTORY */}
+        {activeTab === 'quotes-history' && (isSuperAdmin || isEditor) && (
+          <div className="animate-fade-in">
+            <QuotesHistoryManager />
+          </div>
+        )}
+
         {/* Tab: Oficios */}
         {activeTab === 'documents' && (isSuperAdmin || isEditor) && (
           <div className="animate-fade-in">
@@ -975,18 +962,6 @@ export default function Dashboard() {
                     <p className="text-slate-400 max-w-md mx-auto mb-6">
                       Agrega tu primer producto en el panel izquierdo para que los clientes puedan verlo en la página pública.
                     </p>
-                    {/* BOTÓN TEMPORAL: siembra los 4 productos que ya se muestran en la
-                        web pública (que hoy vienen de datos estáticos de respaldo, no de
-                        Firestore). Solo se ve mientras el catálogo esté vacío -- en cuanto
-                        haya algún producto real, este bloque completo deja de mostrarse
-                        solo. Se puede borrar este botón cuando ya no se necesite. */}
-                    <button
-                      onClick={handleSeedInitialProducts}
-                      disabled={uploading}
-                      className="text-xs font-bold uppercase tracking-widest text-amber-500 border border-amber-500/30 hover:bg-amber-500/10 rounded-full px-5 py-2.5 transition-colors disabled:opacity-50"
-                    >
-                      {uploading ? 'Cargando...' : '⚡ Cargar los 4 productos actuales de la web (una sola vez)'}
-                    </button>
                   </div>
                 ) : (
                   <div className="grid md:grid-cols-2 gap-4">

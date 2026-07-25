@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, ShieldCheck, Database, Zap, RefreshCw, CheckCircle, AlertCircle, Trash2, Wifi, WifiOff } from 'lucide-react';
+import { Activity, ShieldCheck, Zap, RefreshCw, CheckCircle, AlertCircle, Trash2, Wifi, WifiOff } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { logger } from '../../../lib/logger';

@@ -19,7 +19,29 @@ export interface NewsItem {
   sourceName?: string;
   originalUrl?: string;
   imgUrl?: string;
-  createdAt?: any; // String in news page, Timestamp in Firestore
+  createdAt?: Timestamp | string;
+}
+
+export interface RssSource {
+  id: string;
+  name: string;
+  url: string;
+  active: boolean;
+}
+
+export interface SystemSettings {
+  seoTitle?: string;
+  seoDescription?: string;
+  logoUrl?: string;
+  bankName?: string;
+  bankAccount?: string;
+  bankClabe?: string;
+  bankRfc?: string;
+  newsSources?: RssSource[];
+  contactEmail?: string;
+  contactPhone?: string;
+  whatsappNumber?: string;
+  rssItemsLimit?: number;
 }
 
 export interface Lead {

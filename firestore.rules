@@ -62,25 +62,48 @@ service cloud.firestore {
 
     // Reglas para productos (Catálogo Dinámico)
     match /products/{productId} {
-      // Leer: Público (cualquiera puede ver el catálogo en la página)
       allow read: if true;
-      // Escribir: Súper admin o editor
-      allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+      allow create: if (isSuperAdmin() || hasValidPrivilege('editor'))
+                    && request.resource.data.keys().hasAll(['title', 'weight', 'desc', 'imgUrl'])
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.title.size() < 200;
+      allow update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
     }
 
     // Reglas para seguimiento de pedidos
     match /orders/{folio} {
-      // Leer un pedido específico si sabes el folio (público)
       allow get: if true;
-      // Listar no está permitido públicamente para evitar scraping. Solo administradores.
-      allow list, create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+      allow list: if isSuperAdmin() || hasValidPrivilege('editor');
+      allow create: if (isSuperAdmin() || hasValidPrivilege('editor'))
+                    && request.resource.data.keys().hasAll(['folio', 'clientName', 'status', 'updatedAt'])
+                    && request.resource.data.folio is string
+                    && request.resource.data.clientName is string
+                    && request.resource.data.status is string;
+      allow update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
     }
 
     // Reglas para Noticias SEO
     match /news/{newsId} {
-      // Leer: Público (cualquiera puede ver las noticias)
       allow read: if true;
-      // Escribir: Súper admin o editor
+      allow create: if (isSuperAdmin() || hasValidPrivilege('editor'))
+                    && request.resource.data.keys().hasAll(['title', 'summary'])
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.title.size() < 500
+                    && request.resource.data.summary is string;
+      allow update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+
+    // Reglas para documentos oficiales (oficios)
+    match /official_documents/{docId} {
+      allow read: if isSuperAdmin() || hasValidPrivilege('lector') || hasValidPrivilege('editor');
+      allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+
+    // Reglas para historial de cotizaciones
+    match /quotes_history/{quoteId} {
+      allow read: if isSuperAdmin() || hasValidPrivilege('lector') || hasValidPrivilege('editor');
       allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
     }
 

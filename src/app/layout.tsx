@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { Toaster } from "react-hot-toast";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -117,7 +119,7 @@ export default function RootLayout({
         {/* Google Analytics */}
         <Script
           strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-NYXY4MK85C"
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
         />
         <Script
           id="google-analytics"
@@ -127,7 +129,7 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-NYXY4MK85C', {
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
                 page_path: window.location.pathname,
               });
             `,
@@ -195,7 +197,10 @@ export default function RootLayout({
             })
           }}
         />
-        {children}
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
+        <WhatsAppButton />
       </body>
     </html>
   );

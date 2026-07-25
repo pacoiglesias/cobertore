@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Newspaper, Image as ImageIcon, Trash2, CheckCircle, Clock, Rss, RefreshCw } from 'lucide-react';
+import { Newspaper, Trash2, CheckCircle, Clock, Rss, RefreshCw } from 'lucide-react';
 import { collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { httpsCallable } from 'firebase/functions';
@@ -33,7 +33,7 @@ export default function NewsManager() {
     const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'));
     const unsub = onSnapshot(q, (snapshot) => {
       setNews(snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as NewsItem[]);
-    });
+    }, (err) => { logger.error('Error en listener de noticias:', err); });
     return () => unsub();
   }, []);
 
