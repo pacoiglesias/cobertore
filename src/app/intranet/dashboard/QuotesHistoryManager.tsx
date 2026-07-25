@@ -24,12 +24,13 @@ interface QuoteHistoryItem {
 export function QuotesHistoryManager() {
   const [quotes, setQuotes] = useState<QuoteHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [displayLimit, setDisplayLimit] = useState(20);
 
   useEffect(() => {
     const q = query(
       collection(db, 'quotes_history'),
       orderBy('createdAt', 'desc'),
-      limit(50)
+      limit(displayLimit)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -39,14 +40,16 @@ export function QuotesHistoryManager() {
       });
       setQuotes(data);
       setLoading(false);
-    }, (err) => {
-      logger.error('Error fetching quotes history:', err);
-      toast.error('Error al cargar el historial de cotizaciones');
+    }, (error) => {
+      logger.error('Error fetching quotes history', error);
+      toast.error('Error al cargar historial');
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [displayLimit]);
+
+  const loadMore = () => setDisplayLimit(prev => prev + 20);
 
   const formatMoney = (amount: number) => {
     return new Intl.NumberFormat('es-MX', {
@@ -148,6 +151,17 @@ export function QuotesHistoryManager() {
           </div>
         ))}
       </div>
+      
+      {quotes.length >= displayLimit && (
+        <div className="mt-12 text-center">
+          <button 
+            onClick={loadMore}
+            className="bg-white/5 border border-white/10 hover:bg-amber-600 hover:border-amber-500 text-white px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all"
+          >
+            Cargar Más
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { SystemProvider } from "@/components/providers/SystemProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -199,10 +200,18 @@ export default function RootLayout({
             })
           }}
         />
-        <ErrorBoundary>
-          {children}
-        </ErrorBoundary>
-        <WhatsAppButton />
+        <SystemProvider>
+          <div className="flex flex-col min-h-screen">
+            <main className="flex-grow">
+              <ErrorBoundary>
+                {children}
+              </ErrorBoundary>
+            </main>
+          </div>
+          
+          <WhatsAppButton />
+          <Toaster position="bottom-right" />
+        </SystemProvider>
       </body>
     </html>
   );

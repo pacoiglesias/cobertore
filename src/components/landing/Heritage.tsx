@@ -60,7 +60,7 @@ export function Heritage() {
           </p>
         </motion.div>
 
-        <div className="lg:col-span-7 lg:pl-16 lg:border-l border-white/10 space-y-16 mt-8 lg:mt-0">
+        <div className="lg:col-span-7 pl-6 lg:pl-16 border-l border-white/10 space-y-16 mt-8 lg:mt-0 ml-2 lg:ml-0">
           {TIMELINE.map((item, i) => (
             <motion.div
               key={item.year}
@@ -69,9 +69,9 @@ export function Heritage() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.4 }}
-              className="relative pl-8"
+              className="relative pl-6 lg:pl-8"
             >
-              <span className="absolute left-[-5px] top-1.5 w-2.5 h-2.5 rounded-full bg-amber-500 ring-4 ring-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+              <span className="absolute left-[-31px] lg:left-[-37px] top-1.5 w-2.5 h-2.5 rounded-full bg-amber-500 ring-4 ring-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
               <p className="font-mono text-[13px] font-bold tracking-widest text-amber-500">{item.year}</p>
               <p className="font-serif text-white text-2xl mt-3">{item.title}</p>
               <p className="text-slate-400 font-light mt-3 leading-relaxed max-w-xl">{item.copy}</p>

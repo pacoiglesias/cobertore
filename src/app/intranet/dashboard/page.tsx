@@ -16,6 +16,8 @@ import NewsManager from './NewsManager';
 import SystemMonitor from './SystemMonitor';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { FilesTab } from './components/FilesTab';
+import { NewsTab } from './components/NewsTab';
+import { SkeletonTable } from '@/components/Skeleton';
 import { LeadsTab } from './components/LeadsTab';
 import { OrdersTab } from './components/OrdersTab';
 import { ProductsTab } from './components/ProductsTab';
@@ -485,95 +487,147 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      {/* Tabs */}
-      <div className="border-b border-white/5 bg-[#0a0f1d]">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 flex gap-8">
-          {!isAlmacen && (
-            <button 
-              onClick={() => setActiveTab('files')}
-              className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'files' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-            >
-              Repositorio
-            </button>
-          )}
-          {(isSuperAdmin || isEditor || isAlmacen) && (
-            <button 
-              onClick={() => setActiveTab('orders')}
-              className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'orders' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-            >
-              Seguimiento Pedidos
-            </button>
-          )}
-          {(isSuperAdmin || isEditor) && !isAlmacen && (
-            <>
+
+      {/* Tabs NAVIGATION */}
+        <div className="flex overflow-x-auto hide-scrollbar border-b border-white/5" role="tablist" aria-label="Navegación del Dashboard">
+          <div className="flex gap-8 px-4 md:px-6 min-w-max">
+            {isSuperAdmin && (
               <button 
-                onClick={() => setActiveTab('leads')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'leads' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                onClick={() => setActiveTab('overview')}
+                role="tab"
+                aria-selected={activeTab === 'overview'}
+                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'overview' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
               >
-                Prospectos Web
+                Panel General
               </button>
+            )}
+            
+            {(isSuperAdmin || isAlmacen) && (
               <button 
-                onClick={() => setActiveTab('quote-generator')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'quote-generator' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'} flex items-center gap-2`}
+                onClick={() => setActiveTab('orders')}
+                role="tab"
+                aria-selected={activeTab === 'orders'}
+                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'orders' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'} flex items-center gap-2`}
               >
-                <FileSignature className="w-4 h-4"/> Crear Cotización
+                <Package className="w-4 h-4" /> 
+                Pedidos
+                {orders.length > 0 && (
+                  <span className="bg-amber-500 text-black px-2 py-0.5 rounded-full text-[10px] ml-1">
+                    {orders.length}
+                  </span>
+                )}
               </button>
-              <button 
-                onClick={() => setActiveTab('quotes-history')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'quotes-history' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'} flex items-center gap-2`}
-              >
-                <FileText className="w-4 h-4"/> Historial Cotizaciones
-              </button>
-              <button 
-                onClick={() => setActiveTab('catalog')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'catalog' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-              >
-                Catálogo
-              </button>
-              <button 
-                onClick={() => setActiveTab('documents')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'documents' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'} flex items-center gap-2`}
-              >
-                <FileText className="w-4 h-4" /> Oficios
-              </button>
-            </>
-          )}
-          {isSuperAdmin && (
-            <>
-              <button 
-                onClick={() => setActiveTab('users')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'users' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-              >
-                Empleados y Permisos
-              </button>
-              <button 
-                onClick={() => setActiveTab('settings')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'settings' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-              >
-                Configuración
-              </button>
-              <button 
-                onClick={() => setActiveTab('news')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'news' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-              >
-                Noticias (SEO)
-              </button>
-              <button 
-                onClick={() => setActiveTab('monitor')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'monitor' ? 'border-emerald-500 text-emerald-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-              >
-                Monitor
-              </button>
-              <button 
-                onClick={() => setActiveTab('analytics')}
-                className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'analytics' ? 'border-blue-500 text-blue-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
-              >
-                Analíticas
-              </button>
-            </>
-          )}
+            )}
+
+            {(isSuperAdmin || isEditor) && (
+              <>
+                <button 
+                  onClick={() => setActiveTab('files')}
+                  role="tab"
+                  aria-selected={activeTab === 'files'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'files' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                >
+                  Documentos Web
+                </button>
+                <button 
+                  onClick={() => setActiveTab('leads')}
+                  role="tab"
+                  aria-selected={activeTab === 'leads'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'leads' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                >
+                  Prospectos Web
+                </button>
+                <button 
+                  onClick={() => setActiveTab('quote-generator')}
+                  role="tab"
+                  aria-selected={activeTab === 'quote-generator'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'quote-generator' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'} flex items-center gap-2`}
+                >
+                  <FileSignature className="w-4 h-4"/> Crear Cotización
+                </button>
+                <button 
+                  onClick={() => setActiveTab('quotes-history')}
+                  role="tab"
+                  aria-selected={activeTab === 'quotes-history'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'quotes-history' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'} flex items-center gap-2`}
+                >
+                  <FileText className="w-4 h-4"/> Historial Cotizaciones
+                </button>
+                <button 
+                  onClick={() => setActiveTab('catalog')}
+                  role="tab"
+                  aria-selected={activeTab === 'catalog'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'catalog' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                >
+                  Catálogo
+                </button>
+                <button 
+                  onClick={() => setActiveTab('documents')}
+                  role="tab"
+                  aria-selected={activeTab === 'documents'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'documents' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'} flex items-center gap-2`}
+                >
+                  <FileText className="w-4 h-4" /> Oficios
+                </button>
+              </>
+            )}
+            {isSuperAdmin && (
+              <>
+                <button 
+                  onClick={() => setActiveTab('users')}
+                  role="tab"
+                  aria-selected={activeTab === 'users'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'users' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                >
+                  Empleados y Permisos
+                </button>
+                <button 
+                  onClick={() => setActiveTab('settings')}
+                  role="tab"
+                  aria-selected={activeTab === 'settings'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'settings' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                >
+                  Configuración
+                </button>
+                <button 
+                  onClick={() => setActiveTab('news')}
+                  role="tab"
+                  aria-selected={activeTab === 'news'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors ${activeTab === 'news' ? 'border-amber-500 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                >
+                  Noticias (SEO)
+                </button>
+                <button 
+                  onClick={() => setActiveTab('monitor')}
+                  role="tab"
+                  aria-selected={activeTab === 'monitor'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'monitor' ? 'border-emerald-500 text-emerald-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                >
+                  Monitor
+                </button>
+                <button 
+                  onClick={() => setActiveTab('analytics')}
+                  role="tab"
+                  aria-selected={activeTab === 'analytics'}
+                  className={`py-4 text-xs font-bold uppercase tracking-widest border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'analytics' ? 'border-blue-500 text-blue-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                >
+                  Analíticas
+                </button>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+
+        {/* LOADING INDICATOR */}
+        {loading && (
+          <div className="max-w-7xl mx-auto px-4 w-full py-12">
+             <div className="flex flex-col items-center justify-center opacity-50 mb-8">
+               <Loader2 className="w-8 h-8 text-amber-500 animate-spin mb-4" />
+               <p className="text-slate-400 text-sm uppercase tracking-widest font-bold">Cargando datos...</p>
+             </div>
+             <SkeletonTable />
+          </div>
+        )}
 
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-12">
         {activeTab === 'analytics' && (

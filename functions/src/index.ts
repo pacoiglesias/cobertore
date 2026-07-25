@@ -50,10 +50,16 @@ interface NewsSource {
 // firestore.rules / storage.rules -- se repite aqui porque las Cloud
 // Functions no pueden "heredar" las Security Rules, corren con permisos de
 // administrador y deben validar el rol ellas mismas.
-async function assertIsAdminOrEditor(db: Firestore, email: string | undefined) {
-  if (!email) {
+async function assertIsAdminOrEditor(db: Firestore, auth: any) {
+  if (!auth || !auth.token || !auth.token.email) {
     throw new HttpsError('unauthenticated', 'Debes iniciar sesion.');
   }
+  // Verificar que el correo haya sido confirmado por Google/Microsoft/Email
+  if (!auth.token.email_verified) {
+    throw new HttpsError('permission-denied', 'Debes verificar tu correo electronico primero.');
+  }
+  
+  const email = auth.token.email;
   if (SUPER_ADMIN_EMAILS.includes(email)) return;
 
   const privDoc = await db.collection('user_privileges').doc(email).get();
@@ -149,7 +155,7 @@ export const fetchNewsPeriodically = functions.scheduler.onSchedule({
 // super admin o editor pueden dispararlo.
 export const triggerNewsFetch = functions.https.onCall(async (request) => {
   const db = getFirestore();
-  await assertIsAdminOrEditor(db, request.auth?.token?.email as string | undefined);
+  await assertIsAdminOrEditor(db, request.auth);
   const result = await runNewsFetch(db);
   return result;
 });
