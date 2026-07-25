@@ -1,11 +1,11 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    
+
     // Función para verificar si es Súper Administrador
     function isSuperAdmin() {
       return request.auth != null && (
-        request.auth.token.email == 'paco.iglesias@gmail.com' || 
+        request.auth.token.email == 'paco.iglesias@gmail.com' ||
         request.auth.token.email == 'paco@cobertores.com' ||
         request.auth.token.email == 'pacoismael@gmail.com'
       );
@@ -13,52 +13,60 @@ service firebase.storage {
 
     // Función para verificar si el usuario tiene rol de editor vigente en Firestore
     function isEditor() {
-      return request.auth != null && 
-             firestore.exists(/databases/(default)/documents/user_privileges/$(request.auth.token.email)) && 
-             (firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt == null || 
-              firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt > request.time) &&
-             firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.role == 'editor';
+      return request.auth != null &&
+        firestore.exists(/databases/(default)/documents/user_privileges/$(request.auth.token.email)) &&
+        (firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt == null ||
+         firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt > request.time) &&
+        firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.role == 'editor';
+    }
+
+    // NUEVO: rol de lector vigente en Firestore (lector o editor cuentan como lector)
+    function isLector() {
+      return request.auth != null &&
+        firestore.exists(/databases/(default)/documents/user_privileges/$(request.auth.token.email)) &&
+        (firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt == null ||
+         firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt > request.time) &&
+        (firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.role == 'lector' ||
+         firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.role == 'editor');
     }
 
     match /intranet/{allPaths=**} {
-      // FIX: antes "allow read: if request.auth != null" dejaba leer a
-      // CUALQUIER cuenta autenticada, no solo a personal con rol asignado.
-      // Firebase Auth permite auto-registro vía su API REST aunque el
-      // frontend no muestre un formulario de registro (a menos que esté
-      // desactivado en Firebase Console > Authentication > Settings), así
-      // que "autenticado" no es lo mismo que "tiene privilegios". Ahora
-      // exige el mismo chequeo de rol que ya se usa para escribir.
-      allow read: if isSuperAdmin() || isEditor();
-      // Permitir subir solo a súper admins y editores autorizados
+      // FIX: antes "allow read: if request.auth != null" dejaba leer TODO /intranet
+      // a cualquier usuario autenticado, incluyendo sesiones de Auth Anónimo si el
+      // sitio público las usa en algún flujo. Ahora se exige el mismo modelo de
+      // roles que ya usa firestore.rules para intranet_files.
+      allow read: if isSuperAdmin() || isEditor() || isLector();
+      // Permitir subir solo a súper admins y editores autorizados (sin cambios)
       allow write: if isSuperAdmin() || isEditor();
     }
 
     match /quotes/{allPaths=**} {
-      allow read: if true; // El cliente necesita poder descargar el PDF desde el link del correo
-      // Solo súper admin o editor generan cotizaciones (igual que el resto de reglas de escritura)
+      allow read: if true; // el cliente necesita descargar su PDF desde el link del correo
+      // Solo súper admin o editor generan cotizaciones (sin cambios)
       allow write: if isSuperAdmin() || isEditor();
     }
 
     match /catalog/{allPaths=**} {
-      // Público para que la página web pueda mostrar las fotos
+      // Público para que la página web pueda mostrar las fotos (sin cambios)
       allow read: if true;
-      // FIX: antes cualquier usuario autenticado podía subir/reemplazar
-      // fotos del catálogo público. Ahora solo súper admin o editor,
-      // igual que el resto de reglas de escritura del proyecto.
+      // FIX: antes "request.auth != null" permitía a CUALQUIER usuario autenticado
+      // (incluida una sesión anónima) subir o reemplazar fotos del catálogo público.
+      // Ahora solo súper admin o editor pueden escribir, igual que el resto de
+      // reglas de escritura del proyecto.
       allow write: if (isSuperAdmin() || isEditor())
-                   && request.resource.size < 5 * 1024 * 1024
-                   && request.resource.contentType.matches('image/.*');
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
     }
 
     match /system_assets/{allPaths=**} {
-      // Público para que el frontend pueda cargar el logo
+      // Público para que el frontend pueda cargar el logo (sin cambios)
       allow read: if true;
-      // FIX: el comentario ya decía "Solo administradores pueden subir
-      // assets del sistema" pero la regla permitía a cualquier autenticado.
-      // Ahora sí coincide con lo que dice el comentario.
+      // FIX: el comentario decía "Solo administradores pueden subir assets del
+      // sistema", pero el código anterior aceptaba cualquier "request.auth != null".
+      // Ahora el código coincide con el comentario: solo Súper Admin.
       allow write: if isSuperAdmin()
-                   && request.resource.size < 5 * 1024 * 1024
-                   && request.resource.contentType.matches('image/.*');
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
     }
   }
 }
