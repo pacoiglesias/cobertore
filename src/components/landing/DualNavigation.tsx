@@ -86,7 +86,7 @@ function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt,
 
 export function DualNavigation() {
   return (
-    <section className="py-24 lg:py-32 bg-[#0a0f1d] relative z-10">
+    <section id="divisiones" className="py-24 lg:py-32 bg-[#0a0f1d] relative z-10">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <motion.div
           variants={fadeUp}

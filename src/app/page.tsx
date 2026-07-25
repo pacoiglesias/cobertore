@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Factory, Leaf, Award, MapPin, Phone, Mail, ChevronRight, ArrowRight, ShieldCheck, TrendingUp, Globe, Hammer, Star, Send, Loader2, Clock } from 'lucide-react';
+import { Building2, Factory, Leaf, Award, MapPin, Phone, Mail, ChevronRight, ArrowRight, ShieldCheck, TrendingUp, Globe, Hammer, Star, Send, Loader2, Clock, Menu, X } from 'lucide-react';
 import { ManoFilLogo } from '../components/ManoFilLogo';
 import { addDoc, collection, Timestamp, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -219,6 +220,7 @@ export default function LandingPage() {
   const t = translations[lang];
   
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Dynamic Catalog State
@@ -266,7 +268,7 @@ export default function LandingPage() {
     sessionStorage.clear();
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
+        for(const registration of registrations) {
           registration.unregister();
         }
       });
@@ -406,11 +408,42 @@ export default function LandingPage() {
             >
               <Globe className="w-4 h-4" /> {lang === 'es' ? 'EN' : 'ES'}
             </button>
-            <a href="/intranet" className="hidden md:block bg-white/5 hover:bg-amber-600 border border-white/10 hover:border-amber-500 text-white px-6 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+            <Link href="/intranet" className="hidden md:block bg-white/5 hover:bg-amber-600 border border-white/10 hover:border-amber-500 text-white px-6 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
               {t.nav.portal}
-            </a>
+            </Link>
+            <button
+              onClick={() => setIsMobileMenuOpen((v) => !v)}
+              className="lg:hidden text-white p-2 -mr-2"
+              aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Menú móvil: el bloque de arriba (hidden lg:flex) solo se ve en pantallas grandes.
+            Este panel cubre el mismo menú para celular/tablet, donde antes no había forma
+            de navegar por secciones salvo hacer scroll manual. */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="lg:hidden overflow-hidden bg-slate-900/98 backdrop-blur-xl border-t border-white/10"
+            >
+              <div className="flex flex-col px-6 py-6 gap-1 text-sm font-bold tracking-widest uppercase text-slate-300">
+                <a href="#hero" onClick={() => setIsMobileMenuOpen(false)} className="py-3 border-b border-white/5 hover:text-amber-500 transition-colors">{t.nav.home}</a>
+                <a href="#productos" onClick={() => setIsMobileMenuOpen(false)} className="py-3 border-b border-white/5 hover:text-amber-500 transition-colors">{t.nav.catalog}</a>
+                <a href="#divisiones" onClick={() => setIsMobileMenuOpen(false)} className="py-3 border-b border-white/5 hover:text-amber-500 transition-colors">{t.nav.divisions}</a>
+                <a href="#herencia" onClick={() => setIsMobileMenuOpen(false)} className="py-3 border-b border-white/5 hover:text-amber-500 transition-colors">{t.nav.legacy}</a>
+                <Link href="/intranet" onClick={() => setIsMobileMenuOpen(false)} className="py-3 mt-2 text-center bg-amber-600 text-white rounded-full">{t.nav.portal}</Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section Épico */}
@@ -595,7 +628,7 @@ export default function LandingPage() {
             
             <div className="grid md:grid-cols-3 gap-8">
               {latestNews.map((news) => (
-                <a href="/noticias" key={news.id} className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group flex flex-col hover:-translate-y-2">
+                <Link href="/noticias" key={news.id} className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group flex flex-col hover:-translate-y-2">
                   <div className="h-48 overflow-hidden relative">
                     <img src={news.imgUrl} alt={news.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   </div>
@@ -610,13 +643,13 @@ export default function LandingPage() {
                       Leer Artículo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
             <div className="text-center mt-12">
-              <a href="/noticias" className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-colors">
+              <Link href="/noticias" className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-colors">
                 Ver Todas las Noticias
-              </a>
+              </Link>
             </div>
           </div>
         </section>
@@ -737,11 +770,11 @@ export default function LandingPage() {
           <div>
             <h4 className="text-white font-bold uppercase tracking-widest mb-6 md:mb-8 text-xs">{t.footer.intra}</h4>
             <ul className="space-y-4 text-sm font-light">
-              <li><a href="/intranet" className="hover:text-amber-500 transition-colors text-left">{t.footer.i1}</a></li>
-              <li><a href="/noticias" className="hover:text-amber-500 transition-colors text-left">Portal de Noticias (RSS)</a></li>
-              <li><a href="/privacidad" className="hover:text-amber-500 transition-colors text-left">{t.footer.i2}</a></li>
-              <li><a href="/terminos" className="hover:text-amber-500 transition-colors text-left">{t.footer.i3}</a></li>
-              <li><a href="/cookies" className="hover:text-amber-500 transition-colors text-left">{t.footer.i4}</a></li>
+              <li><Link href="/intranet" className="hover:text-amber-500 transition-colors text-left">{t.footer.i1}</Link></li>
+              <li><Link href="/noticias" className="hover:text-amber-500 transition-colors text-left">Portal de Noticias (RSS)</Link></li>
+              <li><Link href="/privacidad" className="hover:text-amber-500 transition-colors text-left">{t.footer.i2}</Link></li>
+              <li><Link href="/terminos" className="hover:text-amber-500 transition-colors text-left">{t.footer.i3}</Link></li>
+              <li><Link href="/cookies" className="hover:text-amber-500 transition-colors text-left">{t.footer.i4}</Link></li>
             </ul>
           </div>
         </div>

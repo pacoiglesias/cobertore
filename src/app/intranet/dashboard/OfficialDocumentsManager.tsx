@@ -148,7 +148,6 @@ export default function OfficialDocumentsManager({
         scale: 2,
         useCORS: true,
         logging: false,
-        allowTaint: true
       });
       
       const imgData = canvas.toDataURL('image/png');
@@ -181,7 +180,6 @@ export default function OfficialDocumentsManager({
         scale: 2,
         useCORS: true,
         logging: false,
-        allowTaint: true
       });
       
       const imgData = canvas.toDataURL('image/png');

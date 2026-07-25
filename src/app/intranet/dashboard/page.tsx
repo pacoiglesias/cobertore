@@ -413,6 +413,13 @@ export default function Dashboard() {
                 <p className="text-[10px] text-amber-500 uppercase tracking-widest">{isSuperAdmin ? 'Súper Admin' : (isEditor ? 'Editor' : 'Lector')}</p>
               </div>
             </div>
+            <Link
+              href="/"
+              className="p-2 hover:bg-white/10 text-slate-400 hover:text-white rounded-full transition-colors"
+              title="Volver al sitio público"
+            >
+              <Building2 className="w-5 h-5" />
+            </Link>
             <button 
               onClick={() => signOut(auth)} 
               className="p-2 hover:bg-red-500/10 text-red-400 rounded-full transition-colors"

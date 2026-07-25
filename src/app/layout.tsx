@@ -152,9 +152,13 @@ export default function RootLayout({
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
                   navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                    logger.log('ServiceWorker registration successful');
+                    // Nota: este es un <script> inline (HTML crudo), no forma parte
+                    // del bundle de React -- no tiene acceso a logger. Debe usar
+                    // console directo. (bug anterior: usaba logger.log aqui y
+                    // tronaba con "ReferenceError: logger is not defined" cada vez
+                    // que cargaba cualquier pagina).
                   }, function(err) {
-                    logger.log('ServiceWorker registration failed: ', err);
+                    console.error('ServiceWorker registration failed: ', err);
                   });
                 });
               }

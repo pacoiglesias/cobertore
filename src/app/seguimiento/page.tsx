@@ -155,9 +155,9 @@ export default function SeguimientoPage() {
                     ? 'Este folio ha sido marcado como cancelado. Si consideras que esto es un error o deseas reactivar tu pedido, por favor contacta inmediatamente a tu ejecutivo de ventas.' 
                     : 'Este folio fue cerrado debido a la falta de seguimiento. Si deseas retomar tu cotización, comunícate con nosotros para actualizar los precios y la disponibilidad.'}
                 </p>
-                <a href="/" className="mt-8 px-6 py-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-full text-xs font-bold uppercase tracking-widest transition-colors">
+                <Link href="/" className="mt-8 px-6 py-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-full text-xs font-bold uppercase tracking-widest transition-colors">
                   Regresar al Inicio
-                </a>
+                </Link>
               </div>
             ) : (
               <div className="relative">

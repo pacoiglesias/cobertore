@@ -120,7 +120,6 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       const canvas = await html2canvas(element, { 
         scale: 2, 
         useCORS: true, 
-        allowTaint: true,
         logging: false,
         backgroundColor: '#ffffff'
       });
@@ -153,7 +152,6 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       const canvas = await html2canvas(element, { 
         scale: 2, 
         useCORS: true, 
-        allowTaint: true,
         logging: false,
         backgroundColor: '#ffffff'
       });
@@ -205,7 +203,6 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       const canvas = await html2canvas(element, { 
         scale: 2, 
         useCORS: true, 
-        allowTaint: true,
         logging: false,
         backgroundColor: '#ffffff'
       });
