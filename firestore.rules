@@ -74,13 +74,19 @@ service cloud.firestore {
     // Reglas para seguimiento de pedidos
     match /orders/{folio} {
       allow get: if true;
-      allow list: if isSuperAdmin() || hasValidPrivilege('editor');
+      // FIX: el rol 'almacen' existe del lado del cliente (te manda directo
+      // a la pestaña de Pedidos) pero esta regla nunca lo reconocia --
+      // cualquier usuario con ese rol se quedaba sin poder ver ni actualizar
+      // nada. Se agrega aqui, solo para list/update (dar seguimiento a
+      // pedidos), no para create/delete (eso se queda en editor/super admin).
+      allow list: if isSuperAdmin() || hasValidPrivilege('editor') || hasValidPrivilege('almacen');
       allow create: if (isSuperAdmin() || hasValidPrivilege('editor'))
                     && request.resource.data.keys().hasAll(['folio', 'clientName', 'status', 'updatedAt'])
                     && request.resource.data.folio is string
                     && request.resource.data.clientName is string
                     && request.resource.data.status is string;
-      allow update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+      allow update: if isSuperAdmin() || hasValidPrivilege('editor') || hasValidPrivilege('almacen');
+      allow delete: if isSuperAdmin() || hasValidPrivilege('editor');
     }
 
     // Reglas para Noticias SEO
