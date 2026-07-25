@@ -6,6 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import emailjs from '@emailjs/browser';
 import { logger } from '../../../lib/logger';
+import { useSystemSettings } from '../../../hooks/useSystemSettings';
 
 interface CatalogProduct {
   id: string;
@@ -62,11 +63,24 @@ export function QuoteGenerator({ products, userEmail }: Props) {
   const [validity, setValidity] = useState('15 días');
   const [deliveryTime, setDeliveryTime] = useState('3 a 4 semanas post-anticipo');
   
+  // Datos bancarios: se leen de Firestore (system_settings/global, editable
+  // en Configuración) -- estos valores son solo el respaldo inicial mientras
+  // nadie los haya configurado ahí. Antes estaban quemados en el código sin
+  // forma de editarlos.
+  const { settings: systemSettings } = useSystemSettings();
   const [bankName, setBankName] = useState('BBVA Bancomer');
   const [bankAccount, setBankAccount] = useState('0123456789');
   const [bankClabe, setBankClabe] = useState('012345678901234567');
   const [bankRfc, setBankRfc] = useState('MFI6212158B4');
   const [folio, setFolio] = useState('');
+
+  useEffect(() => {
+    if (!systemSettings) return;
+    if (systemSettings.bankName) setBankName(systemSettings.bankName);
+    if (systemSettings.bankAccount) setBankAccount(systemSettings.bankAccount);
+    if (systemSettings.bankClabe) setBankClabe(systemSettings.bankClabe);
+    if (systemSettings.bankRfc) setBankRfc(systemSettings.bankRfc);
+  }, [systemSettings]);
 
   const generateNewFolio = () => {
     const array = new Uint32Array(2);

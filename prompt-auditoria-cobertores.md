@@ -1,54 +1,63 @@
-# Prompt: Cobertores Web — estado real (2026-07-24, fin de sesión)
+# Prompt: Cobertores Web v0.2.0 — estado al 2026-07-25
 
 ## Primer paso obligatorio de la próxima sesión
-Antes que nada, aplicar `cobertore-fixes-completo.zip` (8 archivos) al
-repo, correr `revisar-cobertore.bat`, y confirmar build limpio. Ese zip
-reconstruye trabajo que se perdió por un `git stash drop` accidental — ver
-`CHANGELOG.md` para el detalle exacto de qué contiene.
+1. Confirmar que `firebase login --reauth` + `firebase deploy --only
+   hosting,functions` terminaron bien (se cortó por sesión expirada al
+   cierre de la sesión anterior).
+2. Aplicar `cobertore-final-v0.2.0.zip` (datos bancarios editables +
+   `.gitignore` limpio + versión 0.2.0) si no se ha hecho.
+3. Correr estos 2 comandos de limpieza de git (quitan del control de
+   versiones el build compilado y los reportes de diagnóstico, que ahora
+   están en `.gitignore` — se quedan en tu disco, solo dejan de subirse):
+   ```
+   git rm -r --cached functions/lib revisiones
+   ```
+4. **Correr `respaldo-cobertore.bat` — sigue sin haber ningún respaldo
+   hecho en todas estas sesiones.** Es la prioridad de higiene más
+   importante pendiente.
 
-## 📓 Flujo de trabajo (usa los scripts, en este orden)
+## 📓 Flujo de trabajo (sin cambios)
 1. `respaldo-cobertore.bat` — antes de tocar cualquier cosa.
 2. Aplicar cambios.
-3. `revisar-cobertore.bat` — confirma que build/tipos/lint siguen sanos.
-4. `deploy-cobertore.bat` — solo si el paso 3 salió limpio.
+3. `revisar-cobertore.bat` — confirma build/tipos/lint sanos (ya limpia
+   `.next`/`out`/`functions\lib` antes de compilar).
+4. `todo-en-uno.bat` o los pasos manuales — solo si el paso 3 salió limpio.
 5. Actualizar `CHANGELOG.md` bajo `[Unreleased]` (regla ya en `AGENTS.md`).
 
-## ✅ Ya resuelto y confirmado EN VIVO
-- RSS funcionando de extremo a extremo (probado, importó noticias reales).
-  Causa raíz: permisos de Google Cloud IAM, no código.
-- Seguridad de rules, versión estable de `firebase-functions`, año de
-  fundación consistente, `og-image.png`, íconos PWA, manifest correcto.
-
-## ⏳ Reconstruido pero sin confirmar deploy (aplicar primero)
-- Fix de `logger is not defined`, menú móvil, `#divisiones`, 8 links a
-  `Link`, fix de PDF (`allowTaint`), botón volver al inicio en dashboard.
-  Todo en `cobertore-fixes-completo.zip`.
+## ✅ Ya resuelto y confirmado
+- RSS funcionando con fuentes reales (Vanguardia, 24-horas, Tlaxcala,
+  Coldwell Banker).
+- Oficios: guardado automático al descargar/enviar.
+- Datos bancarios editables desde el dashboard, sin necesitar rebuild.
+- Seguridad de rules, PDFs en tamaño Carta, año de fundación consistente,
+  menú móvil, logger corregido, `og-image.png`, íconos PWA.
 
 ## Prioridad 1 — Pendiente real
-1. **Auditoría en vivo de Cotizaciones (PDF), Oficios, y Catálogo** — no
-   se ha hecho todavía. Usar el navegador conectado, probar cada botón
-   real, y si algo falla revisar logs reales en Cloud Run → Registros
-   antes de asumir la causa (así se encontraron los bugs de IAM).
-2. Confirmar si `fetchNewsPeriodically` también necesitaba el rol de
-   Cloud Datastore.
+1. Confirmar visualmente que los PDFs de Cotizaciones/Oficios abren bien.
+2. Auditoría en vivo de Catálogo — sigue sin hacerse.
+3. App Check (falta reCAPTCHA v3 site key, la genera Paco).
 
-## Prioridad 2 — Pendiente conocido (sin cambios)
-- App Check, datos bancarios en `QuoteGenerator.tsx`, `npm audit`
-  (esperar patch de Next, no forzar downgrade), fotografía real vs. stock,
-  8 usos de `: any`.
+## Prioridad 2 — Pendiente conocido (sin cambios, baja prioridad)
+- `npm audit`: confirmado que no hay arreglo seguro disponible ahora mismo
+  ni en raíz ni en `functions/` sin forzar cambios que rompen algo. No
+  insistir en esto hasta que el ecosistema publique parches.
+- 8 usos de `: any`, ~35 issues de ESLint catalogados (comillas sin
+  escapar en páginas legales, imports sin usar) — cosmético, no urgente.
+- Fotografía real vs. stock de Unsplash.
+- El Universal y Marca (RSS) rotas a propósito, sin reemplazo buscado.
 
-## Prioridad 3 — Ranking (gestión de Paco, fuera del código)
+## Prioridad 3 — Ranking / gráficas (gestión de Paco o próxima sesión)
+- Botón flotante de WhatsApp para cotización rápida.
 - Google Search Console, Google Business Profile, backlinks, reseñas.
+- Sección de certificaciones/"por qué elegirnos" si aplica.
 
-## Reglas de higiene de git para esta sesión
-- Nunca `git stash drop` sin haber confirmado antes que el trabajo ya se
-  entregó o está seguro en otro lado. Preferir `git stash pop`.
-- Antes de cerrar una tarea, confirmar con `git status`/`git diff` que los
-  cambios esperados siguen presentes, no solo que se hicieron en algún
-  momento de la sesión.
+## Reglas de higiene de git (siguen vigentes)
+- Nunca `git stash drop` sin confirmar que el trabajo ya está a salvo.
+- Antes de cerrar una tarea, `git status`/`git diff` para confirmar que
+  los cambios esperados siguen presentes.
+- `revisiones/`, `respaldos/`, y `functions/lib/` ya NO se versionan —
+  no te sorprendas si `git status` no los muestra, es lo correcto ahora.
 
 ## Formato de entrega esperado
 Por cada punto: qué encontraste, qué corregiste, y qué requiere mi
-decisión. Si es posible probarlo en vivo con el navegador conectado,
-pruébalo — no asumas que un fix de código funciona hasta verlo funcionar
-en la app real.
+decisión. Prueba en vivo con el navegador conectado cuando sea posible.

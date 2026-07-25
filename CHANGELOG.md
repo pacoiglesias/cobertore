@@ -1,61 +1,58 @@
 # Changelog — Cobertores Web (Mano Fil S.A.)
 
-## [Unreleased]
+## [0.2.0] — 2026-07-25
 
-### Fixed — pendiente de aplicar (en `cobertore-fixes-completo.zip`, sin confirmar deploy)
-Un `git stash drop` accidental borró estos fixes antes de que llegaran a
-GitHub; se reconstruyeron todos desde cero y se re-empaquetaron juntos en
-un solo zip para evitar que se sigan fragmentando entre entregas:
+### Added
+- **Datos bancarios editables**: nueva sección en `Configuración` del
+  dashboard (Banco, RFC, Cuenta, CLABE). Antes estaban quemados como
+  ejemplo en `QuoteGenerator.tsx` sin forma de cambiarlos. Se guardan en
+  `system_settings/global` y se aplican **al instante** en la siguiente
+  cotización (no requiere rebuild, a diferencia del SEO).
+- **Oficios: guardado automático.** "Descargar" y "Enviar (WhatsApp)" ahora
+  guardan el documento en el Historial como parte del mismo clic, en vez de
+  depender de que también le dieras clic por separado a "Guardar Nuevo
+  Documento" (botón que estaba lejos, en otra sección de la pantalla).
 
-- `layout.tsx`: `ReferenceError: logger is not defined` en cada carga de
-  página — el `<script>` inline de registro del Service Worker usaba
-  `logger.log`, pero ese script no tiene acceso a los imports de React.
-- `QuoteGenerator.tsx` / `OfficialDocumentsManager.tsx`: quitado
-  `allowTaint: true` de `html2canvas` (causaba `SecurityError` al exportar
-  el PDF si las imágenes no tenían CORS configurado en Storage).
-- `OfficialDocumentsManager.tsx`: `fetchDocuments` reordenada antes del
-  `useEffect` que la llama (funcionaba por casualidad, ahora es explícito).
-- `page.tsx` (home): agregado menú móvil completo (antes el nav estaba
-  `hidden lg:flex`, invisible en celular/tablet sin alternativa), 6 links
-  migrados de `<a>` a `<Link>`, `let`→`const` en el loop de service workers.
-- `DualNavigation.tsx`: agregado `id="divisiones"` — el link del nav
-  `#divisiones` no tenía a dónde apuntar.
-- `seguimiento/page.tsx`, `intranet/page.tsx`: 2 links más migrados a `<Link>`.
-- `intranet/dashboard/page.tsx`: botón "Volver al sitio público" agregado
-  junto a "Cerrar Sesión" (antes no había forma de salir del dashboard).
+### Fixed
+- RSS confirmado funcionando con fuentes reales: `Vanguardia MX` y
+  `24-horas.mx` reemplazaron a ESPN/TVNotas (URLs muertas). Verificado
+  trayendo artículos nuevos en español en vivo.
+- `SystemSettings.tsx`: el "respaldo" de fuentes RSS (solo se usa si nadie
+  ha guardado nada todavía) seguía apuntando a las URLs de Infobae que ya
+  habíamos descartado — corregido para que coincida con lo que sí funciona.
+- Reordenado `fetchDocuments` antes del `useEffect` que la usa en
+  `OfficialDocumentsManager.tsx` (mismo patrón de bug ya corregido antes,
+  se había vuelto a colar).
 
-### Fixed — confirmado en vivo y funcionando
-- **RSS funcionando de extremo a extremo**, confirmado por Paco: "1
-  noticia(s) nueva(s) importada(s) de 3 fuente(s)". Causa raíz: 2 permisos
-  de Google Cloud faltantes (invocación pública de Cloud Run en
-  `triggerNewsFetch`, y rol "Usuario de Cloud Datastore" para la cuenta de
-  servicio default de Cloud Functions) — no eran bugs de código.
+### Housekeeping
+- `.gitignore`: agregado `/revisiones/`, `/respaldos/`, `/functions/lib/`
+  — reportes de diagnóstico, backups locales y build compilado ya no se
+  versionan en git (siguen existiendo en tu disco, solo dejan de subirse).
+- Versión del proyecto: `0.1.0` → `0.2.0`.
 
 ### Known issues / pendiente
-- **Aplicar `cobertore-fixes-completo.zip`, correr `revisar-cobertore.bat`,
-  y confirmar build limpio antes de desplegar** — es el primer paso de la
-  siguiente sesión.
-- **Auditoría en vivo de Cotizaciones (PDF), Oficios, y Catálogo — sigue
-  sin hacerse.** Usar el navegador conectado (Claude para Chrome) para
-  probar cada botón real.
-- Confirmar si `fetchNewsPeriodically` (cron de 6h) también necesitaba el
-  rol de Cloud Datastore o ya lo tenía.
-- App Check, datos bancarios reales o de ejemplo, `npm audit` (esperar
-  patch de Next), fotografía real vs. stock — sin cambios, prioridad baja.
+- **`npm audit fix` en `functions/` no cambió nada realmente** — se probó
+  y confirmó que no hay diff en el lockfile; `brace-expansion` no tiene
+  arreglo disponible sin forzar en este árbol de dependencias, y `uuid`
+  requiere `--force` (degradaría `firebase-admin` a v10, no hacerlo).
+  Queda en espera de que el ecosistema publique una versión compatible.
+- App Check sigue sin implementar.
+- El Universal y Marca (RSS) siguen rotas, dejadas así a propósito.
+- 8 usos de `: any` en TypeScript, ~35 errores de ESLint catalogados
+  (comillas sin escapar, imports sin usar) — ninguno bloqueante.
+- 3 `high` en `npm audit` raíz (Next.js/PostCSS/sharp) — esperar patch de
+  Next, no forzar downgrade.
+- Fotografía real pendiente de reemplazar el stock de Unsplash.
+- **Confirmar que `firebase login --reauth` + deploy de hosting y
+  functions haya terminado bien** — se cortó por sesión de Firebase CLI
+  expirada al cierre de esta sesión.
+- **Sigue sin haber ningún respaldo (`respaldo-cobertore.bat`) corrido.**
 
-### Lección de esta sesión
-- **Nunca usar `git stash drop` sin haber confirmado antes que el trabajo
-  ya se entregó/empaquetó.** Usar `git stash pop` como default, o revisar
-  `git stash list` / `git diff` antes de descartar cualquier stash.
-- Los scripts `respaldo-cobertore.bat` y `revisar-cobertore.bat` (ya
-  entregados) existen precisamente para que esto no vuelva a pasar del
-  lado del repo real — pero la sesión de Claude también necesita su propia
-  disciplina de no descartar trabajo sin confirmar que está a salvo primero.
-
-## 2026-07-24 (sesiones 1-3 — hardening, RSS, gráficos, ranking)
-Ver entradas anteriores para el detalle completo: reglas de seguridad,
-`firebase-functions` estable, año de fundación 1962, `og-image.png`,
-íconos PWA, `manifest.json` correcto.
+## 2026-07-24 (sesiones previas)
+Ver detalle completo en el historial de este archivo: hardening de
+seguridad, IAM/Cloud Run para RSS, año de fundación 1962, `og-image.png`,
+tamaño Carta en PDFs, menú móvil, y todo lo demás documentado sesión por
+sesión.
 
 ## 2026-XX-XX (retroactivo)
 ### Added

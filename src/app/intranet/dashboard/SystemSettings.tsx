@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Upload, Image as ImageIcon, CheckCircle, AlertCircle, Search, Rss, Plus, Trash2, Shield } from 'lucide-react';
+import { Settings, Upload, Image as ImageIcon, CheckCircle, AlertCircle, Search, Rss, Plus, Trash2, Shield, Landmark } from 'lucide-react';
 import { db, storage } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -26,6 +26,13 @@ export default function SystemSettings() {
   const [isSavingSeo, setIsSavingSeo] = useState(false);
   const [seoSuccessMsg, setSeoSuccessMsg] = useState('');
 
+  const [bankName, setBankName] = useState('');
+  const [bankAccount, setBankAccount] = useState('');
+  const [bankClabe, setBankClabe] = useState('');
+  const [bankRfc, setBankRfc] = useState('');
+  const [isSavingBank, setIsSavingBank] = useState(false);
+  const [bankSuccessMsg, setBankSuccessMsg] = useState('');
+
   // RSS States
   const [rssSources, setRssSources] = useState<RssSource[]>([]);
   const [newRssName, setNewRssName] = useState('');
@@ -40,12 +47,19 @@ export default function SystemSettings() {
       
       const defaultSources = [
         { id: '1', name: 'Tlaxcala (El Sol)', url: 'https://www.elsoldetlaxcala.com.mx/rss.xml', active: true },
-        { id: '2', name: 'Deportes (Infobae)', url: 'https://www.infobae.com/deportes/arc/outboundfeeds/rss/', active: true },
-        { id: '3', name: 'Entretenimiento (Infobae)', url: 'https://www.infobae.com/entretenimiento/arc/outboundfeeds/rss/', active: true },
+        { id: '2', name: 'Deportes (Vanguardia MX)', url: 'https://vanguardia.com.mx/rss.xml', active: true },
+        { id: '3', name: '24 Horas', url: 'https://www.24-horas.mx/feed/', active: true },
       ];
       
       const defaultSeoTitle = 'Cobertores Mano FIL - Distribución Textil y Desarrollo Inmobiliario';
       const defaultSeoDesc = 'Distribución masiva de cobertores, blancos y desarrollos inmobiliarios. Liderazgo corporativo y comercial desde 1962 en Tlaxcala para todo México.';
+
+      // Estos son ejemplos -- si nadie los ha editado en este panel, se
+      // muestran así de obvio para que no se confundan con datos reales.
+      const defaultBankName = 'Banco de ejemplo (edita este campo)';
+      const defaultBankAccount = '0000000000';
+      const defaultBankClabe = '000000000000000000';
+      const defaultBankRfc = 'RFC000000000';
 
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -54,10 +68,18 @@ export default function SystemSettings() {
         setSeoTitle(data.seoTitle !== undefined ? data.seoTitle : defaultSeoTitle);
         setSeoDescription(data.seoDescription !== undefined ? data.seoDescription : defaultSeoDesc);
         setRssSources(data.newsSources !== undefined ? data.newsSources : defaultSources);
+        setBankName(data.bankName !== undefined ? data.bankName : defaultBankName);
+        setBankAccount(data.bankAccount !== undefined ? data.bankAccount : defaultBankAccount);
+        setBankClabe(data.bankClabe !== undefined ? data.bankClabe : defaultBankClabe);
+        setBankRfc(data.bankRfc !== undefined ? data.bankRfc : defaultBankRfc);
       } else {
         setSeoTitle(defaultSeoTitle);
         setSeoDescription(defaultSeoDesc);
         setRssSources(defaultSources);
+        setBankName(defaultBankName);
+        setBankAccount(defaultBankAccount);
+        setBankClabe(defaultBankClabe);
+        setBankRfc(defaultBankRfc);
       }
     };
     fetchSettings();
@@ -112,6 +134,26 @@ export default function SystemSettings() {
       logger.error("Error guardando SEO:", error);
     } finally {
       setIsSavingSeo(false);
+    }
+  };
+
+  const handleSaveBank = async () => {
+    setIsSavingBank(true);
+    setBankSuccessMsg('');
+    try {
+      const settingsRef = doc(db, 'system_settings', 'global');
+      await setDoc(settingsRef, {
+        bankName,
+        bankAccount,
+        bankClabe,
+        bankRfc
+      }, { merge: true });
+      setBankSuccessMsg('¡Datos bancarios guardados! Se verán en la próxima cotización que generes.');
+      setTimeout(() => setBankSuccessMsg(''), 4000);
+    } catch (error) {
+      logger.error("Error guardando datos bancarios:", error);
+    } finally {
+      setIsSavingBank(false);
     }
   };
 
@@ -273,6 +315,86 @@ export default function SystemSettings() {
             className="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
           >
             {isSavingSeo ? 'Guardando SEO...' : 'Guardar Configuración SEO'}
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-slate-900/50 rounded-3xl border border-white/5 p-8 backdrop-blur-xl">
+        <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          <Landmark className="w-5 h-5 text-amber-500" /> Datos Bancarios (Cotizaciones)
+        </h3>
+
+        <div className="space-y-6">
+          <div className="bg-amber-500/10 border border-amber-500/20 text-amber-200/80 rounded-2xl p-4 text-xs flex items-start gap-3">
+            <Shield className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold">Estos datos aparecen en el PDF de cada cotización</p>
+              <p className="mt-1 leading-relaxed">
+                Antes estaban fijos en el código como ejemplo. Ahora los editas aquí y se guardan
+                de inmediato en la base de datos -- no necesitas volver a compilar ni desplegar
+                el sitio para que la siguiente cotización que generes ya los use.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-slate-300 text-sm font-medium">Banco</label>
+              <input
+                type="text"
+                value={bankName}
+                onChange={(e) => setBankName(e.target.value)}
+                placeholder="Ej: BBVA Bancomer"
+                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-slate-300 text-sm font-medium">RFC</label>
+              <input
+                type="text"
+                value={bankRfc}
+                onChange={(e) => setBankRfc(e.target.value)}
+                placeholder="Ej: MFI6212158B4"
+                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white font-mono focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-slate-300 text-sm font-medium">Número de cuenta</label>
+              <input
+                type="text"
+                value={bankAccount}
+                onChange={(e) => setBankAccount(e.target.value)}
+                placeholder="Ej: 0123456789"
+                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white font-mono focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-slate-300 text-sm font-medium">CLABE interbancaria</label>
+              <input
+                type="text"
+                value={bankClabe}
+                onChange={(e) => setBankClabe(e.target.value)}
+                placeholder="Ej: 012345678901234567"
+                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white font-mono focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+          </div>
+
+          {bankSuccessMsg && (
+            <div className="flex items-center gap-2 text-green-400 bg-green-400/10 p-4 rounded-xl border border-green-400/20 text-sm">
+              <CheckCircle className="w-5 h-5" /> {bankSuccessMsg}
+            </div>
+          )}
+
+          <button
+            onClick={handleSaveBank}
+            disabled={isSavingBank}
+            className="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
+          >
+            {isSavingBank ? 'Guardando...' : 'Guardar Datos Bancarios'}
           </button>
         </div>
       </div>

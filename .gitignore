@@ -47,4 +47,10 @@ next-env.d.ts
 *.zip
 scratch/
 /functions/node_modules/
-functions/firebase-debug.log 
+functions/firebase-debug.log
+
+# artefactos locales de los scripts .bat -- no necesitan vivir en git
+/revisiones/
+/respaldos/
+/functions/lib/
+firebase-debug.log 

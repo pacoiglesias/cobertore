@@ -6,6 +6,10 @@ import { logger } from '../lib/logger';
 
 export interface SystemSettings {
   logoUrl?: string;
+  bankName?: string;
+  bankAccount?: string;
+  bankClabe?: string;
+  bankRfc?: string;
 }
 
 export function useSystemSettings() {
