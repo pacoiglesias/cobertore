@@ -37,15 +37,13 @@ service firebase.storage {
       // roles que ya usa firestore.rules para intranet_files.
       allow read: if isSuperAdmin() || isEditor() || isLector();
       // Permitir subir solo a súper admins y editores autorizados (sin cambios)
-      allow write: if (isSuperAdmin() || isEditor())
-        && request.resource.size < 25 * 1024 * 1024;
+      allow write: if isSuperAdmin() || isEditor();
     }
 
     match /quotes/{allPaths=**} {
       allow read: if true; // el cliente necesita descargar su PDF desde el link del correo
       // Solo súper admin o editor generan cotizaciones (sin cambios)
-      allow write: if (isSuperAdmin() || isEditor())
-        && request.resource.size < 10 * 1024 * 1024;
+      allow write: if isSuperAdmin() || isEditor();
     }
 
     match /catalog/{allPaths=**} {
@@ -67,13 +65,6 @@ service firebase.storage {
       // sistema", pero el código anterior aceptaba cualquier "request.auth != null".
       // Ahora el código coincide con el comentario: solo Súper Admin.
       allow write: if isSuperAdmin()
-        && request.resource.size < 5 * 1024 * 1024
-        && request.resource.contentType.matches('image/.*');
-    }
-
-    match /news/{allPaths=**} {
-      allow read: if true;
-      allow write: if (isSuperAdmin() || isEditor())
         && request.resource.size < 5 * 1024 * 1024
         && request.resource.contentType.matches('image/.*');
     }
