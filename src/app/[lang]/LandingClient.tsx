@@ -254,7 +254,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
             </Link>
             <button
               onClick={() => setIsMobileMenuOpen((v) => !v)}
-              className="lg:hidden text-white p-2 -mr-2"
+              className="lg:hidden text-slate-900 dark:text-white p-2 -mr-2"
               aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
               aria-expanded={isMobileMenuOpen}
             >
@@ -318,12 +318,12 @@ export default function LandingClient({ lang }: { lang: Lang }) {
               </div>
             </motion.div>
             
-            <motion.h1 variants={fadeUp} className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif text-white mb-6 leading-[1.05] tracking-tight drop-shadow-2xl">
+            <motion.h1 variants={fadeUp} className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif text-slate-900 dark:text-white mb-6 leading-[1.05] tracking-tight drop-shadow-2xl">
               {t.hero.title1} <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-700 italic pr-4">{t.hero.title2}</span>
             </motion.h1>
             
-            <motion.p variants={fadeUp} className="text-base sm:text-lg md:text-2xl text-slate-300 font-light max-w-3xl mx-auto mb-12 drop-shadow-lg leading-relaxed">
+            <motion.p variants={fadeUp} className="text-base sm:text-lg md:text-2xl text-slate-700 dark:text-slate-300 font-light max-w-3xl mx-auto mb-12 drop-shadow-lg leading-relaxed">
               {t.hero.desc}
             </motion.p>
             
@@ -334,7 +334,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                   {t.hero.btnCatalog} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </a>
-              <a href="#herencia" className="bg-white/5 hover:bg-white/10 text-white border border-white/20 hover:border-amber-500/50 px-8 md:px-12 py-4 rounded-full text-xs font-bold tracking-widest uppercase transition-all backdrop-blur-md flex items-center justify-center hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+              <a href="#herencia" className="bg-white/5 hover:bg-white/10 text-slate-900 dark:text-white border border-slate-300 dark:border-white/20 hover:border-amber-500/50 px-8 md:px-12 py-4 rounded-full text-xs font-bold tracking-widest uppercase transition-all backdrop-blur-md flex items-center justify-center hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 {t.hero.btnMore}
               </a>
             </motion.div>
@@ -400,7 +400,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
               {t.products.tag}
               <span className="w-12 h-[1px] bg-amber-500/50"></span>
             </h4>
-            <h2 className="text-4xl md:text-6xl font-serif text-white mb-6 drop-shadow-xl">{t.products.title}</h2>
+            <h2 className="text-4xl md:text-6xl font-serif text-slate-900 dark:text-white mb-6 drop-shadow-xl">{t.products.title}</h2>
             <p className="text-slate-400 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
               {t.products.desc}
             </p>
@@ -414,7 +414,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: index * 0.15, duration: 0.7, ease: "easeOut" }}
-                className={`bg-white/[0.02] backdrop-blur-2xl rounded-3xl overflow-hidden border border-white/5 hover:border-amber-500/50 group transition-all duration-500 flex flex-col hover:shadow-[0_0_40px_rgba(245,158,11,0.25)] hover:-translate-y-2 relative md:col-span-3 lg:col-span-6`}
+                className={`bg-white dark:bg-white/[0.02] backdrop-blur-2xl rounded-3xl overflow-hidden border border-slate-200 dark:border-white/5 shadow-md dark:shadow-none hover:border-amber-500/50 group transition-all duration-500 flex flex-col hover:shadow-[0_0_40px_rgba(245,158,11,0.25)] hover:-translate-y-2 relative md:col-span-3 lg:col-span-6`}
               >
                 {/* Glow Background on Hover */}
                 <div className="absolute inset-0 bg-gradient-to-b from-amber-500/0 via-amber-500/5 to-amber-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10"></div>
@@ -427,17 +427,17 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                   </div>
                 </div>
                 <div className="p-8 flex flex-col flex-grow relative z-20 -mt-10">
-                  <h3 className="font-serif text-2xl md:text-3xl text-white mb-4 drop-shadow-md">{item.title}</h3>
-                  <p className="text-slate-400 text-sm font-light mb-8 flex-grow leading-relaxed">{item.desc}</p>
+                  <h3 className="font-serif text-2xl md:text-3xl text-slate-900 dark:text-white mb-4 drop-shadow-md">{item.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm font-light mb-8 flex-grow leading-relaxed">{item.desc}</p>
                   
-                  <div className="space-y-4 mb-8 bg-black/20 p-5 rounded-2xl border border-white/5">
-                    <div className="flex justify-between text-xs text-slate-400">
+                  <div className="space-y-4 mb-8 bg-slate-100 dark:bg-black/20 p-5 rounded-2xl border border-slate-200 dark:border-white/5">
+                    <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
                       <span className="uppercase tracking-widest">{t.products.measures}</span>
-                      <span className="font-bold text-white">{item.measures || t.products.defaultMeasures}</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{item.measures || t.products.defaultMeasures}</span>
                     </div>
-                    <div className="flex justify-between text-xs text-slate-400">
+                    <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
                       <span className="uppercase tracking-widest">{t.products.composition}</span>
-                      <span className="font-bold text-white">{item.composition || t.products.defaultComposition}</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{item.composition || t.products.defaultComposition}</span>
                     </div>
                   </div>
                   
@@ -474,12 +474,12 @@ export default function LandingClient({ lang }: { lang: Lang }) {
           <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
             <div className="text-center mb-16 md:mb-20">
               <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">{t.news.tag}</h4>
-              <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">{t.news.title}</h2>
+              <h2 className="text-3xl md:text-5xl font-serif text-slate-900 dark:text-white mb-6">{t.news.title}</h2>
             </div>
             
             <div className="grid md:grid-cols-3 gap-8">
               {latestNews.map((news) => (
-                <Link href="/noticias" key={news.id} className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group flex flex-col hover:-translate-y-2">
+                <Link href="/noticias" key={news.id} className="bg-white dark:bg-white/[0.02] shadow-sm dark:shadow-none border border-slate-200 dark:border-white/5 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group flex flex-col hover:-translate-y-2">
                   <div className="h-48 overflow-hidden relative">
                     <Image src={news.imgUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000'} alt={news.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover group-hover:scale-110 transition-transform duration-700" />
                   </div>
@@ -488,8 +488,8 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                       <Clock className="w-3 h-3" />
                       {news.createdAt ? (typeof news.createdAt === 'object' && 'toDate' in (news.createdAt as any) ? (news.createdAt as any).toDate() : new Date(news.createdAt as string)).toLocaleDateString('es-MX') : ''}
                     </span>
-                    <h3 className="text-xl font-bold text-white mb-3 leading-tight">{news.title}</h3>
-                    <p className="text-slate-400 text-sm mb-6 flex-grow line-clamp-3">{news.summary}</p>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 leading-tight">{news.title}</h3>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 flex-grow line-clamp-3">{news.summary}</p>
                     <span className="text-amber-500 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:text-amber-400">
                       {t.news.read} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </span>
@@ -511,35 +511,35 @@ export default function LandingClient({ lang }: { lang: Lang }) {
         <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
           <div className="text-center mb-12">
             <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">{t.faq.tag}</h4>
-            <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">{t.faq.title}</h2>
+            <h2 className="text-3xl md:text-5xl font-serif text-slate-900 dark:text-white mb-6">{t.faq.title}</h2>
           </div>
           <div className="space-y-4">
-            <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
-              <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
+            <details className="group bg-white dark:bg-white/[0.02] shadow-sm dark:shadow-none border border-slate-200 dark:border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
+              <summary className="flex justify-between items-center font-bold text-lg text-slate-900 dark:text-white list-none">
                 {t.faq.q1}
                 <span className="transition group-open:rotate-180">
                   <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
               </summary>
-              <p className="text-slate-400 mt-4 leading-relaxed font-light">{t.faq.a1}</p>
+              <p className="text-slate-600 dark:text-slate-400 mt-4 leading-relaxed font-light">{t.faq.a1}</p>
             </details>
-            <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
-              <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
+            <details className="group bg-white dark:bg-white/[0.02] shadow-sm dark:shadow-none border border-slate-200 dark:border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
+              <summary className="flex justify-between items-center font-bold text-lg text-slate-900 dark:text-white list-none">
                 {t.faq.q2}
                 <span className="transition group-open:rotate-180">
                   <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
               </summary>
-              <p className="text-slate-400 mt-4 leading-relaxed font-light">{t.faq.a2}</p>
+              <p className="text-slate-600 dark:text-slate-400 mt-4 leading-relaxed font-light">{t.faq.a2}</p>
             </details>
-            <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
-              <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
+            <details className="group bg-white dark:bg-white/[0.02] shadow-sm dark:shadow-none border border-slate-200 dark:border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
+              <summary className="flex justify-between items-center font-bold text-lg text-slate-900 dark:text-white list-none">
                 {t.faq.q3}
                 <span className="transition group-open:rotate-180">
                   <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
               </summary>
-              <p className="text-slate-400 mt-4 leading-relaxed font-light">{t.faq.a3}</p>
+              <p className="text-slate-600 dark:text-slate-400 mt-4 leading-relaxed font-light">{t.faq.a3}</p>
             </details>
           </div>
         </div>
