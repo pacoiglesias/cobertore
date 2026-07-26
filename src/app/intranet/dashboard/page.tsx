@@ -689,7 +689,7 @@ export default function Dashboard() {
                   {previewFile.type.includes('image') ? (
                     <img src={previewFile.url} alt={previewFile.name} className="max-w-full max-h-[80vh] object-contain" />
                   ) : previewFile.type.includes('pdf') ? (
-                    <iframe src={previewFile.url} className="w-full h-full min-h-[80vh] border-0" title={previewFile.name} />
+                    <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(previewFile.url)}&embedded=true`} className="w-full h-full min-h-[80vh] border-0" title={previewFile.name} />
                   ) : (
                     <div className="text-center p-8">
                       <File className="w-16 h-16 text-slate-500 mx-auto mb-4" />
