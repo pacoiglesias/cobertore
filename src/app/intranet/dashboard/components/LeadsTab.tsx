@@ -1,5 +1,5 @@
 import React from 'react';
-import { User as UserIcon, MessageSquare, Phone, Download } from 'lucide-react';
+import { User as UserIcon, MessageSquare, Phone, Download, Clock, CheckCircle, CheckSquare, Inbox } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 
 interface Lead {
@@ -9,6 +9,7 @@ interface Lead {
   quantity: string;
   message: string;
   createdAt: Timestamp;
+  status?: string;
 }
 
 interface LeadsTabProps {
@@ -16,20 +17,43 @@ interface LeadsTabProps {
   leadSearchTerm: string;
   setLeadSearchTerm: (val: string) => void;
   exportLeadsToCSV: () => void;
+  updateLeadStatus?: (id: string, status: string) => void;
 }
+
+const CRM_COLUMNS = [
+  { id: 'nuevo', title: 'Nuevos', icon: Inbox, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/30' },
+  { id: 'contactado', title: 'Contactados', icon: Phone, color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
+  { id: 'cotizado', title: 'Cotizados', icon: Clock, color: 'text-purple-500', bg: 'bg-purple-500/10', border: 'border-purple-500/30' },
+  { id: 'cerrado', title: 'Cerrados', icon: CheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' }
+];
 
 export function LeadsTab({
   leads,
   leadSearchTerm,
   setLeadSearchTerm,
-  exportLeadsToCSV
+  exportLeadsToCSV,
+  updateLeadStatus
 }: LeadsTabProps) {
+  
+  const filteredLeads = leads.filter(lead => 
+    (lead.name || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) || 
+    (lead.message || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) ||
+    (lead.phone || '').includes(leadSearchTerm)
+  );
+
+  const getLeadsByStatus = (statusId: string) => {
+    return filteredLeads.filter(lead => {
+      const s = lead.status || 'nuevo';
+      return s === statusId;
+    });
+  };
+
   return (
     <div>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
         <div>
-          <h2 className="text-3xl font-serif text-white mb-2">Prospectos de Ventas (Leads)</h2>
-          <p className="text-slate-400">Mensajes recibidos desde el formulario de la página principal.</p>
+          <h2 className="text-3xl font-serif text-white mb-2">CRM de Ventas</h2>
+          <p className="text-slate-400">Gestiona los prospectos que llegan desde la página web.</p>
         </div>
         <button 
           onClick={exportLeadsToCSV}
@@ -49,44 +73,71 @@ export function LeadsTab({
         />
       </div>
 
-      <div className="space-y-4">
-        {leads.length === 0 && (
-          <div className="text-center py-12 bg-[#0a0f1d] border border-white/5 rounded-2xl">
-            <p className="text-slate-400">Aún no hay prospectos registrados.</p>
-          </div>
-        )}
-        {leads.filter(lead => 
-          (lead.name || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) || 
-          (lead.message || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) ||
-          (lead.phone || '').includes(leadSearchTerm)
-        ).map(lead => (
-          <div key={lead.id} className="bg-[#0a0f1d] border border-white/5 p-6 rounded-2xl flex flex-col md:flex-row gap-6 items-start md:items-center justify-between hover:border-amber-500/30 transition-colors">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
-                <UserIcon className="w-6 h-6 text-blue-500" />
-              </div>
-              <div>
-                <h3 className="text-white font-medium text-lg">{lead.name || 'Sin nombre'}</h3>
-                <div className="flex items-center gap-4 text-slate-400 text-sm mt-1">
-                  <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {lead.phone}</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-start">
+        {CRM_COLUMNS.map(col => {
+          const colLeads = getLeadsByStatus(col.id);
+          const Icon = col.icon;
+          
+          return (
+            <div key={col.id} className="bg-[#0a0f1d] border border-white/5 rounded-2xl p-4 flex flex-col gap-4 min-h-[500px]">
+              {/* Column Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${col.bg} ${col.border} border`}>
+                    <Icon className={`w-4 h-4 ${col.color}`} />
+                  </div>
+                  <h3 className="text-white font-bold">{col.title}</h3>
                 </div>
+                <span className="bg-white/10 text-white text-xs px-2 py-1 rounded-full font-bold">
+                  {colLeads.length}
+                </span>
+              </div>
+
+              {/* Column Cards */}
+              <div className="flex-1 space-y-4">
+                {colLeads.length === 0 ? (
+                  <div className="text-center p-4 text-sm text-slate-500 italic">
+                    Sin prospectos
+                  </div>
+                ) : (
+                  colLeads.map(lead => (
+                    <div key={lead.id} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-amber-500/50 transition-colors">
+                      <div className="flex justify-between items-start mb-3">
+                        <h4 className="text-white font-medium text-sm">{lead.name || 'Sin nombre'}</h4>
+                        <span className="text-[10px] text-slate-400">
+                          {lead.createdAt?.toDate ? lead.createdAt.toDate().toLocaleDateString('es-MX') : ''}
+                        </span>
+                      </div>
+                      
+                      <div className="text-xs text-slate-300 mb-3 space-y-1">
+                        <p className="flex items-center gap-2"><Phone className="w-3 h-3 text-slate-500" /> {lead.phone}</p>
+                        <p className="flex items-center gap-2"><CheckSquare className="w-3 h-3 text-slate-500" /> Cantidad: <span className="font-bold text-emerald-400">{lead.quantity}</span></p>
+                      </div>
+
+                      <div className="bg-[#0a0f1d] rounded-lg p-3 text-xs text-slate-400 mb-4 italic line-clamp-3 relative">
+                        <MessageSquare className="w-3 h-3 text-slate-600 absolute top-3 left-3" />
+                        <span className="pl-6 block">{lead.message}</span>
+                      </div>
+
+                      <div className="pt-3 border-t border-white/5">
+                        <label className="text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-1 block">Estado</label>
+                        <select 
+                          value={lead.status || 'nuevo'}
+                          onChange={(e) => updateLeadStatus && updateLeadStatus(lead.id, e.target.value)}
+                          className="w-full bg-[#0a0f1d] border border-white/10 rounded-lg p-2 text-white text-xs focus:border-amber-500 outline-none appearance-none"
+                        >
+                          {CRM_COLUMNS.map(opt => (
+                            <option key={opt.id} value={opt.id} className="text-black">{opt.title}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
-            
-            <div className="flex-grow md:mx-8 bg-white/5 p-4 rounded-xl relative">
-              <MessageSquare className="w-4 h-4 text-amber-500 absolute top-4 left-4" />
-              <p className="text-slate-300 text-sm pl-8 italic">"{lead.message}"</p>
-              <div className="pl-8 mt-2 text-xs font-bold text-emerald-500">Cantidad solicitada: {lead.quantity}</div>
-            </div>
-            
-            <div className="text-right whitespace-nowrap">
-              <span className="text-xs font-bold uppercase tracking-widest text-slate-500 block mb-1">Recibido</span>
-              <span className="text-amber-500 font-medium">
-                {lead.createdAt?.toDate().toLocaleDateString('es-MX')}
-              </span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

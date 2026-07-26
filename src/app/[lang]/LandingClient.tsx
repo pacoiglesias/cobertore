@@ -164,6 +164,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
       const { _honey, ...cleanData } = formData;
       await addDoc(collection(db, 'leads'), {
         ...cleanData,
+        status: 'nuevo',
         createdAt: Timestamp.now()
       });
 

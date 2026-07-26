@@ -55,6 +55,7 @@ interface Lead {
   quantity: string;
   message: string;
   createdAt: Timestamp;
+  status?: string;
 }
 
 interface Order {
@@ -113,6 +114,17 @@ export default function Dashboard() {
   const [isEditor, setIsEditor] = useState(false);
   const [isAlmacen, setIsAlmacen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  // Lead status update
+  const updateLeadStatus = async (leadId: string, newStatus: string) => {
+    try {
+      await setDoc(doc(db, 'leads', leadId), { status: newStatus }, { merge: true });
+      toast.success('Estado actualizado correctamente');
+    } catch (error) {
+      logger.error('Error actualizando estado del prospecto:', error);
+      toast.error('Error al actualizar el estado');
+    }
+  };
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -693,12 +705,15 @@ export default function Dashboard() {
 
         {/* TABS CONTENT: LEADS */}
         {activeTab === 'leads' && (isSuperAdmin || isEditor) && (
-          <LeadsTab 
-            leads={leads}
-            leadSearchTerm={leadSearchTerm}
-            setLeadSearchTerm={setLeadSearchTerm}
-            exportLeadsToCSV={exportLeadsToCSV}
-          />
+          <div className="animate-fade-in">
+            <LeadsTab 
+              leads={leads}
+              leadSearchTerm={leadSearchTerm}
+              setLeadSearchTerm={setLeadSearchTerm}
+              exportLeadsToCSV={exportLeadsToCSV}
+              updateLeadStatus={updateLeadStatus}
+            />
+          </div>
         )}
 
         {/* TABS CONTENT: ORDERS (SEGUIMIENTO) */}
