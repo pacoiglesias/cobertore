@@ -70,6 +70,10 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     alternates: {
       canonical: '/',
+      languages: {
+        'es': '/es',
+        'en': '/en',
+      },
     },
     openGraph: {
       title: dynamicTitle,
@@ -123,7 +127,6 @@ export default function RootLayout({
     >
       <head>
         <meta name="theme-color" content="#070b14" />
-        <meta name="google-site-verification" content="TU_CODIGO_DE_VERIFICACION_AQUI" />
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className="min-h-full flex flex-col bg-slate-50 dark:bg-[#070b14] text-slate-900 dark:text-slate-300 transition-colors duration-300">
