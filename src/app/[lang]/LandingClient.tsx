@@ -433,11 +433,11 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                   <div className="space-y-4 mb-8 bg-black/20 p-5 rounded-2xl border border-white/5">
                     <div className="flex justify-between text-xs text-slate-400">
                       <span className="uppercase tracking-widest">{t.products.measures}</span>
-                      <span className="font-bold text-white">{item.measures || '2m x 1.50m aprox.'}</span>
+                      <span className="font-bold text-white">{item.measures || t.products.defaultMeasures}</span>
                     </div>
                     <div className="flex justify-between text-xs text-slate-400">
                       <span className="uppercase tracking-widest">{t.products.composition}</span>
-                      <span className="font-bold text-white">{item.composition || '100% Regenerado'}</span>
+                      <span className="font-bold text-white">{item.composition || t.products.defaultComposition}</span>
                     </div>
                   </div>
                   
@@ -521,7 +521,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                   <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
               </summary>
-              <p className="text-slate-400 mt-4 leading-relaxed font-light">En Mano Fil S.A. somos la fábrica principal en Tlaxcala especializada en la venta por mayoreo de cobertores, cobijas y tilmas. Hacemos envíos corporativos a todo México con capacidad de respuesta inmediata y precios de fábrica directo.</p>
+              <p className="text-slate-400 mt-4 leading-relaxed font-light">{t.faq.a1}</p>
             </details>
             <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
               <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
@@ -530,7 +530,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                   <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
               </summary>
-              <p className="text-slate-400 mt-4 leading-relaxed font-light">Las tilmas económicas son cobertores rústicos y altamente duraderos, elaborados generalmente de material 100% regenerado. Se usan masivamente en mudanzas, donaciones, emergencias y uso industrial debido a su alta resistencia y bajo costo.</p>
+              <p className="text-slate-400 mt-4 leading-relaxed font-light">{t.faq.a2}</p>
             </details>
             <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
               <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
@@ -539,7 +539,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                   <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
               </summary>
-              <p className="text-slate-400 mt-4 leading-relaxed font-light">Sí, nuestra división textil fabrica mantas y cobertores gruesos con retención térmica superior, ideales para programas sociales, hospitales y distribución mayorista durante contingencias de frío extremo.</p>
+              <p className="text-slate-400 mt-4 leading-relaxed font-light">{t.faq.a3}</p>
             </details>
           </div>
         </div>
@@ -714,26 +714,26 @@ export default function LandingClient({ lang }: { lang: Lang }) {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "{t.faq.q1}",
+                "name": t.faq.q1,
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "En Mano Fil S.A. somos la fábrica principal en Tlaxcala especializada en la venta por mayoreo de cobertores, cobijas y tilmas. Hacemos envíos corporativos a todo México con capacidad de respuesta inmediata y precios de fábrica directo."
+                  "text": t.faq.a1
                 }
               },
               {
                 "@type": "Question",
-                "name": "{t.faq.q2}",
+                "name": t.faq.q2,
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Las tilmas económicas son cobertores rústicos y altamente duraderos, elaborados generalmente de material 100% regenerado. Se usan masivamente en mudanzas, donaciones, emergencias y uso industrial debido a su alta resistencia y bajo costo."
+                  "text": t.faq.a2
                 }
               },
               {
                 "@type": "Question",
-                "name": "{t.faq.q3}",
+                "name": t.faq.q3,
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Sí, nuestra división textil fabrica mantas y cobertores gruesos con retención térmica superior, ideales para programas sociales, hospitales y distribución mayorista durante contingencias de frío extremo."
+                  "text": t.faq.a3
                 }
               }
             ]

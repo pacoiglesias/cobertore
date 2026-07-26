@@ -18,7 +18,9 @@ export const dictionaries = {
       disclaimer1: '* Los colores y las medidas pueden variar un 5%.',
       disclaimer2: '** 100% regenerado es debido a que son fibras recicladas (mezcla de acrílico, lana, poliéster y otras fibras).',
       measures: 'Especificaciones',
+      defaultMeasures: '2m x 1.50m aprox.',
       composition: 'Material',
+      defaultComposition: '100% Regenerado',
       quote: 'Cotizar Volumen',
       items: [
         { title: "Tilma Económica", weight: "1.300 KG", img: "/products/tilma-eco-1-3kg.webp", desc: "Tejido compacto y duradero. Soporta uso industrial y lavados constantes." },
@@ -126,8 +128,11 @@ export const dictionaries = {
     faq: {
       tag: 'Preguntas Frecuentes', title: 'Resolvemos tus Dudas',
       q1: '¿Dónde puedo comprar cobijas y cobertores por mayoreo?',
+      a1: 'En Mano Fil S.A. somos la fábrica principal en Tlaxcala especializada en la venta por mayoreo de cobertores, cobijas y tilmas. Hacemos envíos corporativos a todo México con capacidad de respuesta inmediata y precios de fábrica directo.',
       q2: '¿Qué son las tilmas y para qué se utilizan en la industria?',
-      q3: '¿Manejan cobertores térmicos para invierno?'
+      a2: 'Las tilmas económicas son cobertores rústicos y altamente duraderos, elaborados generalmente de material 100% regenerado. Se usan masivamente en mudanzas, donaciones, emergencias y uso industrial debido a su alta resistencia y bajo costo.',
+      q3: '¿Manejan cobertores térmicos para invierno?',
+      a3: 'Sí, nuestra división textil fabrica mantas y cobertores gruesos con retención térmica superior, ideales para programas sociales, hospitales y distribución mayorista durante contingencias de frío extremo.'
     },
     contact: {
       title: 'Cotización Directa',
@@ -158,7 +163,9 @@ export const dictionaries = {
       disclaimer1: '* Colors and dimensions may vary by 5%.',
       disclaimer2: '** "100% regenerated" refers to the use of recycled fibers (a blend of acrylic, wool, polyester, and other fibers).',
       measures: 'Specifications',
+      defaultMeasures: 'Approx. 2m x 1.50m',
       composition: 'Material',
+      defaultComposition: '100% Recycled Fibers',
       quote: 'Request Wholesale Quote',
       items: [
         { title: "Standard Industrial Tilma", weight: "1.300 KG", img: "/products/tilma-eco-1-3kg.webp", desc: "Compact and highly durable weave. Withstands industrial use and constant washing." },
@@ -266,8 +273,11 @@ export const dictionaries = {
     faq: {
       tag: 'Frequently Asked Questions', title: 'Your Questions, Answered',
       q1: 'Where can I buy blankets wholesale?',
+      a1: 'At Mano Fil S.A., we are the leading factory in Tlaxcala specializing in wholesale distribution of heavy-duty blankets and tilmas. We handle corporate shipments across Mexico with immediate response capabilities and direct factory pricing.',
       q2: 'What are tilmas and how are they used in industry?',
-      q3: 'Do you offer thermal blankets for winter?'
+      a2: 'Economic tilmas are highly durable, rustic blankets generally made from 100% recycled fibers. They are massively used in moving operations, donations, emergencies, and industrial use due to their high resistance and low cost.',
+      q3: 'Do you offer thermal blankets for winter?',
+      a3: 'Yes, our textile division manufactures thick blankets with superior thermal retention, ideal for social programs, hospitals, and wholesale distribution during extreme cold weather contingencies.'
     },
     contact: {
       title: 'Request a Quote',
