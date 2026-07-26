@@ -1,5 +1,15 @@
 # Changelog — Cobertores Web (Mano Fil S.A.)
 
+## [0.5.1] — 2026-07-26 (Fase 13: UX Intuitiva y Refactorización Estricta)
+
+### Added
+- **CMS Markdown**: Se implementó un mini-editor Markdown en el módulo de Noticias (`NewsManager.tsx`) para permitir negritas, cursivas y listas; con renderizado dinámico en la web pública mediante `react-markdown`.
+- **Cotizador Proactivo**: `QuoteGenerator.tsx` ahora muestra cálculos de Subtotal e IVA (16%) en tiempo real en la interfaz izquierda del formulario antes de la exportación a PDF.
+
+### Fixed
+- **Deuda Técnica TypeScript**: Se solucionaron múltiples errores de tipado (eliminación masiva de `: any`) en `SystemProvider`, `LandingClient`, `QuoteGenerator`, y más; validando el tipado estricto a través de `npm run build` con 100% de éxito.
+- **Rendimiento React**: Eliminación de `useEffect` redundantes con dependencias vacías que hacían doble llamada a Firestore (optimizando la carga de Logos y Datos Bancarios en Cotizaciones).
+
 ## [0.5.0] — 2026-07-26 (Fase 12: Internacionalización y Seguridad Zero-Flicker)
 
 ### Added

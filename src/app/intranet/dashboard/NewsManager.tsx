@@ -143,8 +143,15 @@ export default function NewsManager() {
               <textarea value={form.summary} onChange={e=>setForm({...form, summary: e.target.value})} required rows={2} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="De qué trata el artículo..."/>
             </div>
             <div>
-              <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Contenido (Párrafos)</label>
-              <textarea value={form.body} onChange={e=>setForm({...form, body: e.target.value})} required rows={6} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="Escribe aquí toda la noticia..."/>
+              <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2 flex justify-between items-center">
+                <span>Contenido (Formato Markdown soportado)</span>
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => setForm({...form, body: form.body + '**Negrita** '})} className="px-2 py-1 bg-white/5 hover:bg-white/10 rounded text-xs">B</button>
+                  <button type="button" onClick={() => setForm({...form, body: form.body + '*Cursiva* '})} className="px-2 py-1 bg-white/5 hover:bg-white/10 rounded text-xs">I</button>
+                  <button type="button" onClick={() => setForm({...form, body: form.body + '\n- Elemento de lista'})} className="px-2 py-1 bg-white/5 hover:bg-white/10 rounded text-xs">•</button>
+                </div>
+              </label>
+              <textarea value={form.body} onChange={e=>setForm({...form, body: e.target.value})} required rows={8} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="Escribe aquí toda la noticia. Puedes usar **negritas**, *cursivas* o listas con guiones (-)..."/>
             </div>
             <div>
               <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Foto Portada</label>

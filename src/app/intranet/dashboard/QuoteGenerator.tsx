@@ -36,22 +36,6 @@ export function QuoteGenerator({ products, userEmail }: Props) {
   const [sellerName, setSellerName] = useState('Paco Iglesias');
   const [sellerEmail, setSellerEmail] = useState(userEmail || 'paco@cobertores.com');
   const [globalLogoUrl, setGlobalLogoUrl] = useState('');
-  
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const docRef = doc(db, 'system_settings', 'global');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          if (data.logoUrl) setGlobalLogoUrl(data.logoUrl);
-        }
-      } catch (e) {
-        logger.error("Error fetching global logo", e);
-      }
-    };
-    fetchSettings();
-  }, []);
 
   const [selectedProduct, setSelectedProduct] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -81,6 +65,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
     if (systemSettings.bankAccount) setBankAccount(systemSettings.bankAccount);
     if (systemSettings.bankClabe) setBankClabe(systemSettings.bankClabe);
     if (systemSettings.bankRfc) setBankRfc(systemSettings.bankRfc);
+    if (systemSettings.logoUrl) setGlobalLogoUrl(systemSettings.logoUrl);
   }, [systemSettings]);
 
   const generateNewFolio = () => {
@@ -406,6 +391,25 @@ export function QuoteGenerator({ products, userEmail }: Props) {
             </button>
           </div>
         </div>
+
+        {/* Resumen de Cotización (Proactivo) */}
+        {items.length > 0 && (
+          <div className="pt-6 border-t border-white/5 space-y-2">
+            <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-widest">Resumen Financiero</h3>
+            <div className="flex justify-between text-slate-400 text-xs font-mono">
+              <span>Subtotal:</span>
+              <span>${subtotal.toFixed(2)} MXN</span>
+            </div>
+            <div className="flex justify-between text-slate-400 text-xs font-mono">
+              <span>IVA (16%):</span>
+              <span>${iva.toFixed(2)} MXN</span>
+            </div>
+            <div className="flex justify-between text-white text-sm font-bold font-mono pt-2 border-t border-white/10">
+              <span>TOTAL:</span>
+              <span className="text-amber-500">${total.toFixed(2)} MXN</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Vista Previa de la Hoja Membretada (Lado Derecho) */}

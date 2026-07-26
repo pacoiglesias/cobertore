@@ -1,9 +1,9 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { CldImage } from 'next-cloudinary';
 import { ArrowRight, ChevronRight, Building2, Factory } from 'lucide-react';
 
-const fadeUp: any = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   show: (i = 0) => ({
     opacity: 1,
@@ -22,7 +22,7 @@ function SectionEyebrow({ children, className = "" }: { children: React.ReactNod
   );
 }
 
-function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt, variant }: any) {
+function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt, variant }: { id: string; eyebrow: string; title: string; copy: string; bullets: string[]; ctaLabel: string; image: string; alt: string; variant: 'textil' | 'inmobiliaria' }) {
   const isTextil = variant === "textil";
   // Construimos una URL absoluta para que Cloudinary la haga 'fetch' desde producción
   const absoluteUrl = `https://cobertores.com${image}`;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { Building2, ShieldCheck, MapPin } from 'lucide-react';
 
 // NOTA (2026-07-24): los 3 stats originales ("300,000 m²", "+15 países")
@@ -14,7 +14,7 @@ const STATS = [
   { icon: Building2, value: "Doble división", label: "Textil e inmobiliaria bajo un mismo grupo" },
 ];
 
-const fadeUp: any = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   show: (i = 0) => ({
     opacity: 1,

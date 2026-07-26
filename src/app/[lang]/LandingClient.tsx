@@ -663,7 +663,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@graph": (catalogProducts.length > 0 ? catalogProducts : t.products.items).map((item: any, idx: number) => ({
+            "@graph": (catalogProducts.length > 0 ? catalogProducts : t.products.items).map((item: { title: string; desc: string; imgUrl?: string; img?: string }, idx: number) => ({
               "@type": "Product",
               "@id": `https://cobertores.com/#product-${idx}`,
               "name": item.title,

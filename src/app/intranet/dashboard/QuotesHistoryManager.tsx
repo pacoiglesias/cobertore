@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { db } from '../../../lib/firebase';
-import { collection, query, orderBy, onSnapshot, limit, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, limit, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { FileText, Download, ExternalLink, Loader2, Calendar, Trash2 } from 'lucide-react';
 import { ConfirmDialog } from '../../../components/ConfirmDialog';
 import { logger } from '../../../lib/logger';
@@ -18,7 +18,7 @@ interface QuoteHistoryItem {
   subtotal: number;
   pdfUrl: string;
   itemsCount: number;
-  createdAt: any;
+  createdAt: Timestamp;
 }
 
 export function QuotesHistoryManager() {
@@ -78,9 +78,9 @@ export function QuotesHistoryManager() {
     }).format(amount);
   };
 
-  const formatDate = (timestamp: any) => {
+  const formatDate = (timestamp: Timestamp | null) => {
     if (!timestamp) return 'Fecha desconocida';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp as unknown as string | number);
     return new Intl.DateTimeFormat('es-MX', {
       dateStyle: 'medium',
       timeStyle: 'short'

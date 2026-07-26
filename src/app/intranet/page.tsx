@@ -35,7 +35,7 @@ export default function IntranetLogin() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/intranet/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Credenciales inválidas o no tienes permisos de acceso.');
     } finally {
       setLoading(false);
@@ -53,7 +53,7 @@ export default function IntranetLogin() {
     try {
       await sendPasswordResetEmail(auth, email);
       setSuccessMsg('Enlace de recuperación enviado. Revisa tu correo.');
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('Error al enviar el enlace. Verifica que el correo esté registrado.');
     } finally {
       setLoading(false);
@@ -67,9 +67,9 @@ export default function IntranetLogin() {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       router.push('/intranet/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Google Auth Error:", err);
-      setError(`Error de Google: ${err.message || 'Desconocido'}`);
+      setError(`Error de Google: ${(err as Error).message || 'Desconocido'}`);
     } finally {
       setLoading(false);
     }

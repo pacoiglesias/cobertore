@@ -14,8 +14,8 @@ interface CatalogProduct {
 
 interface ProductsTabProps {
   products: CatalogProduct[];
-  productForm: any;
-  setProductForm: React.Dispatch<React.SetStateAction<any>>;
+  productForm: { title: string; weight: string; desc: string; composition: string; measures: string };
+  setProductForm: React.Dispatch<React.SetStateAction<{ title: string; weight: string; desc: string; composition: string; measures: string }>>;
   uploading: boolean;
   productImgRef: React.RefObject<HTMLInputElement | null>;
   handleProductUpload: (e: React.FormEvent) => Promise<void>;

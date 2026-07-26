@@ -3,6 +3,7 @@ import { db } from '@/lib/firebase';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Clock, ChevronLeft } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { NewsItem } from '@/lib/types';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -165,7 +166,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
             )}
             
             <div className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
-              {news.body}
+              <ReactMarkdown>{news.body}</ReactMarkdown>
             </div>
           </div>
           

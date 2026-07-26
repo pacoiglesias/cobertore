@@ -10,7 +10,7 @@ interface SystemSettingsData {
   address: string;
   officeHours: string;
   rssItemsLimit: number;
-  newsSources: any[];
+  newsSources: Array<{ id: string; name: string; url: string; isActive: boolean }>;
 }
 
 const defaultSettings: SystemSettingsData = {
