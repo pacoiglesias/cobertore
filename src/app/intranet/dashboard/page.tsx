@@ -115,7 +115,6 @@ export default function Dashboard() {
   const [isAlmacen, setIsAlmacen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
-  // Lead status update
   const updateLeadStatus = async (leadId: string, newStatus: string) => {
     try {
       await setDoc(doc(db, 'leads', leadId), { status: newStatus }, { merge: true });
@@ -123,6 +122,28 @@ export default function Dashboard() {
     } catch (error) {
       logger.error('Error actualizando estado del prospecto:', error);
       toast.error('Error al actualizar el estado');
+    }
+  };
+
+  const deleteLead = async (leadId: string) => {
+    if (confirm('¿Estás seguro de que deseas eliminar este prospecto permanentemente?')) {
+      try {
+        await deleteDoc(doc(db, 'leads', leadId));
+        toast.success('Prospecto eliminado');
+      } catch (error) {
+        logger.error('Error eliminando prospecto:', error);
+        toast.error('Error al eliminar prospecto');
+      }
+    }
+  };
+
+  const editLead = async (leadId: string, updatedData: any) => {
+    try {
+      await setDoc(doc(db, 'leads', leadId), updatedData, { merge: true });
+      toast.success('Prospecto actualizado');
+    } catch (error) {
+      logger.error('Error editando prospecto:', error);
+      toast.error('Error al actualizar prospecto');
     }
   };
 
@@ -712,6 +733,8 @@ export default function Dashboard() {
               setLeadSearchTerm={setLeadSearchTerm}
               exportLeadsToCSV={exportLeadsToCSV}
               updateLeadStatus={updateLeadStatus}
+              deleteLead={deleteLead}
+              editLead={editLead}
             />
           </div>
         )}

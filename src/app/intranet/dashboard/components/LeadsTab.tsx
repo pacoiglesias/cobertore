@@ -1,5 +1,5 @@
 import React from 'react';
-import { User as UserIcon, MessageSquare, Phone, Download, Clock, CheckCircle, CheckSquare, Inbox } from 'lucide-react';
+import { User as UserIcon, MessageSquare, Phone, Download, Clock, CheckCircle, CheckSquare, Inbox, Edit, Trash2 } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 
 interface Lead {
@@ -18,6 +18,8 @@ interface LeadsTabProps {
   setLeadSearchTerm: (val: string) => void;
   exportLeadsToCSV: () => void;
   updateLeadStatus?: (id: string, status: string) => void;
+  deleteLead?: (id: string) => void;
+  editLead?: (id: string, data: any) => void;
 }
 
 const CRM_COLUMNS = [
@@ -32,7 +34,9 @@ export function LeadsTab({
   leadSearchTerm,
   setLeadSearchTerm,
   exportLeadsToCSV,
-  updateLeadStatus
+  updateLeadStatus,
+  deleteLead,
+  editLead
 }: LeadsTabProps) {
   
   const filteredLeads = leads.filter(lead => 
@@ -101,8 +105,35 @@ export function LeadsTab({
                   </div>
                 ) : (
                   colLeads.map(lead => (
-                    <div key={lead.id} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-amber-500/50 transition-colors">
-                      <div className="flex justify-between items-start mb-3">
+                    <div key={lead.id} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-amber-500/50 transition-colors relative group">
+                      {/* Acciones de Edición/Borrado */}
+                      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          onClick={() => {
+                            if (!editLead) return;
+                            const newName = prompt('Editar nombre:', lead.name);
+                            if (newName === null) return; // Cancelado
+                            const newPhone = prompt('Editar teléfono:', lead.phone);
+                            if (newPhone === null) return;
+                            const newQty = prompt('Editar cantidad:', lead.quantity);
+                            if (newQty === null) return;
+                            editLead(lead.id, { name: newName, phone: newPhone, quantity: newQty });
+                          }}
+                          className="p-1.5 bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white rounded-md transition-colors"
+                          title="Editar prospecto"
+                        >
+                          <Edit className="w-3 h-3" />
+                        </button>
+                        <button 
+                          onClick={() => deleteLead && deleteLead(lead.id)}
+                          className="p-1.5 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-md transition-colors"
+                          title="Eliminar prospecto"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      <div className="flex justify-between items-start mb-3 pr-14">
                         <h4 className="text-white font-medium text-sm">{lead.name || 'Sin nombre'}</h4>
                         <span className="text-[10px] text-slate-400">
                           {lead.createdAt?.toDate ? lead.createdAt.toDate().toLocaleDateString('es-MX') : ''}
