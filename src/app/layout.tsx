@@ -22,8 +22,9 @@ import { doc, getDoc } from "firebase/firestore";
 import { logger } from '../lib/logger';
 
 export async function generateMetadata(): Promise<Metadata> {
-  let dynamicTitle = "Cobertores Ultra Cálidos para Invierno | MANO FIL Cobertores.com";
-  let dynamicDescription = "Descubre la colección de cobertores MANO FIL: gruesos, pachoncitos y con diseños exclusivos para conservar el calor. Calidad premium en cobertores ligeros, de invierno, matrimoniales y king size.";
+  let dynamicTitle = "Fábrica de Cobertores y Tilmas | Venta por Mayoreo | MANO FIL";
+  let dynamicDescription = "Fábrica textil de cobertores y tilmas por mayoreo en México. Suministro industrial B2B y logística a gran escala.";
+  let dynamicKeywords = ["cobertores gruesos", "cobertores para invierno", "cobertores ultra cálidos", "venta de cobertores por mayoreo", "cobertores matrimoniales", "cobertores king size", "MANO FIL Cobertores", "fábrica textil Tlaxcala", "Mano Fil S.A."];
 
   try {
     const settingsRef = doc(db, "system_settings", "global");
@@ -32,6 +33,9 @@ export async function generateMetadata(): Promise<Metadata> {
       const data = snap.data();
       if (data.seoTitle) dynamicTitle = data.seoTitle;
       if (data.seoDescription) dynamicDescription = data.seoDescription;
+      if (data.seoKeywords) {
+        dynamicKeywords = data.seoKeywords.split(',').map((k: string) => k.trim());
+      }
     }
   } catch (error) {
     logger.error("Error fetching global SEO settings:", error);
@@ -43,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: "%s | MANO FIL Cobertores.com"
     },
     description: dynamicDescription,
-    keywords: ["cobertores gruesos", "cobertores para invierno", "cobertores ultra cálidos", "venta de cobertores por mayoreo", "cobertores matrimoniales", "cobertores king size", "MANO FIL Cobertores", "fábrica textil Tlaxcala", "Mano Fil S.A."],
+    keywords: dynamicKeywords,
     authors: [{ name: "MANO FIL Cobertores" }],
     creator: "MANO FIL Cobertores",
     publisher: "MANO FIL Cobertores",
@@ -162,13 +166,9 @@ export default function RootLayout({
                 if ('serviceWorker' in navigator) {
                   window.addEventListener('load', function() {
                     navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                      // Nota: este es un <script> inline (HTML crudo), no forma parte
-                      // del bundle de React -- no tiene acceso a logger. Debe usar
-                      // console directo. (bug anterior: usaba logger.log aqui y
-                      // tronaba con "ReferenceError: logger is not defined" cada vez
-                      // que cargaba cualquier pagina).
-                    }, function(err) {
-                      console.error('ServiceWorker registration failed: ', err);
+                      // SW registered successfully
+                    }).catch(function(err) {
+                      // Silently catch registration failure
                     });
                   });
                 }

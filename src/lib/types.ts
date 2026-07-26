@@ -32,6 +32,7 @@ export interface RssSource {
 export interface SystemSettings {
   seoTitle?: string;
   seoDescription?: string;
+  seoKeywords?: string;
   logoUrl?: string;
   bankName?: string;
   bankAccount?: string;

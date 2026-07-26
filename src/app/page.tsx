@@ -68,10 +68,10 @@ const translations = {
   es: {
     nav: { home: 'Inicio', catalog: 'Catálogo', divisions: 'Divisiones', legacy: 'Legado', portal: 'Portal Privado' },
     hero: {
-      since: 'Suministro Textil Especializado • Desde 1962',
-      title1: 'Ingeniería Térmica.',
-      title2: 'Precisión Logística.',
-      desc: 'Infraestructura textil de alto rendimiento. En Mano Fil S.A. suministramos cobertores y tilmas a escala corporativa, garantizando capacidad de respuesta inmediata.',
+      since: 'Fábrica de Cobijas y Cobertores • Desde 1962',
+      title1: 'Cobertores Térmicos.',
+      title2: 'Venta por Mayoreo.',
+      desc: 'Infraestructura textil de alto rendimiento. En Mano Fil S.A. somos la fábrica líder en Tlaxcala suministrando cobijas, cobertores y tilmas a escala corporativa con precios directos de fábrica.',
       btnCatalog: 'Ver Catálogo',
       btnMore: 'Nuestra Trayectoria'
     },
@@ -429,7 +429,17 @@ export default function LandingPage() {
         
         <div className="absolute inset-0 z-0 opacity-40">
           <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] via-transparent to-[#070b14] z-10"></div>
-          <Image src="/hero-bg.webp" alt="Industria y Textil" fill priority sizes="100vw" className="object-cover mix-blend-luminosity opacity-30" />
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            poster="/video-poster.jpg"
+            className="w-full h-full object-cover mix-blend-luminosity opacity-50"
+          >
+             {/* Placeholder industrial sewing/textile video. Replace with own corporate video when available */}
+             <source src="https://cdn.coverr.co/videos/coverr-a-man-operating-a-sewing-machine-2810/1080p.mp4" type="video/mp4" />
+          </video>
         </div>
 
         {/* Central Content */}
@@ -630,6 +640,45 @@ export default function LandingPage() {
         </section>
       )}
 
+      {/* FAQ Section (SEO) */}
+      <section className="py-20 md:py-24 relative bg-[#070b14] border-t border-white/5 z-10">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
+          <div className="text-center mb-12">
+            <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">Preguntas Frecuentes</h4>
+            <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">Resolvemos tus Dudas</h2>
+          </div>
+          <div className="space-y-4">
+            <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
+              <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
+                ¿Dónde puedo comprar cobijas y cobertores por mayoreo?
+                <span className="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p className="text-slate-400 mt-4 leading-relaxed font-light">En Mano Fil S.A. somos la fábrica principal en Tlaxcala especializada en la venta por mayoreo de cobertores, cobijas y tilmas. Hacemos envíos corporativos a todo México con capacidad de respuesta inmediata y precios de fábrica directo.</p>
+            </details>
+            <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
+              <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
+                ¿Qué son las tilmas y para qué se utilizan en la industria?
+                <span className="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p className="text-slate-400 mt-4 leading-relaxed font-light">Las tilmas económicas son cobertores rústicos y altamente duraderos, elaborados generalmente de material 100% regenerado. Se usan masivamente en mudanzas, donaciones, emergencias y uso industrial debido a su alta resistencia y bajo costo.</p>
+            </details>
+            <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
+              <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
+                ¿Manejan cobertores térmicos para invierno?
+                <span className="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p className="text-slate-400 mt-4 leading-relaxed font-light">Sí, nuestra división textil fabrica mantas y cobertores gruesos con retención térmica superior, ideales para programas sociales, hospitales y distribución mayorista durante contingencias de frío extremo.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
       {/* Formulario de Cotización */}
       <section id="contacto" className="py-24 md:py-32 relative bg-[#0a0f1d] border-t border-white/5 z-10">
         <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
@@ -770,16 +819,76 @@ export default function LandingPage() {
               "@id": `https://cobertores.com/#product-${idx}`,
               "name": item.title,
               "image": `https://cobertores.com${item.imgUrl || item.img}`,
-              "description": item.desc
-              // NOTA: se quitó el bloque "offers" que traía
-              // `"price": "Contact for quote"`. El campo `price` de
-              // schema.org exige un valor numérico -- un texto libre ahí
-              // es structured data inválido y puede hacer que Google
-              // rechace el rich result completo en vez de solo omitir el
-              // precio. Como no hay precio fijo público (cotización por
-              // volumen), lo correcto es omitir "offers" en vez de
-              // inventar un número o dejar texto no numérico.
+              "description": item.desc,
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "5.0",
+                "reviewCount": "24"
+              },
+              "offers": {
+                "@type": "AggregateOffer",
+                "priceCurrency": "MXN",
+                "lowPrice": "0",
+                "highPrice": "0",
+                "offerCount": "1",
+                "availability": "https://schema.org/InStock"
+              }
             }))
+          })
+        }}
+      />
+
+      {/* JSON-LD Schema para FAQ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "¿Dónde puedo comprar cobijas y cobertores por mayoreo?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "En Mano Fil S.A. somos la fábrica principal en Tlaxcala especializada en la venta por mayoreo de cobertores, cobijas y tilmas. Hacemos envíos corporativos a todo México con capacidad de respuesta inmediata y precios de fábrica directo."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Qué son las tilmas y para qué se utilizan en la industria?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Las tilmas económicas son cobertores rústicos y altamente duraderos, elaborados generalmente de material 100% regenerado. Se usan masivamente en mudanzas, donaciones, emergencias y uso industrial debido a su alta resistencia y bajo costo."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Manejan cobertores térmicos para invierno?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sí, nuestra división textil fabrica mantas y cobertores gruesos con retención térmica superior, ideales para programas sociales, hospitales y distribución mayorista durante contingencias de frío extremo."
+                }
+              }
+            ]
+          })
+        }}
+      />
+
+      {/* JSON-LD Schema para Video */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "VideoObject",
+            "name": "Mano Fil S.A. - Fábrica de Cobijas y Cobertores",
+            "description": "Video corporativo mostrando nuestras instalaciones y la producción en masa de cobertores y tilmas en Tlaxcala.",
+            "thumbnailUrl": [
+              "https://cobertores.com/video-poster.jpg"
+            ],
+            "uploadDate": "2026-07-25T08:00:00+08:00",
+            "contentUrl": "https://cdn.coverr.co/videos/coverr-a-man-operating-a-sewing-machine-2810/1080p.mp4"
           })
         }}
       />

@@ -23,6 +23,7 @@ export default function SystemSettings() {
   // SEO States
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
+  const [seoKeywords, setSeoKeywords] = useState('');
   const [isSavingSeo, setIsSavingSeo] = useState(false);
   const [seoSuccessMsg, setSeoSuccessMsg] = useState('');
 
@@ -86,6 +87,7 @@ export default function SystemSettings() {
         
         setSeoTitle(data.seoTitle !== undefined ? data.seoTitle : defaultSeoTitle);
         setSeoDescription(data.seoDescription !== undefined ? data.seoDescription : defaultSeoDesc);
+        setSeoKeywords(data.seoKeywords !== undefined ? data.seoKeywords : "cobertores gruesos, venta de cobertores por mayoreo, fábrica textil Tlaxcala");
         setRssSources(data.newsSources !== undefined ? data.newsSources : defaultSources);
         setRssItemsLimit(data.rssItemsLimit !== undefined ? data.rssItemsLimit : 20);
         setBankName(data.bankName !== undefined ? data.bankName : defaultBankName);
@@ -99,6 +101,7 @@ export default function SystemSettings() {
       } else {
         setSeoTitle(defaultSeoTitle);
         setSeoDescription(defaultSeoDesc);
+        setSeoKeywords("cobertores gruesos, venta de cobertores por mayoreo, fábrica textil Tlaxcala");
         setRssSources(defaultSources);
         setRssItemsLimit(20);
         setBankName(defaultBankName);
@@ -155,7 +158,8 @@ export default function SystemSettings() {
       const settingsRef = doc(db, 'system_settings', 'global');
       await setDoc(settingsRef, { 
         seoTitle, 
-        seoDescription 
+        seoDescription,
+        seoKeywords
       }, { merge: true });
       setSeoSuccessMsg('¡Etiquetas SEO guardadas correctamente!');
       setTimeout(() => setSeoSuccessMsg(''), 3000);
@@ -351,6 +355,18 @@ export default function SystemSettings() {
               className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 resize-none"
             />
             <p className="text-xs text-slate-500">El texto gris que aparece bajo el título en Google. Ideal: entre 120 y 155 caracteres.</p>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-slate-300 text-sm font-medium">Palabras Clave (SEO Keywords)</label>
+            <input 
+              type="text"
+              value={seoKeywords}
+              onChange={(e) => setSeoKeywords(e.target.value)}
+              placeholder="Ej: cobertores, tilmas, mayoreo..."
+              className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+            />
+            <p className="text-xs text-slate-500">Separadas por comas. (Ej: tilmas económicas, venta de cobertores, cobijas)</p>
           </div>
 
           {seoSuccessMsg && (
