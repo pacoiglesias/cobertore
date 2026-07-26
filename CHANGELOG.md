@@ -1,5 +1,13 @@
 # Changelog — Cobertores Web (Mano Fil S.A.)
 
+## [0.5.3] — 2026-07-26 (Fase 14: Optimización, SEO y Paginación Pública)
+
+### Added
+- **Compresión Inteligente de Imágenes**: Se integró `browser-image-compression` en `NewsManager.tsx` y `ProductsTab.tsx` para reducir hasta un 90% el tamaño de las fotografías locales (límite de 500KB o 1920px) antes de la subida a Firebase Storage, mejorando el rendimiento y reduciendo el consumo de ancho de banda.
+- **Paginación Pública de Firestore**: El listado principal de noticias (`/noticias`) ahora pre-renderiza únicamente las últimas 12 publicaciones. La carga dinámica bajo demanda ("Cargar Más") utiliza cursores nativos (`startAfter`) para proteger la memoria RAM en dispositivos móviles.
+- **SEO Dinámico Verificado**: Validación y ratificación del sistema `generateMetadata` en las URL individuales de artículos (`/noticias/[id]`), asegurando pre-renderización limpia de Open Graph (og:title, og:image) para una máxima compatibilidad al compartir en Facebook y WhatsApp.
+- **Respaldos Intensivos de Base de Datos**: Reconfiguración de la Cloud Function `backupDatabase` de semanal (domingos) a **diario** (`every 24 hours`), garantizando recuperación granular del historial de cotizaciones.
+
 ## [0.5.1] — 2026-07-26 (Fase 13: UX Intuitiva y Refactorización Estricta)
 
 ### Added

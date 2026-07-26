@@ -23,7 +23,7 @@ export const metadata = {
 
 async function getNews(): Promise<NewsItem[]> {
   try {
-    const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'), limit(150));
+    const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'), limit(12));
     const snap = await getDocs(q);
     return snap.docs.map(doc => {
       const data = doc.data();

@@ -196,9 +196,9 @@ export const onLeadCreated = onDocumentCreated('leads/{leadId}', async (event) =
 });
 
 // Fase 9: Backups Automáticos de Base de Datos
-// Se ejecuta todos los domingos a la medianoche
+// Se ejecuta todos los dias
 export const backupDatabase = functions.scheduler.onSchedule({
-  schedule: 'every sunday 00:00',
+  schedule: 'every 24 hours',
   timeZone: 'America/Mexico_City',
 }, async () => {
   const db = getFirestore();

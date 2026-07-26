@@ -1,4 +1,10 @@
-# Prompt: Cobertores Web v0.5.1 — estado al 2026-07-26
+# Prompt: Cobertores Web v0.5.3 — estado al 2026-07-26
+
+## ✅ Ya resuelto y confirmado (Fase 14: Optimización, SEO y Paginación)
+- **Compresión de Imágenes**: Uploads de Noticias y Catálogo optimizados al vuelo (`browser-image-compression`) bajo 500KB.
+- **Paginación Pública de Noticias**: Listado asíncrono implementado en `/noticias` protegiendo memoria RAM del cliente mediante queries fraccionados de Firestore (`startAfter`).
+- **SEO Dinámico Avanzado**: Validación de inyección programática de Open Graph (`og:image`, `og:title`) en `/noticias/[id]/page.tsx`.
+- **Respaldos de Base de Datos**: Actualización de la Cloud Function a frecuencia diaria para mayor seguridad.
 
 ## ✅ Ya resuelto y confirmado (Fase 13: UX Intuitiva y Refactorización Estricta)
 - **CMS Markdown**: Módulo de noticias mejorado con editor enriquecido y soporte `react-markdown` público.
@@ -28,10 +34,7 @@
 
 ## Prioridad 1 — Pendiente (Roadmap Futuro)
 1. **Verificar Dominio en Google Search Console**: Indispensable para indexar las cientos de noticias que genere el RSS.
-2. **Implementar Cloudinary**: Para optimizar imágenes y reducir TTI (Time to Interactive).
-3. **Paginación en Frontend de Noticias**: Para no saturar memoria de móviles al cargar 150 noticias.
-4. **Respaldo Automático de Base de Datos (Backups)**: Programar Cloud Function para respaldar la base de datos de Cotizaciones/Oficios cada madrugada.
-5. **Generar Llaves de AppCheck reales**: Cambiar de ambiente "Auditoría" a ambiente protegido con las llaves de ReCAPTCHA reales generadas por el administrador.
+2. **Generar Llaves de AppCheck reales**: Cambiar de ambiente "Auditoría" a ambiente protegido con las llaves de ReCAPTCHA reales generadas por el administrador.
 
 ## Prioridad 2 — Pendiente conocido (sin cambios, baja prioridad)
 - `npm audit`: confirmado que no hay arreglo seguro disponible ahora mismo

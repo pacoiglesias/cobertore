@@ -24,9 +24,10 @@ import { OrdersTab } from './components/OrdersTab';
 import { ProductsTab, type ProductForm } from './components/ProductsTab';
 import { getFileIcon, formatSize } from './components/utils';
 import { toast } from 'react-hot-toast';
+import { jsPDF } from "jspdf";
+import imageCompression from 'browser-image-compression';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import { logger } from '../../../lib/logger';
-import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 interface IntranetFile {
@@ -303,12 +304,20 @@ export default function Dashboard() {
     if (!productImgRef.current?.files || productImgRef.current.files.length === 0 || !isEditor) return;
     
     setUploading(true);
-    setUploadProgress('Subiendo producto al catálogo...');
+    setUploadProgress('Comprimiendo imagen...');
     const file = productImgRef.current.files[0];
     
     try {
-      const storageRef = ref(storage, `catalog/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
+      const options = {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+      };
+      const compressedFile = await imageCompression(file, options);
+      
+      setUploadProgress('Subiendo producto al catálogo...');
+      const storageRef = ref(storage, `catalog/${Date.now()}_${compressedFile.name}`);
+      await uploadBytes(storageRef, compressedFile);
       const url = await getDownloadURL(storageRef);
       
       await addDoc(collection(db, 'products'), {

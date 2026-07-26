@@ -6,6 +6,7 @@ import { httpsCallable } from 'firebase/functions';
 import { db, storage, functions } from '@/lib/firebase';
 import { toast } from 'react-hot-toast';
 import { logger } from '../../../lib/logger';
+import imageCompression from 'browser-image-compression';
 
 interface NewsItem {
   id: string;
@@ -68,9 +69,16 @@ export default function NewsManager() {
     setUploading(true);
     try {
       const file = imgRef.current.files[0];
-      const storagePath = `news/${Date.now()}_${file.name}`;
+      const options = {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+      };
+      const compressedFile = await imageCompression(file, options);
+      
+      const storagePath = `news/${Date.now()}_${compressedFile.name}`;
       const storageRef = ref(storage, storagePath);
-      await uploadBytes(storageRef, file);
+      await uploadBytes(storageRef, compressedFile);
       const url = await getDownloadURL(storageRef);
 
       await addDoc(collection(db, 'news'), {

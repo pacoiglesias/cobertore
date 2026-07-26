@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, limit, startAfter, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { Newspaper, ChevronRight, Clock } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { NewsItem } from '@/lib/types';
@@ -35,7 +35,8 @@ interface NewsGridProps {
 export function NewsGrid({ initialNews }: NewsGridProps) {
   const [news, setNews] = useState<NewsItem[]>(initialNews);
   const [refreshing, setRefreshing] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(12);
+  const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
+  const [hasMore, setHasMore] = useState(true); // Asumimos que si inicialNews tiene 12, podría haber más
 
   useEffect(() => {
     let cancelled = false;
@@ -43,7 +44,7 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
     async function refreshFromFirestore() {
       setRefreshing(true);
       try {
-        const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'), limit(150));
+        const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'), limit(12));
         const snap = await getDocs(q);
         const fresh: NewsItem[] = snap.docs.map((doc) => {
           const data = doc.data();
@@ -60,10 +61,11 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
         });
         if (!cancelled && fresh.length > 0) {
           setNews(fresh);
+          setLastDoc(snap.docs[snap.docs.length - 1]);
+          setHasMore(snap.docs.length === 12);
         }
       } catch (error) {
         logger.error('Error refrescando noticias en vivo:', error);
-        // Si falla, nos quedamos con initialNews -- no rompemos la página.
       } finally {
         if (!cancelled) setRefreshing(false);
       }
@@ -75,8 +77,43 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
     };
   }, []);
 
-  const handleLoadMore = () => {
-    setVisibleCount(prev => prev + 12);
+  const handleLoadMore = async () => {
+    if (!lastDoc) return;
+    setRefreshing(true);
+    try {
+      const q = query(
+        collection(db, 'news'),
+        orderBy('createdAt', 'desc'),
+        startAfter(lastDoc),
+        limit(12)
+      );
+      const snap = await getDocs(q);
+      const newItems: NewsItem[] = snap.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          title: data.title || '',
+          summary: data.summary || '',
+          body: data.body || '',
+          sourceName: data.sourceName || '',
+          originalUrl: data.originalUrl || '',
+          imgUrl: data.imgUrl || '',
+          createdAt: data.createdAt?.toDate().toISOString() || ''
+        };
+      });
+
+      if (newItems.length > 0) {
+        setNews(prev => [...prev, ...newItems]);
+        setLastDoc(snap.docs[snap.docs.length - 1]);
+      }
+      if (snap.docs.length < 12) {
+        setHasMore(false);
+      }
+    } catch (e) {
+      logger.error('Error cargando más noticias:', e);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   if (news.length === 0) {
@@ -89,7 +126,7 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
     );
   }
 
-  const visibleNews = news.slice(0, visibleCount);
+
 
   return (
     <div>
@@ -100,7 +137,7 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
         </p>
       )}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {visibleNews.map((item: NewsItem) => (
+        {news.map((item: NewsItem) => (
           <article key={item.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl transition-all group flex flex-col">
             <div className="h-64 overflow-hidden relative">
               <BlurImage
@@ -136,13 +173,14 @@ export function NewsGrid({ initialNews }: NewsGridProps) {
         ))}
       </div>
       
-      {visibleCount < news.length && (
+      {hasMore && (
         <div className="mt-12 text-center">
           <button 
             onClick={handleLoadMore}
-            className="bg-white border-2 border-slate-200 hover:border-amber-500 text-slate-700 hover:text-amber-600 font-bold py-3 px-8 rounded-full transition-all hover:shadow-lg shadow-sm"
+            disabled={refreshing}
+            className="bg-white border-2 border-slate-200 hover:border-amber-500 text-slate-700 hover:text-amber-600 font-bold py-3 px-8 rounded-full transition-all hover:shadow-lg shadow-sm disabled:opacity-50"
           >
-            Cargar Más Noticias ({news.length - visibleCount} restantes)
+            {refreshing ? 'Cargando...' : 'Cargar Más Noticias'}
           </button>
         </div>
       )}
