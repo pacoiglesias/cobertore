@@ -24,7 +24,25 @@ export async function generateMetadata(
   const { lang } = await params;
   const validLang = resolveLang(lang);
 
+  // FIX 2026-07-26: /en heredaba el título y la descripción en español
+  // del layout raíz. En los resultados de búsqueda en inglés, la página
+  // aparecía con texto en español -- mata el porcentaje de clics y
+  // confunde al comprador internacional. Ahora cada idioma tiene los
+  // suyos, con las palabras clave que de verdad buscaría cada mercado.
+  const meta = {
+    es: {
+      title: 'Cobertores y Cobijas por Mayoreo | Fábrica Textil desde 1962',
+      description: 'Fábrica de cobertores, cobijas y tilmas en Tlaxcala. Venta por mayoreo a escala corporativa con precios directos de fábrica. Más de 60 años de experiencia.',
+    },
+    en: {
+      title: 'Wholesale Blankets & Thermal Textiles | Mexican Manufacturer Since 1962',
+      description: 'Leading blanket manufacturer in Tlaxcala, Mexico. Heavy-duty thermal blankets and tilmas for corporate wholesale, with direct factory pricing and large-volume capacity.',
+    },
+  }[validLang];
+
   return {
+    title: meta.title,
+    description: meta.description,
     alternates: {
       canonical: `/${validLang}`,
       languages: {
@@ -32,6 +50,13 @@ export async function generateMetadata(
         'en': '/en',
         'x-default': '/es',
       },
+    },
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      locale: validLang === 'en' ? 'en_US' : 'es_MX',
+      type: 'website',
+      url: `https://cobertores.com/${validLang}`,
     },
   };
 }
