@@ -58,14 +58,6 @@ service firebase.storage {
         && request.resource.contentType.matches('image/.*');
     }
 
-    match /news/{allPaths=**} {
-      // Público para que las noticias se puedan ver
-      allow read: if true;
-      allow write: if (isSuperAdmin() || isEditor())
-        && request.resource.size < 5 * 1024 * 1024
-        && request.resource.contentType.matches('image/.*');
-    }
-
     match /system_assets/{allPaths=**} {
       // Público para que el frontend pueda cargar el logo (sin cambios)
       allow read: if true;
