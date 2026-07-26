@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@custom-variant dark (&:is(.dark *));
 
 :root {
   --background: #ffffff;
@@ -14,9 +13,11 @@
   --font-serif: var(--font-playfair), Georgia, 'Times New Roman', serif;
 }
 
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
 }
 
 html {
