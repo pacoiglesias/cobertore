@@ -153,7 +153,7 @@ export function LeadsTab({
                   colLeads.map(lead => (
                     <div key={lead.id} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-amber-500/50 transition-colors relative group">
                       {/* Acciones de Edición/Borrado */}
-                      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute top-2 right-2 flex gap-1 opacity-100 transition-opacity">
                         <button 
                           onClick={() => {
                             if (!editLead) return;
