@@ -1,4 +1,10 @@
-# Prompt: Cobertores Web v0.5.0 — estado al 2026-07-26
+# Prompt: Cobertores Web v0.5.1 — estado al 2026-07-26
+
+## ✅ Ya resuelto y confirmado (Fase 13: UX Intuitiva y Refactorización Estricta)
+- **CMS Markdown**: Módulo de noticias mejorado con editor enriquecido y soporte `react-markdown` público.
+- **Cotizador Inteligente**: Cálculos automáticos de IVA y Subtotal inyectados dinámicamente en UI.
+- **Deuda Técnica TypeScript**: Limpieza exhaustiva de tipos `: any` (`SystemSettings`, `ProductsTab`, `QuoteGenerator`). Compilación SSG validada al 100%.
+- **Navegación Perfecta**: Incorporación de `trailingSlash` para eliminar errores 404 de payloads RSC en Firebase Hosting con URLs limpias.
 
 ## ✅ Ya resuelto y confirmado (Fase 12: i18n & Seguridad Zero-Flicker)
 - **Internacionalización Real Estática (i18n)**: Migración a URLs físicas `/es` y `/en` con `generateStaticParams`, reteniendo velocidad 100% SSG.
@@ -31,7 +37,7 @@
 - `npm audit`: confirmado que no hay arreglo seguro disponible ahora mismo
   ni en raíz ni en `functions/` sin forzar cambios que rompen algo. No
   insistir en esto hasta que el ecosistema publique parches.
-- 8 usos de `: any`, ~35 issues de ESLint catalogados (comillas sin
+- ~35 issues de ESLint catalogados (comillas sin
   escapar en páginas legales, imports sin usar) — cosmético, no urgente.
 - Fotografía real vs. stock de Unsplash.
 - El Universal y Marca (RSS) rotas a propósito, sin reemplazo buscado.
