@@ -1,4 +1,5 @@
 import React from 'react';
+import { dictionaries, Lang } from '../../lib/i18n/dictionaries';
 import { motion, Variants } from 'framer-motion';
 import { Leaf } from 'lucide-react';
 
@@ -11,7 +12,8 @@ const fadeUp: Variants = {
   }),
 };
 
-export function Sustainability() {
+export function Sustainability({ lang = 'es' }: { lang?: Lang }) {
+  const t = dictionaries[lang].sustain;
   return (
     <section id="sustentabilidad" className="py-24 lg:py-32 bg-white dark:bg-[#0a0f1d] border-t border-slate-200 dark:border-white/5 relative z-10">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -22,23 +24,23 @@ export function Sustainability() {
           viewport={{ once: true, amount: 0.4 }}
           className="max-w-2xl mb-16 text-center mx-auto"
         >
-          <p className="font-mono text-[11px] tracking-[0.28em] uppercase text-amber-500 font-bold mb-4">Compromiso ambiental</p>
+          <p className="font-mono text-[11px] tracking-[0.28em] uppercase text-amber-500 font-bold mb-4">{t.eyebrow}</p>
           <h2 className="font-serif text-3xl lg:text-4xl text-slate-900 dark:text-white leading-tight drop-shadow-md">
-            Solidez industrial con responsabilidad de largo plazo.
+            {t.title}
           </h2>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-10">
           {[
             {
-              tag: "Producción Textil",
-              title: "Procesos textiles de menor impacto",
-              copy: "Optimización del consumo hídrico y energético en el proceso de hilado y teñido, uso creciente de fibras de origen responsable, y tratamiento de aguas residuales previo a su reincorporación al proceso productivo.",
+              tag: t.c1tag,
+              title: t.c1title,
+              copy: t.c1desc,
             },
             {
-              tag: "Desarrollo Inmobiliario",
-              title: "Edificaciones de bajo impacto",
-              copy: "Criterios de eficiencia energética e hídrica en el diseño de naves y desarrollos comerciales, gestión responsable de residuos de obra y selección de materiales de menor huella ambiental en cada proyecto.",
+              tag: t.c2tag,
+              title: t.c2title,
+              copy: t.c2desc,
             },
           ].map((block, i) => (
             <motion.div

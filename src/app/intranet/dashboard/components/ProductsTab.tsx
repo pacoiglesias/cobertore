@@ -12,10 +12,17 @@ interface CatalogProduct {
   storagePath: string;
 }
 
+// Campos en inglés opcionales: si están vacíos, el sitio en /en muestra
+// el texto en español como respaldo.
+export interface ProductForm {
+  title: string; weight: string; desc: string; composition: string; measures: string;
+  title_en?: string; desc_en?: string; measures_en?: string; composition_en?: string;
+}
+
 interface ProductsTabProps {
   products: CatalogProduct[];
-  productForm: { title: string; weight: string; desc: string; composition: string; measures: string };
-  setProductForm: React.Dispatch<React.SetStateAction<{ title: string; weight: string; desc: string; composition: string; measures: string }>>;
+  productForm: ProductForm;
+  setProductForm: React.Dispatch<React.SetStateAction<ProductForm>>;
   uploading: boolean;
   productImgRef: React.RefObject<HTMLInputElement | null>;
   handleProductUpload: (e: React.FormEvent) => Promise<void>;
@@ -77,6 +84,37 @@ export function ProductsTab({
                 <input type="text" value={productForm.composition} onChange={e=>setProductForm({...productForm, composition: e.target.value})} required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="100% Acrílico"/>
               </div>
             </div>
+            {/* Traducción opcional al inglés: si se deja vacío, la versión
+                /en del sitio muestra el texto en español como respaldo. */}
+            <details className="border border-white/10 rounded-xl overflow-hidden">
+              <summary className="cursor-pointer select-none px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-amber-500 bg-amber-500/5 hover:bg-amber-500/10 transition-colors">
+                🌐 Traducción al inglés (opcional)
+              </summary>
+              <div className="p-4 space-y-4 bg-black/20">
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  Si lo dejas vacío, la página en inglés mostrará el texto en español.
+                </p>
+                <div>
+                  <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Nombre en inglés</label>
+                  <input type="text" value={productForm.title_en || ''} onChange={e=>setProductForm({...productForm, title_en: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="e.g. Lightweight Distribution Tilma"/>
+                </div>
+                <div>
+                  <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Descripción en inglés</label>
+                  <textarea value={productForm.desc_en || ''} onChange={e=>setProductForm({...productForm, desc_en: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="Short description in English..."></textarea>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Medidas (EN)</label>
+                    <input type="text" value={productForm.measures_en || ''} onChange={e=>setProductForm({...productForm, measures_en: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="approx. 2m x 1.50m"/>
+                  </div>
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Composición (EN)</label>
+                    <input type="text" value={productForm.composition_en || ''} onChange={e=>setProductForm({...productForm, composition_en: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-sm focus:border-amber-500 outline-none" placeholder="100% Regenerated"/>
+                  </div>
+                </div>
+              </div>
+            </details>
+
             <div>
               <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Foto (Requerida)</label>
               <input type="file" ref={productImgRef} accept="image/*" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-slate-400 text-sm outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-amber-500/10 file:text-amber-500 hover:file:bg-amber-500 hover:file:text-white transition-all"/>

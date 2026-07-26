@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { CldImage } from 'next-cloudinary';
 import { ArrowRight, ChevronRight, Building2, Factory } from 'lucide-react';
+import { dictionaries, Lang } from '../../lib/i18n/dictionaries';
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -92,7 +93,8 @@ function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt,
   );
 }
 
-export function DualNavigation() {
+export function DualNavigation({ lang = 'es' }: { lang?: Lang }) {
+  const t = dictionaries[lang].dual;
   return (
     <section id="divisiones" className="py-24 lg:py-32 bg-white dark:bg-[#0a0f1d] relative z-10">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -103,9 +105,9 @@ export function DualNavigation() {
           viewport={{ once: true, amount: 0.4 }}
           className="max-w-2xl mb-16"
         >
-          <SectionEyebrow className="mb-4">Dos divisiones, un mismo grupo</SectionEyebrow>
+          <SectionEyebrow className="mb-4">{t.eyebrow}</SectionEyebrow>
           <h2 className="font-serif text-3xl lg:text-5xl text-slate-900 dark:text-white leading-tight drop-shadow-xl">
-            Comercialización logística y patrimonio inmobiliario, bajo una sola disciplina corporativa.
+            {t.intro}
           </h2>
         </motion.div>
 
@@ -113,32 +115,28 @@ export function DualNavigation() {
           <DivisionCard
             id="textil"
             variant="textil"
-            eyebrow="División Textil · Cobertores.com"
-            title="Distribución Textil de Alta Gama."
-            copy="Cobertores, blancos para el hogar, hilos y telas técnicas. Suministramos volúmenes corporativos respaldados por rigurosos controles de calidad y alianzas estratégicas a nivel nacional e internacional."
+            eyebrow={t.tEyebrow}
+            title={t.tTitle}
+            copy={t.tCopy}
             bullets={[
-              "Cobertores y blancos para el hogar",
-              "Hilos industriales y telas técnicas",
-              "Distribución logística certificada",
+              t.tB1, t.tB2, t.tB3,
             ]}
-            ctaLabel="Explorar catálogo textil"
+            ctaLabel={t.tCta}
             image="/division-textile.webp"
-            alt="Textura de cobertor de lujo sobre telar industrial"
+            alt={t.tAlt}
           />
           <DivisionCard
             id="inmobiliaria"
             variant="inmobiliaria"
-            eyebrow="División Inmobiliaria"
-            title="Bienes raíces & desarrollos industriales."
-            copy="Naves industriales, desarrollos comerciales y activos residenciales estratégicos, planeados con el mismo rigor operativo que ha definido a nuestra comercialización logística desde 1962. Patrimonio que se administra, no solo se construye."
+            eyebrow={t.rEyebrow}
+            title={t.rTitle}
+            copy={t.rCopy}
             bullets={[
-              "Naves y parques industriales",
-              "Desarrollos comerciales",
-              "Activos residenciales estratégicos",
+              t.rB1, t.rB2, t.rB3,
             ]}
-            ctaLabel="Ver portafolio inmobiliario"
+            ctaLabel={t.rCta}
             image="/division-realestate.webp"
-            alt="Fachada de nave industrial moderna del portafolio inmobiliario"
+            alt={t.rAlt}
           />
         </div>
       </div>

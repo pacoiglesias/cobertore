@@ -1,28 +1,8 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
+import { dictionaries, Lang } from '../../lib/i18n/dictionaries';
 
-const TIMELINE = [
-  {
-    year: "1962",
-    title: "Fundación del taller textil",
-    copy: "Inicio de operaciones de manufactura textil, con foco en calidad de hilado y confección a escala.",
-  },
-  {
-    year: "1980—1990",
-    title: "Expansión industrial",
-    copy: "Modernización de maquinaria y consolidación como proveedor mayorista de cobertores y blancos para el hogar.",
-  },
-  {
-    year: "2000",
-    title: "Nace la División Inmobiliaria",
-    copy: "La experiencia en administración de activos industriales se traduce en desarrollo y arrendamiento de naves y desarrollos comerciales.",
-  },
-  {
-    year: "Hoy",
-    title: "Grupo consolidado de doble división",
-    copy: "Manufactura textil de exportación y un portafolio inmobiliario en crecimiento sostenido, bajo una misma disciplina corporativa.",
-  },
-];
+
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -33,7 +13,14 @@ const fadeUp: Variants = {
   }),
 };
 
-export function Heritage() {
+export function Heritage({ lang = 'es' }: { lang?: Lang }) {
+  const t = dictionaries[lang].heritage;
+  const TIMELINE = [
+    { year: t.y1, title: t.t1, copy: t.d1 },
+    { year: t.y2, title: t.t2, copy: t.d2 },
+    { year: t.y3, title: t.t3, copy: t.d3 },
+    { year: t.y4, title: t.t4, copy: t.d4 },
+  ];
   return (
     <section id="herencia" className="py-24 lg:py-40 bg-slate-50 dark:bg-[#070b14] relative overflow-hidden z-10 border-t border-slate-200 dark:border-white/5">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/5 via-transparent dark:via-[#070b14] to-transparent dark:to-[#070b14] z-0 pointer-events-none"></div>
@@ -46,17 +33,12 @@ export function Heritage() {
           viewport={{ once: true, amount: 0.4 }}
           className="lg:col-span-5"
         >
-          <p className="font-mono text-[11px] tracking-[0.28em] uppercase text-amber-500 font-bold mb-4">Herencia industrial</p>
+          <p className="font-mono text-[11px] tracking-[0.28em] uppercase text-amber-500 font-bold mb-4">{t.eyebrow}</p>
           <h2 className="font-serif text-slate-900 dark:text-white text-4xl sm:text-5xl lg:text-6xl leading-tight drop-shadow-xl">
-            De un telar a un grupo empresarial.
+            {t.title}
           </h2>
           <p className="text-slate-600 dark:text-slate-400 font-light text-lg mt-8 leading-relaxed">
-            Mano Fil S.A. nació en 1962 como un taller textil familiar orientado a la calidad
-            manufacturera. Ese mismo rigor —precisión en el proceso, disciplina en la
-            administración, visión de largo plazo— fue lo que, décadas después, nos permitió
-            capitalizar nuestros activos y expandirnos hacia el desarrollo inmobiliario e
-            industrial. Hoy, el grupo opera dos divisiones que comparten un mismo principio:
-            construir valor que perdura.
+            {t.intro}
           </p>
         </motion.div>
 

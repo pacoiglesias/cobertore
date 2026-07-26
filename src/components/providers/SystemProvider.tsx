@@ -14,7 +14,7 @@ interface SystemSettingsData {
 }
 
 const defaultSettings: SystemSettingsData = {
-  whatsappNumber: '525512345678',
+  whatsappNumber: '522464642891',
   contactEmail: 'ventas@cobertores.com',
   address: 'Calle Industria Textil 123, Tlaxcala, México',
   officeHours: 'Lunes a Viernes de 9:00 a 18:00 hrs',

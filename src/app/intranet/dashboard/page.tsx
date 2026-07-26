@@ -21,7 +21,7 @@ import { FilesTab } from './components/FilesTab';
 import { SkeletonTable } from '@/components/Skeleton';
 import { LeadsTab } from './components/LeadsTab';
 import { OrdersTab } from './components/OrdersTab';
-import { ProductsTab } from './components/ProductsTab';
+import { ProductsTab, type ProductForm } from './components/ProductsTab';
 import { getFileIcon, formatSize } from './components/utils';
 import { toast } from 'react-hot-toast';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from 'recharts';
@@ -295,7 +295,7 @@ export default function Dashboard() {
 
 
   // --- CATALOG MANAGEMENT ---
-  const [productForm, setProductForm] = useState({ title: '', weight: '', desc: '', measures: '', composition: '' });
+  const [productForm, setProductForm] = useState<ProductForm>({ title: '', weight: '', desc: '', measures: '', composition: '', title_en: '', desc_en: '', measures_en: '', composition_en: '' });
   const productImgRef = useRef<HTMLInputElement>(null);
 
   const handleProductUpload = async (e: React.FormEvent) => {
@@ -318,7 +318,7 @@ export default function Dashboard() {
         createdAt: Timestamp.now()
       });
       
-      setProductForm({ title: '', weight: '', desc: '', measures: '', composition: '' });
+      setProductForm({ title: '', weight: '', desc: '', measures: '', composition: '', title_en: '', desc_en: '', measures_en: '', composition_en: '' });
       if (productImgRef.current) productImgRef.current.value = '';
       toast.success('Producto subido exitosamente.');
     } catch (error) {

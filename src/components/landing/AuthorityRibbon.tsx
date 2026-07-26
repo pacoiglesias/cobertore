@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { Building2, ShieldCheck, MapPin } from 'lucide-react';
+import { dictionaries, Lang } from '../../lib/i18n/dictionaries';
 
 // NOTA (2026-07-24): los 3 stats originales ("300,000 m²", "+15 países")
 // se quitaron porque no eran cifras verificables/reales. En vez de
@@ -8,11 +9,7 @@ import { Building2, ShieldCheck, MapPin } from 'lucide-react';
 // cualitativas que solo repiten hechos que ya están confirmados en el
 // resto del sitio (año de fundación en Heritage.tsx, alcance nacional en
 // page.tsx, doble división en Heritage.tsx) — nada nuevo sin verificar.
-const STATS = [
-  { icon: ShieldCheck, value: "Trayectoria", label: "Manufactura textil desde 1962" },
-  { icon: MapPin, value: "Escala mayorista", label: "Distribución a nivel nacional" },
-  { icon: Building2, value: "Doble división", label: "Textil e inmobiliaria bajo un mismo grupo" },
-];
+
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -23,7 +20,13 @@ const fadeUp: Variants = {
   }),
 };
 
-export function AuthorityRibbon() {
+export function AuthorityRibbon({ lang = 'es' }: { lang?: Lang }) {
+  const t = dictionaries[lang].ribbon;
+  const STATS = [
+    { icon: ShieldCheck, value: t.s1v, label: t.s1l },
+    { icon: MapPin, value: t.s2v, label: t.s2l },
+    { icon: Building2, value: t.s3v, label: t.s3l },
+  ];
   return (
     <section className="bg-slate-50 dark:bg-[#070b14] py-16 lg:py-20 border-t border-slate-200 dark:border-white/5 relative z-10">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/10 via-transparent dark:via-[#070b14] to-transparent dark:to-[#070b14] z-0 pointer-events-none"></div>
@@ -36,7 +39,7 @@ export function AuthorityRibbon() {
           className="text-center mb-14"
         >
           <span className="inline-block font-mono text-[11px] tracking-[0.3em] uppercase text-amber-500 border border-amber-500/40 rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(245,158,11,0.15)] bg-amber-500/5 backdrop-blur-sm">
-            Fundada en 1962 — Más de 6 décadas de liderazgo industrial
+            {t.badge}
           </span>
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 lg:gap-6">

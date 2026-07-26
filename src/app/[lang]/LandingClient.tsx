@@ -68,6 +68,23 @@ const playSuccessSound = () => {
 
 export default function LandingClient({ lang }: { lang: Lang }) {
   const t = dictionaries[lang];
+
+  // Los productos del catálogo se guardan en Firestore en español. Si el
+  // documento incluye traducciones opcionales (title_en / desc_en /
+  // measures_en / composition_en), se usan cuando el idioma es inglés;
+  // si no existen, se muestra el español como respaldo (mejor que dejar
+  // el campo vacío). Así el catálogo puede traducirse producto por
+  // producto desde el dashboard, sin romper los que aún no lo estén.
+  const traducirProducto = (p: any) => {
+    if (lang !== 'en') return p;
+    return {
+      ...p,
+      title: p.title_en || p.title,
+      desc: p.desc_en || p.desc,
+      measures: p.measures_en || p.measures,
+      composition: p.composition_en || p.composition,
+    };
+  };
   
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -335,7 +352,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
         </motion.div>
       </section>
 
-      <AuthorityRibbon />
+      <AuthorityRibbon lang={lang} />
 
       {/* Pilares */}
       <section className="py-20 md:py-32 relative bg-[#0a0f1d] border-t border-white/5 z-10">
@@ -390,7 +407,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6 md:gap-8">
-            {(catalogProducts.length > 0 ? (catalogProducts as any[]) : t.products.items).map((item, index: number) => (
+            {(catalogProducts.length > 0 ? (catalogProducts as any[]).map(traducirProducto) : t.products.items).map((item, index: number) => (
               <motion.div 
                 key={item.id || index}
                 initial={{ opacity: 0, y: 40 }}
@@ -447,17 +464,17 @@ export default function LandingClient({ lang }: { lang: Lang }) {
         </div>
       </section>
 
-      <DualNavigation />
-      <Heritage />
-      <Sustainability />
+      <DualNavigation lang={lang} />
+      <Heritage lang={lang} />
+      <Sustainability lang={lang} />
 
       {/* Sección de Noticias (SEO) */}
       {latestNews.length > 0 && (
         <section className="py-24 md:py-32 relative bg-slate-50 dark:bg-[#070b14] border-t border-slate-200 dark:border-white/5 z-10">
           <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
             <div className="text-center mb-16 md:mb-20">
-              <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">Actualidad</h4>
-              <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">Últimas Noticias</h2>
+              <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">{t.news.tag}</h4>
+              <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">{t.news.title}</h2>
             </div>
             
             <div className="grid md:grid-cols-3 gap-8">
@@ -474,7 +491,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                     <h3 className="text-xl font-bold text-white mb-3 leading-tight">{news.title}</h3>
                     <p className="text-slate-400 text-sm mb-6 flex-grow line-clamp-3">{news.summary}</p>
                     <span className="text-amber-500 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:text-amber-400">
-                      Leer Artículo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      {t.news.read} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </Link>
@@ -482,7 +499,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
             </div>
             <div className="text-center mt-12">
               <Link href="/noticias" className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-colors">
-                Ver Todas las Noticias
+                {t.news.all}
               </Link>
             </div>
           </div>
@@ -493,13 +510,13 @@ export default function LandingClient({ lang }: { lang: Lang }) {
       <section className="py-20 md:py-24 relative bg-slate-50 dark:bg-[#070b14] border-t border-slate-200 dark:border-white/5 z-10">
         <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
           <div className="text-center mb-12">
-            <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">Preguntas Frecuentes</h4>
-            <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">Resolvemos tus Dudas</h2>
+            <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">{t.faq.tag}</h4>
+            <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">{t.faq.title}</h2>
           </div>
           <div className="space-y-4">
             <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
               <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
-                ¿Dónde puedo comprar cobijas y cobertores por mayoreo?
+                {t.faq.q1}
                 <span className="transition group-open:rotate-180">
                   <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
@@ -508,7 +525,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
             </details>
             <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
               <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
-                ¿Qué son las tilmas y para qué se utilizan en la industria?
+                {t.faq.q2}
                 <span className="transition group-open:rotate-180">
                   <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
@@ -517,7 +534,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
             </details>
             <details className="group bg-white/[0.02] border border-white/5 rounded-2xl p-6 cursor-pointer hover:border-amber-500/30 transition-colors">
               <summary className="flex justify-between items-center font-bold text-lg text-white list-none">
-                ¿Manejan cobertores térmicos para invierno?
+                {t.faq.q3}
                 <span className="transition group-open:rotate-180">
                   <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
@@ -532,8 +549,8 @@ export default function LandingClient({ lang }: { lang: Lang }) {
       <section id="contacto" className="py-24 md:py-32 relative bg-[#0a0f1d] border-t border-white/5 z-10">
         <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">Cotización Directa</h2>
-            <p className="text-slate-400 font-light">Solicita precios de mayoreo para pedidos industriales o licitaciones.</p>
+            <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">{t.contact.title}</h2>
+            <p className="text-slate-400 font-light">{t.contact.desc}</p>
           </div>
           
           <div className="bg-white/5 border border-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-sm shadow-2xl relative overflow-hidden">
@@ -564,33 +581,33 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="lead-name" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Nombre o Empresa *</label>
-                    <input id="lead-name" type="text" required minLength={2} maxLength={100} value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-white dark:bg-[#070b14] border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. Grupo Industrial M..." />
+                    <label htmlFor="lead-name" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.name}</label>
+                    <input id="lead-name" type="text" required minLength={2} maxLength={100} value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-white dark:bg-[#070b14] border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.namePh} />
                   </div>
                   <div>
-                    <label htmlFor="lead-phone" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Teléfono / WhatsApp *</label>
+                    <label htmlFor="lead-phone" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.phone}</label>
                     <input id="lead-phone" type="tel" required minLength={10} maxLength={20} pattern="[\d\s\-\+]+" value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-white dark:bg-[#070b14] border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-colors" placeholder="+52 123 456 7890" />
                   </div>
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="lead-email" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Correo Electrónico *</label>
-                    <input id="lead-email" type="email" required maxLength={100} value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-white dark:bg-[#070b14] border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-colors" placeholder="tu@empresa.com" />
+                    <label htmlFor="lead-email" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.email}</label>
+                    <input id="lead-email" type="email" required maxLength={100} value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-white dark:bg-[#070b14] border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.emailPh} />
                   </div>
                   <div>
-                    <label htmlFor="lead-quantity" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Volumen Requerido *</label>
-                    <input id="lead-quantity" type="text" required minLength={1} maxLength={50} value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-white dark:bg-[#070b14] border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. 20,000 piezas" />
+                    <label htmlFor="lead-quantity" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.qty}</label>
+                    <input id="lead-quantity" type="text" required minLength={1} maxLength={50} value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-white dark:bg-[#070b14] border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.qtyPh} />
                   </div>
                 </div>
                 
                 <div>
-                  <label htmlFor="lead-message" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Detalles del Proyecto *</label>
-                  <textarea id="lead-message" required minLength={10} maxLength={1000} value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-white dark:bg-[#070b14] border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder="Especifica modelos de interés, fecha de entrega y destino..."></textarea>
+                  <label htmlFor="lead-message" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.msg}</label>
+                  <textarea id="lead-message" required minLength={10} maxLength={1000} value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-white dark:bg-[#070b14] border border-slate-200 dark:border-white/10 rounded-xl p-4 text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder={t.contact.msgPh}></textarea>
                 </div>
                 
                 <button type="submit" disabled={submitting} className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-4 rounded-xl uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                  {submitting ? <><Loader2 className="w-5 h-5 animate-spin"/> Enviando...</> : <><Send className="w-5 h-5"/> Enviar Solicitud</>}
+                  {submitting ? <><Loader2 className="w-5 h-5 animate-spin"/> {t.contact.sending}</> : <><Send className="w-5 h-5"/> {t.contact.send}</>}
                 </button>
               </form>
             )}
@@ -644,7 +661,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
             <h4 className="text-white font-bold uppercase tracking-widest mb-6 md:mb-8 text-xs">{t.footer.intra}</h4>
             <ul className="space-y-4 text-sm font-light">
               <li><Link href="/intranet" className="hover:text-amber-500 transition-colors text-left">{t.footer.i1}</Link></li>
-              <li><Link href="/noticias" className="hover:text-amber-500 transition-colors text-left">Portal de Noticias (RSS)</Link></li>
+              <li><Link href="/noticias" className="hover:text-amber-500 transition-colors text-left">{t.news.portal}</Link></li>
               <li><Link href="/privacidad" className="hover:text-amber-500 transition-colors text-left">{t.footer.i2}</Link></li>
               <li><Link href="/terminos" className="hover:text-amber-500 transition-colors text-left">{t.footer.i3}</Link></li>
               <li><Link href="/cookies" className="hover:text-amber-500 transition-colors text-left">{t.footer.i4}</Link></li>
@@ -663,7 +680,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@graph": (catalogProducts.length > 0 ? catalogProducts : t.products.items).map((item: { title: string; desc: string; imgUrl?: string; img?: string }, idx: number) => ({
+            "@graph": (catalogProducts.length > 0 ? (catalogProducts as any[]).map(traducirProducto) : t.products.items).map((item: { title: string; desc: string; imgUrl?: string; img?: string }, idx: number) => ({
               "@type": "Product",
               "@id": `https://cobertores.com/#product-${idx}`,
               "name": item.title,
@@ -697,7 +714,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "¿Dónde puedo comprar cobijas y cobertores por mayoreo?",
+                "name": "{t.faq.q1}",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "En Mano Fil S.A. somos la fábrica principal en Tlaxcala especializada en la venta por mayoreo de cobertores, cobijas y tilmas. Hacemos envíos corporativos a todo México con capacidad de respuesta inmediata y precios de fábrica directo."
@@ -705,7 +722,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
               },
               {
                 "@type": "Question",
-                "name": "¿Qué son las tilmas y para qué se utilizan en la industria?",
+                "name": "{t.faq.q2}",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "Las tilmas económicas son cobertores rústicos y altamente duraderos, elaborados generalmente de material 100% regenerado. Se usan masivamente en mudanzas, donaciones, emergencias y uso industrial debido a su alta resistencia y bajo costo."
@@ -713,7 +730,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
               },
               {
                 "@type": "Question",
-                "name": "¿Manejan cobertores térmicos para invierno?",
+                "name": "{t.faq.q3}",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "Sí, nuestra división textil fabrica mantas y cobertores gruesos con retención térmica superior, ideales para programas sociales, hospitales y distribución mayorista durante contingencias de frío extremo."
