@@ -429,7 +429,7 @@ export default function LandingPage() {
         
         <div className="absolute inset-0 z-0 opacity-40">
           <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] via-transparent to-[#070b14] z-10"></div>
-          <img src="/hero-bg.webp" alt="Industria y Textil" className="w-full h-full object-cover mix-blend-luminosity opacity-30 absolute inset-0" />
+          <Image src="/hero-bg.webp" alt="Industria y Textil" fill priority sizes="100vw" className="object-cover mix-blend-luminosity opacity-30" />
         </div>
 
         {/* Central Content */}
@@ -545,7 +545,7 @@ export default function LandingPage() {
 
                 <div className="h-72 overflow-hidden relative p-4">
                   <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] to-transparent z-10 opacity-60"></div>
-                  <img src={item.imgUrl || item.img} alt={item.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 absolute inset-0" />
+                  <Image src={item.imgUrl || item.img} alt={item.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transform group-hover:scale-110 transition-transform duration-1000" />
                   <div className="absolute top-8 right-8 bg-black/60 backdrop-blur-md text-amber-500 text-[10px] font-black tracking-widest uppercase px-4 py-2 rounded-full border border-amber-500/30 z-20 shadow-lg">
                     {item.weight}
                   </div>
@@ -605,7 +605,7 @@ export default function LandingPage() {
               {latestNews.map((news) => (
                 <Link href="/noticias" key={news.id} className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group flex flex-col hover:-translate-y-2">
                   <div className="h-48 overflow-hidden relative">
-                    <img src={news.imgUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000'} alt={news.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 absolute inset-0" />
+                    <Image src={news.imgUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000'} alt={news.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover group-hover:scale-110 transition-transform duration-700" />
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <span className="text-amber-500 text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
