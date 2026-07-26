@@ -30,11 +30,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   return [
+    // FIX 2026-07-26: antes se listaba solo `baseUrl` (la raíz). Tras el
+    // cambio a rutas por idioma, `/` es únicamente una redirección 301 a
+    // `/es` y no tiene contenido propio -- listarla desperdicia rastreo.
+    // Además `/en` no aparecía en ningún lado del sitemap, así que Google
+    // no tenía forma de descubrir la versión en inglés del sitio.
     {
-      url: baseUrl,
+      url: `${baseUrl}/es`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
+    },
+    {
+      url: `${baseUrl}/en`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/noticias`,
