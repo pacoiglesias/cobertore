@@ -18,10 +18,17 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-// Initialize App Check (solo en el navegador)
-if (typeof window !== 'undefined') {
+// Initialize App Check (solo en el navegador, y SOLO si hay una clave real
+// configurada). FIX 2026-07-25: con la clave vacía, initializeAppCheck()
+// se quedaba intentando obtener un token de reCAPTCHA sin sitekey y esto
+// bloqueaba TODAS las peticiones de Firestore/Storage en el sitio entero
+// -- por eso el dashboard mostraba "vacío" todo (RSS, Oficios, etc.)
+// cuando en realidad los datos seguían intactos en la base de datos.
+// En cuanto Paco tenga la clave real de reCAPTCHA v3, ponla en
+// .env.local como NEXT_PUBLIC_RECAPTCHA_SITE_KEY y esto se activa solo.
+if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY) {
   initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''),
+    provider: new ReCaptchaV3Provider(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY),
     isTokenAutoRefreshEnabled: true
   });
 }
