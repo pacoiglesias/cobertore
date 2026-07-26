@@ -6,6 +6,7 @@ import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, Timestamp, setDoc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { auth, db, storage } from '../../../lib/firebase';
+import { isSuperAdminEmail } from '../../../lib/authorization';
 import { LogOut, FileText, Download, Shield, Building2, Upload, Trash2, Image as ImageIcon, File, Loader2, Users, MessageSquare, Clock, Edit, Eye, X, FileSignature, Smartphone, Plus, Package } from 'lucide-react';
 import Link from 'next/link';
 import { QuoteGenerator } from './QuoteGenerator';
@@ -103,8 +104,10 @@ export default function Dashboard() {
   const [previewFile, setPreviewFile] = useState<IntranetFile | null>(null);
 
   // Auth & Roles
-  const SUPER_ADMINS = ['paco@cobertores.com', 'paco.iglesias@gmail.com', 'pacoismael@gmail.com'];
-  const isSuperAdmin = user?.email ? SUPER_ADMINS.includes(user.email) : false;
+  // La lista de Súper Admins vive en src/lib/authorization.ts (fuente
+  // única de verdad) -- antes estaba duplicada aquí y en el login, y cada
+  // reestructuración perdía alguna copia junto con su validación.
+  const isSuperAdmin = isSuperAdminEmail(user?.email);
   
   const [isEditor, setIsEditor] = useState(false);
   const [isAlmacen, setIsAlmacen] = useState(false);
@@ -127,7 +130,7 @@ export default function Dashboard() {
         setUser(currentUser);
         
         // Verify Privileges if not super admin
-        if (!SUPER_ADMINS.includes(currentUser.email || '')) {
+        if (!isSuperAdminEmail(currentUser.email)) {
           const privRef = doc(db, 'user_privileges', currentUser.email || 'unknown');
           const privSnap = await getDoc(privRef);
           if (privSnap.exists()) {

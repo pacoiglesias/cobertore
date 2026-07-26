@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
+import { isAuthorizedUser } from '../../lib/authorization';
 import { ShieldCheck, Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 
@@ -18,9 +19,23 @@ export default function IntranetLogin() {
   const router = useRouter();
 
   useEffect(() => {
-    // Si ya está logueado, redirigir al dashboard
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+    // Si el guard del dashboard nos regresó por falta de permisos,
+    // mostrar el motivo en vez de dejar al usuario sin explicación.
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('error') === 'no-autorizado') {
+        setError('Tu cuenta no tiene acceso a este sistema. Contacta al administrador.');
+      }
+    }
+
+    // Si ya está logueado Y autorizado, redirigir al dashboard.
+    // FIX 2026-07-26: antes redirigía con solo `if (user)`, sin validar
+    // permisos -- mandaba al dashboard a cuentas no autorizadas, que el
+    // guard tenía que expulsar después (viaje redondo innecesario).
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+      const autorizado = await isAuthorizedUser(user.email);
+      if (autorizado) {
         router.push('/intranet/dashboard');
       }
     });
@@ -65,7 +80,21 @@ export default function IntranetLogin() {
     setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+
+      // FIX DE SEGURIDAD 2026-07-26: sin esta validación, cualquier cuenta
+      // de Google quedaba autenticada dentro del sistema. El guard del
+      // dashboard (AuthProvider) también valida esto de forma
+      // independiente, pero comprobarlo aquí permite dar un mensaje claro
+      // en vez de un rebote silencioso al login.
+      const autorizado = await isAuthorizedUser(result.user.email);
+      if (!autorizado) {
+        await signOut(auth);
+        setError('Tu cuenta de Google no tiene acceso a este sistema. Contacta al administrador.');
+        setLoading(false);
+        return;
+      }
+
       router.push('/intranet/dashboard');
     } catch (err: unknown) {
       console.error("Google Auth Error:", err);
