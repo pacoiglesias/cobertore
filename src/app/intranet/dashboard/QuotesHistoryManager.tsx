@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { db } from '../../../lib/firebase';
-import { collection, query, orderBy, onSnapshot, limit } from 'firebase/firestore';
-import { FileText, Download, ExternalLink, Loader2, Calendar } from 'lucide-react';
+import { collection, query, orderBy, onSnapshot, limit, deleteDoc, doc } from 'firebase/firestore';
+import { FileText, Download, ExternalLink, Loader2, Calendar, Trash2 } from 'lucide-react';
 import { ConfirmDialog } from '../../../components/ConfirmDialog';
 import { logger } from '../../../lib/logger';
 import { toast } from 'react-hot-toast';
@@ -25,6 +25,8 @@ export function QuotesHistoryManager() {
   const [quotes, setQuotes] = useState<QuoteHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [displayLimit, setDisplayLimit] = useState(20);
+  const [quoteToDelete, setQuoteToDelete] = useState<QuoteHistoryItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const q = query(
@@ -50,6 +52,24 @@ export function QuotesHistoryManager() {
   }, [displayLimit]);
 
   const loadMore = () => setDisplayLimit(prev => prev + 20);
+
+  // No existia ninguna forma de borrar una cotizacion del historial --
+  // solo se podia ver/descargar el PDF. Reglas de Firestore ya permitian
+  // el borrado (isSuperAdmin || editor), solo faltaba el boton.
+  const handleDeleteQuote = async () => {
+    if (!quoteToDelete) return;
+    setIsDeleting(true);
+    try {
+      await deleteDoc(doc(db, 'quotes_history', quoteToDelete.id));
+      toast.success('Cotización eliminada del historial.');
+    } catch (error) {
+      logger.error('Error deleting quote', error);
+      toast.error('No se pudo eliminar la cotización.');
+    } finally {
+      setIsDeleting(false);
+      setQuoteToDelete(null);
+    }
+  };
 
   const formatMoney = (amount: number) => {
     return new Intl.NumberFormat('es-MX', {
@@ -145,6 +165,14 @@ export function QuotesHistoryManager() {
                 >
                   <ExternalLink className="w-4 h-4" />
                 </a>
+                <button
+                  onClick={() => setQuoteToDelete(quote)}
+                  className="bg-white/5 hover:bg-red-500 hover:text-white p-2.5 rounded-lg text-red-400 transition-colors"
+                  aria-label={`Eliminar cotización ${quote.folio}`}
+                  title="Eliminar del historial"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
             
@@ -162,6 +190,17 @@ export function QuotesHistoryManager() {
           </button>
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!quoteToDelete}
+        title="¿Eliminar esta cotización?"
+        message={`Se eliminará "${quoteToDelete?.folio}" del historial permanentemente. El PDF ya descargado no se ve afectado.`}
+        confirmLabel={isDeleting ? 'Eliminando...' : 'Sí, eliminar'}
+        cancelLabel="Cancelar"
+        variant="danger"
+        onConfirm={handleDeleteQuote}
+        onCancel={() => setQuoteToDelete(null)}
+      />
     </div>
   );
 }
