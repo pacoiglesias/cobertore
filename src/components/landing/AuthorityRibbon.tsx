@@ -25,8 +25,8 @@ const fadeUp: any = {
 
 export function AuthorityRibbon() {
   return (
-    <section className="bg-[#070b14] py-16 lg:py-20 border-t border-white/5 relative z-10">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/10 via-[#070b14] to-[#070b14] z-0 pointer-events-none"></div>
+    <section className="bg-slate-50 dark:bg-[#070b14] py-16 lg:py-20 border-t border-slate-200 dark:border-white/5 relative z-10">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/10 via-transparent dark:via-[#070b14] to-transparent dark:to-[#070b14] z-0 pointer-events-none"></div>
       <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
         <motion.div
           variants={fadeUp}
@@ -52,11 +52,11 @@ export function AuthorityRibbon() {
                 viewport={{ once: true, amount: 0.4 }}
                 className="text-center group"
               >
-                <div className="w-14 h-14 mx-auto mb-4 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-amber-500/30 transition-colors">
+                <div className="w-14 h-14 mx-auto mb-4 bg-slate-200 dark:bg-white/5 rounded-2xl flex items-center justify-center border border-slate-300 dark:border-white/10 group-hover:border-amber-500/30 transition-colors">
                     <Icon className="text-amber-500" size={26} strokeWidth={1.5} />
                 </div>
-                <p className="font-serif text-white text-3xl lg:text-4xl drop-shadow-md">{stat.value}</p>
-                <p className="font-mono text-[11px] tracking-widest uppercase text-slate-400 mt-3 max-w-[200px] mx-auto">
+                <p className="font-serif text-slate-900 dark:text-white text-3xl lg:text-4xl drop-shadow-md">{stat.value}</p>
+                <p className="font-mono text-[11px] tracking-widest uppercase text-slate-600 dark:text-slate-400 mt-3 max-w-[200px] mx-auto">
                   {stat.label}
                 </p>
               </motion.div>

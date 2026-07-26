@@ -35,8 +35,8 @@ const fadeUp: any = {
 
 export function Heritage() {
   return (
-    <section id="herencia" className="py-24 lg:py-40 bg-[#070b14] relative overflow-hidden z-10 border-t border-white/5">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/5 via-[#070b14] to-[#070b14] z-0 pointer-events-none"></div>
+    <section id="herencia" className="py-24 lg:py-40 bg-slate-50 dark:bg-[#070b14] relative overflow-hidden z-10 border-t border-slate-200 dark:border-white/5">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/5 via-transparent dark:via-[#070b14] to-transparent dark:to-[#070b14] z-0 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-14 relative z-10">
         <motion.div
@@ -47,10 +47,10 @@ export function Heritage() {
           className="lg:col-span-5"
         >
           <p className="font-mono text-[11px] tracking-[0.28em] uppercase text-amber-500 font-bold mb-4">Herencia industrial</p>
-          <h2 className="font-serif text-white text-4xl sm:text-5xl lg:text-6xl leading-tight drop-shadow-xl">
+          <h2 className="font-serif text-slate-900 dark:text-white text-4xl sm:text-5xl lg:text-6xl leading-tight drop-shadow-xl">
             De un telar a un grupo empresarial.
           </h2>
-          <p className="text-slate-400 font-light text-lg mt-8 leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-400 font-light text-lg mt-8 leading-relaxed">
             Mano Fil S.A. nació en 1962 como un taller textil familiar orientado a la calidad
             manufacturera. Ese mismo rigor —precisión en el proceso, disciplina en la
             administración, visión de largo plazo— fue lo que, décadas después, nos permitió
@@ -60,7 +60,7 @@ export function Heritage() {
           </p>
         </motion.div>
 
-        <div className="lg:col-span-7 pl-6 lg:pl-16 border-l border-white/10 space-y-16 mt-8 lg:mt-0 ml-2 lg:ml-0">
+        <div className="lg:col-span-7 pl-6 lg:pl-16 border-l border-slate-300 dark:border-white/10 space-y-16 mt-8 lg:mt-0 ml-2 lg:ml-0">
           {TIMELINE.map((item, i) => (
             <motion.div
               key={item.year}
@@ -73,8 +73,8 @@ export function Heritage() {
             >
               <span className="absolute left-[-31px] lg:left-[-37px] top-1.5 w-2.5 h-2.5 rounded-full bg-amber-500 ring-4 ring-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
               <p className="font-mono text-[13px] font-bold tracking-widest text-amber-500">{item.year}</p>
-              <p className="font-serif text-white text-2xl mt-3">{item.title}</p>
-              <p className="text-slate-400 font-light mt-3 leading-relaxed max-w-xl">{item.copy}</p>
+              <p className="font-serif text-slate-900 dark:text-white text-2xl mt-3">{item.title}</p>
+              <p className="text-slate-600 dark:text-slate-400 font-light mt-3 leading-relaxed max-w-xl">{item.copy}</p>
             </motion.div>
           ))}
         </div>

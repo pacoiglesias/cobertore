@@ -1,4 +1,15 @@
-# Prompt: Cobertores Web v0.3.1 — estado al 2026-07-25
+# Prompt: Cobertores Web v0.5.0 — estado al 2026-07-26
+
+## ✅ Ya resuelto y confirmado (Fase 12: i18n & Seguridad Zero-Flicker)
+- **Internacionalización Real Estática (i18n)**: Migración a URLs físicas `/es` y `/en` con `generateStaticParams`, reteniendo velocidad 100% SSG.
+- **Diccionarios Corporativos**: Se crearon diccionarios de traducciones (`src/lib/i18n`) con inglés industrial B2B americano. Redirección raíz implementada.
+- **Seguridad Intranet (Zero-Flicker)**: Implementación de `AuthProvider.tsx` para bloquear vistas no autorizadas a nivel de React Render Tree sin necesidad de middleware de servidor, manteniendo el despliegue puramente estático.
+
+## ✅ Ya resuelto y confirmado (Fase 9: SEO & UI Avanzado)
+- **Modo Claro / Oscuro Inteligente**: Refactorización profunda de Landing Page para soportar Light Mode responsivo sin hardcoding de colores.
+- **SEO & Palabras Clave Dinámicas**: Habilitadas palabras clave editables (`seoKeywords`) desde `SystemSettings.tsx`.
+- **Rich Snippets B2B**: Inyección de esquemas JSON-LD (`VideoObject`, `FAQPage`, etc) resueltos y desplegados en Firebase Hosting, corrigiendo alertas de Google Search Console.
+- **Video Corporativo**: Hero banner actualizado a `<video>` autoejecutable.
 
 ## ✅ Ya resuelto y confirmado (Fase 8 Enterprise)
 - Solución definitiva al error de App Check: La validación invisible (ReCAPTCHA V3) ya protege la Intranet sin bloquear el guardado ni lectura de Oficios/Cotizaciones.
@@ -7,7 +18,7 @@
 - Las imágenes de productos en el frontend cargan correctamente con la etiqueta estática nativa tras retirar el `output: export` conflictivo de Next.js.
 - Animaciones Framer Motion y Scroll-Jacking implementados exitosamente.
 - Paginación (Infinite Scroll Manual) implementada en el historial de cotizaciones.
-- Todos los cambios respaldados en git (`v0.3.1`).
+- Todos los cambios respaldados en git (`v0.4.0`).
 
 ## Prioridad 1 — Pendiente (Roadmap Futuro)
 1. **Verificar Dominio en Google Search Console**: Indispensable para indexar las cientos de noticias que genere el RSS.

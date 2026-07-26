@@ -146,10 +146,13 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
           
           {news.imgUrl && (
             <div className="w-full h-[400px] md:h-[500px] relative rounded-3xl overflow-hidden mb-12">
-              <img
+              <Image
                 src={news.imgUrl}
                 alt={news.title}
-                className="object-cover w-full h-full"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 100vw"
+                className="object-cover"
               />
             </div>
           )}
@@ -180,6 +183,17 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
           )}
           
         </article>
+
+        {/* Sección de Más Noticias (Spider Webbing SEO) */}
+        <div className="mt-16 pt-16 border-t border-slate-200 dark:border-white/10">
+          <h3 className="font-serif text-2xl text-slate-900 dark:text-white mb-8">Más noticias recientes</h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <Link href="/noticias" className="group bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-white/10 hover:border-amber-500/50 transition-all">
+              <p className="text-amber-500 font-bold text-sm mb-2 group-hover:underline">Ver todas las publicaciones →</p>
+              <p className="text-slate-600 dark:text-slate-400 text-sm">Explora nuestra biblioteca completa de noticias y comunicados corporativos.</p>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

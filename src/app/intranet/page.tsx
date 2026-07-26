@@ -68,7 +68,8 @@ export default function IntranetLogin() {
       await signInWithPopup(auth, provider);
       router.push('/intranet/dashboard');
     } catch (err: any) {
-      setError('Error de autenticación con Google.');
+      console.error("Google Auth Error:", err);
+      setError(`Error de Google: ${err.message || 'Desconocido'}`);
     } finally {
       setLoading(false);
     }

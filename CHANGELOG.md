@@ -1,5 +1,22 @@
 # Changelog — Cobertores Web (Mano Fil S.A.)
 
+## [0.5.0] — 2026-07-26 (Fase 12: Internacionalización y Seguridad Zero-Flicker)
+
+### Added
+- **Internacionalización Real Estática (i18n)**: Se implementaron las rutas `/es` y `/en` mediante `generateStaticParams` en Next.js. El renderizado estático (`output: 'export'`) se mantiene al 100% (cero servidor Node requerido). 
+- **Diccionarios Corporativos**: Refactorización de traducciones (Inglés) hacia un tono industrial americano (e.g. "Standard Industrial Tilma").
+- **Protección Zero-Flicker en Intranet**: Se creó `AuthProvider.tsx` como Route Guard para evitar parpadeos de interfaz y bloquear completamente accesos no autorizados a `/intranet/dashboard` en un entorno 100% estático, reemplazando la necesidad de `middleware.ts`.
+- **Redirección Raíz**: La ruta principal `/` ahora ejecuta una redirección automática a `/es`.
+
+## [0.4.0] — 2026-07-25 (Fase 9: SEO Avanzado, Modo Claro/Oscuro y Video)
+
+### Added
+- **Modo Claro / Oscuro Inteligente**: Refactorización de la Landing Page para soportar temas responsivos con `next-themes`. Nuevo Toggle en el Navbar público.
+- **Video Corporativo IA**: Implementación de `<video>` HTML5 en autoplay, mute y loop (sin UI controls) con fallback de imagen en el hero principal.
+- **SEO Dinámico (Palabras Clave)**: Ahora las etiquetas `<meta name="keywords">` se pueden modificar en vivo desde `SystemSettings.tsx` en la Intranet (leídas desde `system_settings/global`).
+- **Esquemas JSON-LD (Rich Snippets)**: Integración de `VideoObject` y `FAQPage` en `page.tsx` para potenciar visibilidad en SERPs y corregir errores críticos de Search Console.
+- **Backups y Despliegues Locales exitosos**: Validada la ejecución de `respaldo-cobertore.bat` y `firebase deploy`.
+
 ## [0.3.1] — 2026-07-25 (Fase 8 Enterprise & Bugfixes)
 
 ### Added
