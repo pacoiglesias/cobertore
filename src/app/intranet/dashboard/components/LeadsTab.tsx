@@ -1,5 +1,5 @@
 import React from 'react';
-import { User as UserIcon, MessageSquare, Phone, Download, Clock, CheckCircle, CheckSquare, Inbox, Edit, Trash2 } from 'lucide-react';
+import { User as UserIcon, MessageSquare, Phone, Download, Clock, CheckCircle, CheckSquare, Inbox, Edit, Trash2, Smartphone } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 
 interface Lead {
@@ -52,6 +52,23 @@ export function LeadsTab({
     });
   };
 
+  const openWhatsApp = (phone: string, name: string, quantity: string) => {
+    const cleanPhone = phone.replace(/\D/g, '');
+    if (cleanPhone.length < 10) {
+      alert('Número de teléfono inválido (muy corto).');
+      return;
+    }
+    const finalPhone = cleanPhone.length === 10 ? `52${cleanPhone}` : cleanPhone;
+    const message = `Hola ${name || ''}, somos de Mano Fil. Recibimos tu cotización web por ${quantity} unidades. ¿En qué te podemos ayudar?`;
+    window.open(`https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
+  // Cálculos para Estadísticas
+  const totalLeads = leads.length;
+  const newLeads = leads.filter(l => (l.status || 'nuevo') === 'nuevo').length;
+  const closedLeads = leads.filter(l => l.status === 'cerrado').length;
+  const conversionRate = totalLeads > 0 ? Math.round((closedLeads / totalLeads) * 100) : 0;
+
   return (
     <div>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
@@ -65,6 +82,25 @@ export function LeadsTab({
         >
           <Download className="w-4 h-4" /> Exportar a CSV
         </button>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-[#0a0f1d] border border-white/5 rounded-xl p-4 shadow-lg">
+          <h4 className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Total Prospectos</h4>
+          <p className="text-2xl font-serif text-white">{totalLeads}</p>
+        </div>
+        <div className="bg-[#0a0f1d] border border-blue-500/20 rounded-xl p-4 shadow-lg">
+          <h4 className="text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-1">Nuevos Pendientes</h4>
+          <p className="text-2xl font-serif text-white">{newLeads}</p>
+        </div>
+        <div className="bg-[#0a0f1d] border border-emerald-500/20 rounded-xl p-4 shadow-lg">
+          <h4 className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-1">Ventas Cerradas</h4>
+          <p className="text-2xl font-serif text-white">{closedLeads}</p>
+        </div>
+        <div className="bg-[#0a0f1d] border border-purple-500/20 rounded-xl p-4 shadow-lg">
+          <h4 className="text-purple-400 text-[10px] font-bold uppercase tracking-widest mb-1">Tasa de Cierre</h4>
+          <p className="text-2xl font-serif text-white">{conversionRate}%</p>
+        </div>
       </div>
       
       <div className="mb-8">
@@ -140,8 +176,18 @@ export function LeadsTab({
                         </span>
                       </div>
                       
-                      <div className="text-xs text-slate-300 mb-3 space-y-1">
-                        <p className="flex items-center gap-2"><Phone className="w-3 h-3 text-slate-500" /> {lead.phone}</p>
+                      <div className="text-xs text-slate-300 mb-3 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-3 h-3 text-slate-500" /> 
+                          <span className="flex-1">{lead.phone}</span>
+                          <button 
+                            onClick={() => openWhatsApp(lead.phone, lead.name, lead.quantity)}
+                            className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 transition-colors"
+                            title="Abrir Chat"
+                          >
+                            <Smartphone className="w-3 h-3" /> Chat
+                          </button>
+                        </div>
                         <p className="flex items-center gap-2"><CheckSquare className="w-3 h-3 text-slate-500" /> Cantidad: <span className="font-bold text-emerald-400">{lead.quantity}</span></p>
                       </div>
 

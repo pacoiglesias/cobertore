@@ -194,7 +194,28 @@ export default function Dashboard() {
     });
 
     const leadsQuery = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
+    let initialLeadsLoad = true;
     const unsubscribeLeads = onSnapshot(leadsQuery, (snapshot) => {
+      if (!initialLeadsLoad) {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            const data = change.doc.data();
+            toast(`¡Nuevo prospecto: ${data.name || 'Sin nombre'}!`, {
+              icon: '🔔',
+              duration: 6000,
+              style: { background: '#f59e0b', color: '#fff', fontWeight: 'bold' }
+            });
+            
+            // Sonido de campana (opcional, sin bloquear)
+            try {
+              const audio = new Audio('/notification.mp3'); // Asumiendo que pueden agregar un mp3 luego, o falla silenciosamente
+              audio.volume = 0.5;
+              audio.play().catch(() => {});
+            } catch(e) {}
+          }
+        });
+      }
+      initialLeadsLoad = false;
       setLeads(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Lead[]);
     }, (err) => {
       logger.error('Error en listener:', err);

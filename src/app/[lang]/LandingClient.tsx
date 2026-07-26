@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -68,6 +68,9 @@ const playSuccessSound = () => {
 
 export default function LandingClient({ lang }: { lang: Lang }) {
   const t = dictionaries[lang];
+
+  const [activeCategory, setActiveCategory] = useState<string>('Todos');
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Los productos del catálogo se guardan en Firestore en español. Si el
   // documento incluye traducciones opcionales (title_en / desc_en /
@@ -407,14 +410,36 @@ export default function LandingClient({ lang }: { lang: Lang }) {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6 md:gap-8">
-            {(catalogProducts.length > 0 ? (catalogProducts as any[]).map(traducirProducto) : t.products.items).map((item, index: number) => (
+          <div className="flex flex-wrap justify-center gap-2 mb-12 relative z-20">
+            {['Todos', ...Array.from(new Set(
+              (catalogProducts.length > 0 ? catalogProducts as any[] : t.products.items).map(i => i.category || 'Industrial')
+            ))].map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${
+                  activeCategory === cat 
+                    ? 'bg-amber-500 text-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.4)]' 
+                    : 'bg-white/5 text-slate-400 hover:text-white border border-white/10 hover:border-amber-500/30'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6 md:gap-8 min-h-[500px]">
+            <AnimatePresence mode="popLayout">
+              {(catalogProducts.length > 0 ? (catalogProducts as any[]).map(traducirProducto) : t.products.items)
+                .filter((item: any) => activeCategory === 'Todos' || (item.category || 'Industrial') === activeCategory)
+                .map((item: any, index: number) => (
               <motion.div 
-                key={item.id || index}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: index * 0.15, duration: 0.7, ease: "easeOut" }}
+                key={item.id || item.title || index}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
                 className={`bg-white dark:bg-white/[0.02] backdrop-blur-2xl rounded-3xl overflow-hidden border border-slate-200 dark:border-white/5 shadow-md dark:shadow-none hover:border-amber-500/50 group transition-all duration-500 flex flex-col hover:shadow-[0_0_40px_rgba(245,158,11,0.25)] hover:-translate-y-2 relative md:col-span-3 lg:col-span-6`}
               >
                 {/* Glow Background on Hover */}
@@ -451,6 +476,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
                 </div>
               </motion.div>
             ))}
+            </AnimatePresence>
           </div>
 
           <motion.div 

@@ -23,10 +23,10 @@ export const dictionaries = {
       defaultComposition: '100% Regenerado',
       quote: 'Cotizar Volumen',
       items: [
-        { title: "Tilma Económica", weight: "1.300 KG", img: "/products/tilma-eco-1-3kg.webp", desc: "Tejido compacto y duradero. Soporta uso industrial y lavados constantes." },
-        { title: "Manta Térmica", weight: "2.000 KG", img: "/products/manta-eco-2kg.webp", desc: "Aislamiento térmico de grado superior. El mayor gramaje del catálogo." },
-        { title: "Tilma Ribeteada", weight: "1.150 KG", img: "/products/tilma-ribeteada.webp", desc: "Acabados reforzados por ultrasonido perimetral. Vida útil prolongada." },
-        { title: "Tilma Ligera", weight: "1.000 KG", img: "/products/tilma-eco-1kg.webp", desc: "Optimización de peso y volumen. Perfecta para distribución ágil." }
+        { title: "Tilma Económica", category: "Industrial", weight: "1.300 KG", img: "/products/tilma-eco-1-3kg.webp", desc: "Tejido compacto y duradero. Soporta uso industrial y lavados constantes." },
+        { title: "Manta Térmica", category: "Hospitalario", weight: "2.000 KG", img: "/products/manta-eco-2kg.webp", desc: "Aislamiento térmico de grado superior. El mayor gramaje del catálogo." },
+        { title: "Tilma Ribeteada", category: "Donación", weight: "1.150 KG", img: "/products/tilma-ribeteada.webp", desc: "Acabados reforzados por ultrasonido perimetral. Vida útil prolongada." },
+        { title: "Tilma Ligera", category: "Logística", weight: "1.000 KG", img: "/products/tilma-eco-1kg.webp", desc: "Optimización de peso y volumen. Perfecta para distribución ágil." }
       ]
     },
     divisions: {
@@ -168,10 +168,10 @@ export const dictionaries = {
       defaultComposition: '100% Recycled Fibers',
       quote: 'Request Wholesale Quote',
       items: [
-        { title: "Standard Industrial Tilma", weight: "1.300 KG", img: "/products/tilma-eco-1-3kg.webp", desc: "Compact and highly durable weave. Withstands industrial use and constant washing." },
-        { title: "Heavyweight Thermal Blanket", weight: "2.000 KG", img: "/products/manta-eco-2kg.webp", desc: "Superior grade thermal insulation. Our highest fabric weight for maximum warmth." },
-        { title: "Reinforced Edge Tilma", weight: "1.150 KG", img: "/products/tilma-ribeteada.webp", desc: "Perimeter ultrasonic reinforced finishing for an extended lifespan." },
-        { title: "Lightweight Distribution Tilma", weight: "1.000 KG", img: "/products/tilma-eco-1kg.webp", desc: "Optimized for weight and volume. Perfect for agile logistics and rapid deployment." }
+        { title: "Standard Industrial Tilma", category: "Industrial", weight: "1.300 KG", img: "/products/tilma-eco-1-3kg.webp", desc: "Compact and highly durable weave. Withstands industrial use and constant washing." },
+        { title: "Heavyweight Thermal Blanket", category: "Hospitality", weight: "2.000 KG", img: "/products/manta-eco-2kg.webp", desc: "Superior grade thermal insulation. Our highest fabric weight for maximum warmth." },
+        { title: "Reinforced Edge Tilma", category: "Donation", weight: "1.150 KG", img: "/products/tilma-ribeteada.webp", desc: "Perimeter ultrasonic reinforced finishing for an extended lifespan." },
+        { title: "Lightweight Distribution Tilma", category: "Logistics", weight: "1.000 KG", img: "/products/tilma-eco-1kg.webp", desc: "Optimized for weight and volume. Perfect for agile logistics and rapid deployment." }
       ]
     },
     divisions: {
