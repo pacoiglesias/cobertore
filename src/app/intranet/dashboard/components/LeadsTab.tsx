@@ -69,6 +69,16 @@ export function LeadsTab({
   const closedLeads = leads.filter(l => l.status === 'cerrado').length;
   const conversionRate = totalLeads > 0 ? Math.round((closedLeads / totalLeads) * 100) : 0;
 
+  const getNextStatusInfo = (currentStatus: string) => {
+    switch (currentStatus || 'nuevo') {
+      case 'nuevo': return { nextId: 'contactado', label: 'Marcar Contactado →', color: 'bg-amber-500/20 text-amber-500 hover:bg-amber-500 hover:text-white' };
+      case 'contactado': return { nextId: 'cotizado', label: 'Avanzar a Cotizado →', color: 'bg-purple-500/20 text-purple-400 hover:bg-purple-500 hover:text-white' };
+      case 'cotizado': return { nextId: 'cerrado', label: '¡Cerrar Venta! 🎉', color: 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white' };
+      case 'cerrado': return null;
+      default: return { nextId: 'contactado', label: 'Contactar →', color: 'bg-amber-500/20 text-amber-500' };
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
@@ -196,17 +206,33 @@ export function LeadsTab({
                         <span className="pl-6 block">{lead.message}</span>
                       </div>
 
-                      <div className="pt-3 border-t border-white/5">
-                        <label className="text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-1 block">Estado</label>
-                        <select 
-                          value={lead.status || 'nuevo'}
-                          onChange={(e) => updateLeadStatus && updateLeadStatus(lead.id, e.target.value)}
-                          className="w-full bg-[#0a0f1d] border border-white/10 rounded-lg p-2 text-white text-xs focus:border-amber-500 outline-none appearance-none"
-                        >
-                          {CRM_COLUMNS.map(opt => (
-                            <option key={opt.id} value={opt.id} className="text-black">{opt.title}</option>
-                          ))}
-                        </select>
+                      <div className="pt-3 border-t border-white/5 flex gap-2 items-center">
+                        <div className="flex-1">
+                          <label className="text-[10px] uppercase tracking-widest font-bold text-slate-500 mb-1 block">Estado</label>
+                          <select 
+                            value={lead.status || 'nuevo'}
+                            onChange={(e) => updateLeadStatus && updateLeadStatus(lead.id, e.target.value)}
+                            className="w-full bg-[#0a0f1d] border border-white/10 rounded-lg p-2 text-white text-xs focus:border-amber-500 outline-none appearance-none"
+                          >
+                            {CRM_COLUMNS.map(opt => (
+                              <option key={opt.id} value={opt.id} className="text-black">{opt.title}</option>
+                            ))}
+                          </select>
+                        </div>
+                        
+                        {(() => {
+                          const next = getNextStatusInfo(lead.status || 'nuevo');
+                          if (!next) return null;
+                          return (
+                            <button
+                              onClick={() => updateLeadStatus && updateLeadStatus(lead.id, next.nextId)}
+                              className={`mt-4 px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors ${next.color}`}
+                              title="Avanzar estado"
+                            >
+                              {next.label}
+                            </button>
+                          );
+                        })()}
                       </div>
                     </div>
                   ))
