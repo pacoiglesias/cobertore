@@ -7,14 +7,23 @@ export function generateStaticParams() {
   return [{ lang: 'es' }, { lang: 'en' }];
 }
 
-// FIX 2026-07-25: /es y /en no tenian su propio canonical -- ambos
-// heredaban "canonical: '/'" del layout raiz, y "/" ahora es solo una
-// redireccion sin contenido. Le decia a Google que las dos paginas reales
-// eran duplicados de una pagina vacia. Tambien se agrega hreflang para
-// que Google sepa que /es y /en son la misma pagina en distintos idiomas
-// (evita que compitan entre si en resultados de busqueda).
-export function generateMetadata({ params }: { params: { lang: string } }): Metadata {
-  const validLang = (params.lang === 'en' || params.lang === 'es') ? params.lang : 'es';
+function resolveLang(raw: string | undefined): Lang {
+  return raw === 'en' ? 'en' : 'es';
+}
+
+// FIX CRÍTICO 2026-07-26: en Next.js 15+ `params` es una Promise y hay
+// que esperarla con await. Este archivo usaba el patrón síncrono viejo
+// (`params.lang`), que sobre una Promise devuelve `undefined` -- así que
+// la validación fallaba siempre y caía al respaldo 'es'. Resultado: la
+// ruta /en servía el sitio COMPLETO en español, anulando toda la función
+// de internacionalización. (La ruta /noticias/[id] sí usaba el patrón
+// correcto, por eso esa sí funcionaba.)
+export async function generateMetadata(
+  { params }: { params: Promise<{ lang: string }> }
+): Promise<Metadata> {
+  const { lang } = await params;
+  const validLang = resolveLang(lang);
+
   return {
     alternates: {
       canonical: `/${validLang}`,
@@ -27,7 +36,7 @@ export function generateMetadata({ params }: { params: { lang: string } }): Meta
   };
 }
 
-export default function Page({ params }: { params: { lang: string } }) {
-  const validLang = (params.lang === 'en' || params.lang === 'es') ? (params.lang as Lang) : 'es';
-  return <LandingClient lang={validLang} />;
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  return <LandingClient lang={resolveLang(lang)} />;
 }

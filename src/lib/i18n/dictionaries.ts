@@ -78,10 +78,10 @@ export const dictionaries = {
   en: {
     nav: { home: 'Home', catalog: 'Catalog', divisions: 'Divisions', legacy: 'Legacy', portal: 'Private Portal' },
     hero: {
-      since: 'Textile Manufacturers & Suppliers • Since 1962',
+      since: 'Blanket Manufacturer & Wholesale Supplier • Since 1962',
       title1: 'Thermal Blankets.',
       title2: 'Corporate Wholesale.',
-      desc: 'High-performance textile infrastructure. At Mano Fil S.A., we are the leading factory in Tlaxcala supplying heavy-duty blankets and tilmas on a corporate scale with direct factory pricing.',
+      desc: 'High-performance textile infrastructure. At Mano Fil S.A., we are the leading factory in Tlaxcala supplying heavy-duty blankets and tilmas (traditional Mexican woven blankets) on a corporate scale with direct factory pricing.',
       btnCatalog: 'View Catalog',
       btnMore: 'Our Heritage'
     },
@@ -90,7 +90,7 @@ export const dictionaries = {
       title: 'Maximum Textile Performance',
       desc: 'Our products are engineered with strict quality controls to guarantee extreme durability and superior thermal retention for high-volume applications.',
       disclaimer1: '* Colors and dimensions may vary by 5%.',
-      disclaimer2: '** "100% regenerated" refers to our sustainable use of recycled fibers (a high-quality blend of acrylic, wool, polyester, and other technical fibers).',
+      disclaimer2: '** "100% regenerated" refers to the use of recycled fibers (a blend of acrylic, wool, polyester, and other fibers).',
       measures: 'Specifications',
       composition: 'Material',
       quote: 'Request Wholesale Quote',
@@ -113,12 +113,12 @@ export const dictionaries = {
       tag: 'Corporate Legacy',
       title1: 'Absolute Leadership.',
       title2: 'Forging the Future.',
-      p1: 'Founded in <strong class="text-white font-medium">1962</strong>, Mano Fil S.A. was born with an unwavering vocation: consolidating alliances for massive supply operations. From our corporate headquarters in <strong class="text-amber-500 font-bold">Santa Ana Chiautempan, Tlaxcala</strong>, and operating via our flagship domain <em class="text-amber-500/80 not-italic font-serif">cobertores.com</em>, we have perfected the art of large-scale logistics.',
-      p2: 'Commercial efficiency is our core directive. This discipline has allowed us to diversify our portfolio, successfully expanding into the real estate sector <strong class="text-white font-medium">8 years ago</strong>. Today, we merge our deep logistics expertise with infrastructure development to drive regional economic growth.',
+      p1: 'Founded in <strong class="text-white font-medium">1962</strong>, Mano Fil S.A. was born with an unwavering vocation: consolidating alliances for massive supply operations. From our corporate headquarters in <strong class="text-amber-500 font-bold">Santa Ana Chiautempan, Tlaxcala</strong>, and operating via our flagship domain <em class="text-amber-500/80 not-italic font-serif">cobertores.com</em>, we have perfected the art of large-scale logistics, delivering flawless results nationwide.',
+      p2: 'Commercial efficiency is our core directive. This discipline has allowed us to diversify our portfolio, successfully expanding into the real estate sector <strong class="text-white font-medium">8 years ago</strong>. Today, we merge our deep logistics expertise with infrastructure development to drive economic growth.',
       stat1: 'Year Established',
       stat2: 'Years in Real Estate',
       badgeTitle: 'Logistics Prestige',
-      badgeDesc: 'Over 6 decades<br/>of corporate excellence.'
+      badgeDesc: 'Over 6 decades<br/>of excellence and proven corporate results.'
     },
     footer: {
       desc: 'Mano Fil S.A. - Transforming raw materials into global comfort and infrastructure solutions.',
