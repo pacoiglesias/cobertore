@@ -47,7 +47,7 @@ REM ===== Paso 2: Encontrar el ZIP de cambios y CONFIRMAR antes de tocar nada ==
 echo.
 echo ===== Paso 2: Buscando el ZIP de cambios mas reciente en Descargas =====
 set "ULTIMO_ZIP="
-for /f "delims=" %%F in ('dir /b /o:-d "C:\Users\pacoi\Downloads\cobertore*.zip" 2^>nul') do (
+for /f "delims=" %%F in ('dir /b /o:-d "C:\Users\pacoi\Downloads\cobertore*.zip" "C:\Users\pacoi\Downloads\URGENTE*.zip" "C:\Users\pacoi\Downloads\fix-*.zip" 2^>nul') do (
     if not defined ULTIMO_ZIP set "ULTIMO_ZIP=%%F"
 )
 if not defined ULTIMO_ZIP (
@@ -103,6 +103,18 @@ if exist "functions\lib" rmdir /s /q "functions\lib"
 echo   OK - cache limpiado.
 
 REM ===== Paso 5: Compilar el sitio =====
+echo.
+echo ===== Paso 4.5: Instalando dependencias (npm install) =====
+REM Si package.json cambio (nueva libreria agregada por cualquier sesion),
+REM sin esto el build fallaria con "Cannot find module".
+call npm install
+if errorlevel 1 (
+    echo   [ERROR] npm install fallo. Copia TODO lo de arriba y pasaselo a Claude.
+    pause
+    exit /b 1
+)
+echo   OK - dependencias al dia.
+
 echo.
 echo ===== Paso 5: Compilando el sitio (npm run build) =====
 call npm run build
