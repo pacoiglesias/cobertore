@@ -118,10 +118,20 @@ async function runNewsFetch(db: Firestore): Promise<{ sourcesChecked: number; it
           // Limpiar HTML del resumen
           const cleanSummary = (item.contentSnippet || item.content || '').replace(/<[^>]*>?/gm, '').substring(0, 150) + '...';
 
+          // FIX 2026-07-25: antes se guardaba item.content completo (el
+          // articulo entero de la fuente original) como "body" y se
+          // republicaba integro en /noticias/[id] con su propio JSON-LD.
+          // Esto es reproducir contenido ajeno sin licencia (riesgo legal),
+          // y ademas Google penaliza contenido duplicado -- perjudicaba el
+          // SEO en vez de ayudarlo. Ahora se guarda solo un extracto corto;
+          // la pagina del articulo debe enlazar a "originalUrl" para el
+          // texto completo, como hace cualquier agregador legitimo.
+          const cleanBody = (item.contentSnippet || item.content || '').replace(/<[^>]*>?/gm, '').substring(0, 500);
+
           await newsRef.set({
             title: item.title,
             summary: cleanSummary,
-            body: item.content || item.contentSnippet,
+            body: cleanBody,
             sourceName: source.name,
             originalUrl: item.link,
             imgUrl: imgUrl,
