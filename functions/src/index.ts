@@ -205,20 +205,48 @@ export const backupDatabase = functions.scheduler.onSchedule({
   const bucket = getStorage().bucket();
   
   const collectionsToBackup = ['quotes_history', 'official_documents', 'leads', 'user_privileges'];
-  const backupData: Record<string, any[]> = {};
-  
-  for (const collectionName of collectionsToBackup) {
-    const snap = await db.collection(collectionName).get();
-    backupData[collectionName] = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
-  
   const dateStr = new Date().toISOString().split('T')[0];
   const fileName = `backups/db_backup_${dateStr}.json`;
   
   const file = bucket.file(fileName);
-  await file.save(JSON.stringify(backupData, null, 2), {
+  const writeStream = file.createWriteStream({
     contentType: 'application/json'
   });
   
-  console.log(`Respaldo exitoso creado en Storage: ${fileName}`);
+  writeStream.write('{\n');
+  
+  for (let i = 0; i < collectionsToBackup.length; i++) {
+    const collectionName = collectionsToBackup[i];
+    writeStream.write(`  "${collectionName}": [\n`);
+    
+    let firstDoc = true;
+    // stream() reads docs incrementally avoiding memory crashes (OOM)
+    const stream = db.collection(collectionName).stream();
+    
+    for await (const doc of stream) {
+      if (!firstDoc) {
+        writeStream.write(',\n');
+      }
+      firstDoc = false;
+      const data = { id: (doc as any).id, ...(doc as any).data() };
+      writeStream.write(`    ${JSON.stringify(data)}`);
+    }
+    
+    writeStream.write('\n  ]');
+    if (i < collectionsToBackup.length - 1) {
+      writeStream.write(',\n');
+    } else {
+      writeStream.write('\n');
+    }
+  }
+  
+  writeStream.write('}\n');
+  writeStream.end();
+  
+  await new Promise((resolve, reject) => {
+    writeStream.on('finish', resolve);
+    writeStream.on('error', reject);
+  });
+  
+  console.log(`Respaldo exitoso creado por Stream en Storage: ${fileName}`);
 });
