@@ -9,19 +9,23 @@ import { auth, db, storage } from '../../../lib/firebase';
 import { isSuperAdminEmail } from '../../../lib/authorization';
 import { LogOut, FileText, Download, Shield, Building2, Upload, Trash2, Image as ImageIcon, File, Loader2, Users, MessageSquare, Clock, Edit, Eye, X, FileSignature, Smartphone, Plus, Package } from 'lucide-react';
 import Link from 'next/link';
-import { QuoteGenerator } from './QuoteGenerator';
-import { QuotesHistoryManager } from './QuotesHistoryManager';
-import OfficialDocumentsManager from './OfficialDocumentsManager';
-import SystemSettings from './SystemSettings';
-import NewsManager from './NewsManager';
-import SystemMonitor from './SystemMonitor';
-import { AnalyticsDashboard } from './AnalyticsDashboard';
-import { FilesTab } from './components/FilesTab';
-
+import dynamic from 'next/dynamic';
+import { useAudioFeedback } from '../../../hooks/useAudioFeedback';
 import { SkeletonTable } from '@/components/Skeleton';
-import { LeadsTab } from './components/LeadsTab';
-import { OrdersTab } from './components/OrdersTab';
-import { ProductsTab, type ProductForm } from './components/ProductsTab';
+import { type ProductForm } from './components/ProductsTab';
+
+const QuoteGenerator = dynamic(() => import('./QuoteGenerator').then(m => m.QuoteGenerator));
+const QuotesHistoryManager = dynamic(() => import('./QuotesHistoryManager').then(m => m.QuotesHistoryManager));
+const OfficialDocumentsManager = dynamic(() => import('./OfficialDocumentsManager'));
+const SystemSettings = dynamic(() => import('./SystemSettings'));
+const NewsManager = dynamic(() => import('./NewsManager'));
+const SystemMonitor = dynamic(() => import('./SystemMonitor'));
+const AnalyticsDashboard = dynamic(() => import('./AnalyticsDashboard').then(m => m.AnalyticsDashboard));
+const FilesTab = dynamic(() => import('./components/FilesTab').then(m => m.FilesTab));
+const LeadsTab = dynamic(() => import('./components/LeadsTab').then(m => m.LeadsTab));
+const OrdersTab = dynamic(() => import('./components/OrdersTab').then(m => m.OrdersTab));
+const ProductsTab = dynamic(() => import('./components/ProductsTab').then(m => m.ProductsTab));
+
 import { getFileIcon, formatSize } from './components/utils';
 import { toast } from 'react-hot-toast';
 import { jsPDF } from "jspdf";
@@ -84,6 +88,8 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'files' | 'leads' | 'orders' | 'users' | 'catalog' | 'quote-generator' | 'quotes-history' | 'documents' | 'settings' | 'news' | 'monitor' | 'analytics'>('files');
   const [leadSearchTerm, setLeadSearchTerm] = useState('');
   
+  const { playSuccess, playClick, playDelete, playError } = useAudioFeedback();
+  
   // Data States
   const [files, setFiles] = useState<IntranetFile[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -118,9 +124,11 @@ export default function Dashboard() {
   const updateLeadStatus = async (leadId: string, newStatus: string) => {
     try {
       await setDoc(doc(db, 'leads', leadId), { status: newStatus }, { merge: true });
+      playSuccess();
       toast.success('Estado actualizado correctamente');
     } catch (error) {
       logger.error('Error actualizando estado del prospecto:', error);
+      playError();
       toast.error('Error al actualizar el estado');
     }
   };
@@ -129,9 +137,11 @@ export default function Dashboard() {
     if (confirm('¿Estás seguro de que deseas eliminar este prospecto permanentemente?')) {
       try {
         await deleteDoc(doc(db, 'leads', leadId));
+        playDelete();
         toast.success('Prospecto eliminado');
       } catch (error) {
         logger.error('Error eliminando prospecto:', error);
+        playError();
         toast.error('Error al eliminar prospecto');
       }
     }
@@ -140,9 +150,11 @@ export default function Dashboard() {
   const editLead = async (leadId: string, updatedData: any) => {
     try {
       await setDoc(doc(db, 'leads', leadId), updatedData, { merge: true });
+      playSuccess();
       toast.success('Prospecto actualizado');
     } catch (error) {
       logger.error('Error editando prospecto:', error);
+      playError();
       toast.error('Error al actualizar prospecto');
     }
   };
@@ -206,11 +218,19 @@ export default function Dashboard() {
               style: { background: '#f59e0b', color: '#fff', fontWeight: 'bold' }
             });
             
-            // Sonido de campana (opcional, sin bloquear)
+            // Sonido de campana sintética
             try {
-              const audio = new Audio('/notification.mp3'); // Asumiendo que pueden agregar un mp3 luego, o falla silenciosamente
-              audio.volume = 0.5;
-              audio.play().catch(() => {});
+              const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+              gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start();
+              osc.stop(audioCtx.currentTime + 0.3);
             } catch(e) {}
           }
         });

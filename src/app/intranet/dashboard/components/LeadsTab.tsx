@@ -1,7 +1,7 @@
 import React from 'react';
 import { User as UserIcon, MessageSquare, Phone, Download, Clock, CheckCircle, CheckSquare, Inbox, Edit, Trash2, Smartphone } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
-
+import { motion, AnimatePresence } from 'framer-motion';
 interface Lead {
   id: string;
   name: string;
@@ -162,8 +162,16 @@ export function LeadsTab({
                   </div>
                 ) : (
                   <>
+                  <AnimatePresence mode="popLayout">
                     {colLeads.slice(0, getVisibleLimit(col.id)).map(lead => (
-                    <div key={lead.id} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-amber-500/50 transition-colors relative group">
+                    <motion.div 
+                      key={lead.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                      className="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-amber-500/50 transition-colors relative group"
+                    >
                       {/* Acciones de Edición/Borrado */}
                       <div className="absolute top-2 right-2 flex gap-1 opacity-100 transition-opacity">
                         <button 
@@ -246,9 +254,10 @@ export function LeadsTab({
                           );
                         })()}
                       </div>
-                    </div>
+                    </motion.div>
                   ))
                 }
+                </AnimatePresence>
                 {colLeads.length > getVisibleLimit(col.id) && (
                   <button
                     onClick={() => loadMore(col.id)}

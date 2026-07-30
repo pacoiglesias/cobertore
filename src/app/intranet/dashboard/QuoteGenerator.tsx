@@ -104,9 +104,11 @@ export function QuoteGenerator({ products, userEmail }: Props) {
     setItems(items.filter(item => item.id !== id));
   };
 
-  const subtotal = items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
-  const iva = subtotal * 0.16;
-  const total = subtotal + iva;
+  const { subtotal, iva, total } = React.useMemo(() => {
+    const calcSubtotal = items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
+    const calcIva = calcSubtotal * 0.16;
+    return { subtotal: calcSubtotal, iva: calcIva, total: calcSubtotal + calcIva };
+  }, [items]);
 
   const generatePDF = async () => {
     const element = document.getElementById('quote-template-pdf');

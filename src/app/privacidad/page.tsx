@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import { ManoFilLogo } from '../../components/ManoFilLogo';
+import { ObfuscatedEmail } from '../../components/ObfuscatedEmail';
 
 import { Metadata } from 'next';
 
@@ -77,7 +78,7 @@ export default function PrivacidadPage() {
               Usted tiene derecho a conocer qué datos personales tenemos de usted, para qué los utilizamos y las condiciones del uso que les damos (Acceso). Asimismo, es su derecho solicitar la corrección de su información en caso de que esté desactualizada, sea inexacta o incompleta (Rectificación); que la eliminemos de nuestros registros o bases de datos (Cancelación); así como oponerse al uso de sus datos personales para fines específicos (Oposición).
             </p>
             <p className="mt-4">
-              Para el ejercicio de cualquiera de los derechos ARCO, usted deberá presentar la solicitud respectiva enviando un correo a <strong>ventas@cobertores.com</strong>.
+              Para el ejercicio de cualquiera de los derechos ARCO, usted deberá presentar la solicitud respectiva enviando un correo a <strong><ObfuscatedEmail user="ventas" domain="cobertores.com" className="font-semibold text-white" /></strong>.
             </p>
           </section>
 

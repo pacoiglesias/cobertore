@@ -44,8 +44,7 @@ function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt,
         src={absoluteUrl}
         deliveryType="fetch"
         alt={alt}
-        width={800}
-        height={800}
+        fill
         sizes="(max-width: 768px) 100vw, 50vw"
         format="webp"
         className="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-700 grayscale group-hover:grayscale-0 mix-blend-luminosity absolute inset-0"

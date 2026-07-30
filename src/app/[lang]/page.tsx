@@ -35,13 +35,15 @@ export async function generateMetadata(
       description: 'Fábrica de cobertores, cobijas y tilmas en Tlaxcala. Venta por mayoreo a escala corporativa con precios directos de fábrica. Más de 60 años de experiencia.',
     },
     en: {
-      title: 'Wholesale Blankets & Thermal Textiles | Mexican Manufacturer Since 1962',
+      title: 'Wholesale Blankets & Textiles | Manufacturer Since 1962',
       description: 'Leading blanket manufacturer in Tlaxcala, Mexico. Heavy-duty thermal blankets and tilmas for corporate wholesale, with direct factory pricing and large-volume capacity.',
     },
   }[validLang];
 
   return {
-    title: meta.title,
+    title: {
+      absolute: meta.title
+    },
     description: meta.description,
     alternates: {
       canonical: `/${validLang}`,

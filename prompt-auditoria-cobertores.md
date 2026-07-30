@@ -1,4 +1,9 @@
-# Prompt: Cobertores Web v0.5.3 — estado al 2026-07-26
+# Prompt: Cobertores Web v0.3.1 — estado al 2026-07-30
+
+## ✅ Ya resuelto y confirmado (Fase 15: Public SEO Avanzado)
+- **JSON-LD Schema FAQ**: Se corrigió el bug de interpolación literal en `LandingClient.tsx` que afectaba los fragmentos enriquecidos de Google.
+- **Optimización de Imágenes (Next.js vs Static Export)**: Debido a las restricciones de `output: export`, Next.js no puede optimizar imágenes. Se conectaron los componentes de Catálogo y Noticias a un Helper Dinámico de **Cloudinary** (`buildCloudinaryUrl`) para garantizar que las imágenes se sirvan siempre en formato WebP/AVIF y mitigar la alerta HIGH de auditoría SEO.
+- **Rutas Dinámicas (`/noticias/[id]`)**: Se validó el inyector `generateMetadata` (OpenGraph/Twitter). Se actualizó para que consuma imágenes de Cloudinary y optimice el `NewsArticle` Schema.
 
 ## ✅ Ya resuelto y confirmado (Fase 14: Optimización, SEO y Paginación)
 - **Compresión de Imágenes**: Uploads de Noticias y Catálogo optimizados al vuelo (`browser-image-compression`) bajo 500KB.

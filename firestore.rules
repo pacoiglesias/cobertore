@@ -4,7 +4,7 @@ service cloud.firestore {
     
     // Función para verificar si es Súper Administrador
     function isSuperAdmin() {
-      return request.auth != null && (
+      return request.auth != null && request.auth.token.email_verified == true && (
         request.auth.token.email == 'paco.iglesias@gmail.com' || 
         request.auth.token.email == 'paco@cobertores.com' || 
         request.auth.token.email == 'pacoismael@gmail.com'
@@ -17,7 +17,7 @@ service cloud.firestore {
       let hasByUid = request.auth != null && exists(/databases/$(database)/documents/user_privileges/$(request.auth.uid));
       let pData = hasByUid ? get(/databases/$(database)/documents/user_privileges/$(request.auth.uid)).data : (hasByEmail ? get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data : null);
       
-      return request.auth != null && pData != null && 
+      return request.auth != null && request.auth.token.email_verified == true && pData != null && 
              (!('expiresAt' in pData) || pData.expiresAt == null || pData.expiresAt > request.time) && 
              (pData.role == roleNeeded || pData.role == 'editor');
     }

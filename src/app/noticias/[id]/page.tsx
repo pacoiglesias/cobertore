@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { NewsItem } from '@/lib/types';
 import { Metadata, ResolvingMetadata } from 'next';
+import { buildCloudinaryUrl } from '@/lib/cloudinary';
 
 // 1. generateStaticParams le dice a Next.js qué URLs de noticias pre-renderizar en build time
 export async function generateStaticParams() {
@@ -50,14 +51,14 @@ export async function generateMetadata(
     openGraph: {
       title,
       description,
-      images: news.imgUrl ? [news.imgUrl] : [],
+      images: news.imgUrl ? [buildCloudinaryUrl(news.imgUrl)] : [],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: news.imgUrl ? [news.imgUrl] : [],
+      images: news.imgUrl ? [buildCloudinaryUrl(news.imgUrl)] : [],
     }
   };
 }
@@ -94,7 +95,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: news.title,
-    image: news.imgUrl ? [news.imgUrl] : [],
+    image: news.imgUrl ? [buildCloudinaryUrl(news.imgUrl)] : [],
     datePublished: news.createdAt,
     dateModified: news.createdAt,
     author: [{
@@ -151,7 +152,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
           {news.imgUrl && (
             <div className="w-full h-[400px] md:h-[500px] relative rounded-3xl overflow-hidden mb-12">
               <Image
-                src={news.imgUrl}
+                src={buildCloudinaryUrl(news.imgUrl)}
                 alt={news.title}
                 fill
                 priority

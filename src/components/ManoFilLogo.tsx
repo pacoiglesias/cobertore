@@ -14,7 +14,7 @@ export const ManoFilLogo: React.FC<LogoProps> = ({
   showText = true 
 }) => {
   const { settings } = useSystemSettings();
-  const logoSrc = settings?.logoUrl || "/logo-oficial.png";
+  const logoSrc = settings?.logoUrl || "/logo-oficial.webp";
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
