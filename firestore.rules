@@ -13,12 +13,13 @@ service cloud.firestore {
 
     // Función para verificar si el usuario tiene privilegios vigentes
     function hasValidPrivilege(roleNeeded) {
-      return request.auth != null && 
-             exists(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)) && 
-             (get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt == null || 
-              get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt > request.time) && 
-             (get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data.role == roleNeeded || 
-              get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data.role == 'editor');
+      let hasByEmail = request.auth != null && request.auth.token.email != null && exists(/databases/$(database)/documents/user_privileges/$(request.auth.token.email));
+      let hasByUid = request.auth != null && exists(/databases/$(database)/documents/user_privileges/$(request.auth.uid));
+      let pData = hasByUid ? get(/databases/$(database)/documents/user_privileges/$(request.auth.uid)).data : (hasByEmail ? get(/databases/$(database)/documents/user_privileges/$(request.auth.token.email)).data : null);
+      
+      return request.auth != null && pData != null && 
+             (!('expiresAt' in pData) || pData.expiresAt == null || pData.expiresAt > request.time) && 
+             (pData.role == roleNeeded || pData.role == 'editor');
     }
 
     // Reglas para archivos de la intranet
@@ -30,17 +31,18 @@ service cloud.firestore {
     }
 
     // Reglas para gestión de privilegios
-    match /user_privileges/{emailId} {
-      // Leer: Súper Admin ve todo. El usuario solo ve el suyo.
-      allow read: if isSuperAdmin() || (request.auth != null && request.auth.token.email == emailId);
+    match /user_privileges/{userId} {
+      // Leer: Súper Admin ve todo. El usuario solo ve el suyo. (Soporta busqueda por UID y por Email retrocompatible)
+      allow read: if isSuperAdmin() || (request.auth != null && (request.auth.token.email == userId || request.auth.uid == userId));
       // Escribir: Solo Súper Admin puede dar o quitar permisos.
       allow write: if isSuperAdmin();
     }
 
     // Reglas para leads/cotizaciones
     match /leads/{leadId} {
-      // ANTI-SPAM: Solo permitir si el cuerpo tiene la estructura correcta y longitudes razonables
-      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'email', 'quantity', 'message', 'createdAt'])
+      // ANTI-SPAM: Requerir Firebase App Check (reCAPTCHA) y estructura correcta
+      allow create: if request.app != null
+                    && request.resource.data.keys().hasAll(['name', 'phone', 'email', 'quantity', 'message', 'createdAt'])
                     && request.resource.data.name is string
                     && request.resource.data.name.size() > 2
                     && request.resource.data.name.size() < 100
