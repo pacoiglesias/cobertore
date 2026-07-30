@@ -27,3 +27,21 @@
 - **Archivo:** `firestore.rules`
 - **Problema:** La función `hasValidPrivilege` buscaba los roles del usuario quemando el `.email` como ID de documento, lo cual es frágil si el usuario cambia de correo.
 - **Solución/Estado:** [RESUELTO] Se reescribió `hasValidPrivilege` usando variables (`let`) nativas de Firestore Rules v2 para soportar la búsqueda por `request.auth.uid` (recomendado) manteniendo la retrocompatibilidad con `request.auth.token.email` sin multiplicar los costos de lectura.
+
+### 5. [BAJA PRIORIDAD] Congestión de Interfaz en el CRM (UI/UX)
+- **Fecha:** 2026-07-29
+- **Archivo:** src/app/intranet/dashboard/components/LeadsTab.tsx
+- **Problema:** El CRM mostraba el 100% de las tarjetas de leads (prospectos) de golpe. En escenarios de cientos de leads, el navegador se trababa al intentar renderizar tantas tarjetas simultáneamente, afectando la experiencia en dispositivos móviles.
+- **Solución/Estado:** [RESUELTO] Se introdujo un sistema de paginación visual ("Mostrar más") que renderiza únicamente de 20 en 20 tarjetas por columna, garantizando fluidez sin importar el volumen de prospectos.
+
+### 6. [BAJA PRIORIDAD] Correos Súper Admin Hardcodeados (Mantenibilidad)
+- **Fecha:** 2026-07-29
+- **Archivo:** src/lib/authorization.ts y unctions/src/index.ts
+- **Problema:** Los correos electrónicos de los súper administradores estaban "quemados" directamente en el código fuente. Esto es una mala práctica porque dificulta revocar o agregar acceso sin modificar el código fuente, hacer un nuevo commit y desplegar el sistema.
+- **Solución/Estado:** [RESUELTO] Se abstrajeron los correos usando variables de entorno (NEXT_PUBLIC_SUPER_ADMIN_EMAILS en el frontend y SUPER_ADMIN_EMAILS en el backend) para inyectarlos dinámicamente y de forma segura.
+
+### 7. [CRÍTICO] Bug de SEO: Canonical Hijacking en Rutas Internas
+- **Fecha:** 2026-07-29
+- **Archivo:** src/app/layout.tsx y src/app/noticias/[id]/page.tsx
+- **Problema:** El layout principal forzaba la propiedad lternates: { canonical: '/' } a todas las páginas hijas. Como resultado, Google Search Console etiquetaba las noticias y páginas internas como "Duplicadas", negándose a indexarlas bajo la creencia de que todas eran simplemente la página principal (/es).
+- **Solución/Estado:** [RESUELTO] Se eliminó la etiqueta canónica global del layout.tsx y se implementó una etiqueta dinámica canonical: '/noticias/[id]' en la plantilla de noticias.

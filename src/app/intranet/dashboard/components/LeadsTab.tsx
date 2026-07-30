@@ -45,6 +45,17 @@ export function LeadsTab({
     (lead.phone || '').includes(leadSearchTerm)
   );
 
+  const [visibleLimits, setVisibleLimits] = React.useState<Record<string, number>>({});
+
+  const getVisibleLimit = (colId: string) => visibleLimits[colId] || 20;
+
+  const loadMore = (colId: string) => {
+    setVisibleLimits(prev => ({
+      ...prev,
+      [colId]: (prev[colId] || 20) + 20
+    }));
+  };
+
   const getLeadsByStatus = (statusId: string) => {
     return filteredLeads.filter(lead => {
       const s = lead.status || 'nuevo';
@@ -150,7 +161,8 @@ export function LeadsTab({
                     Sin prospectos
                   </div>
                 ) : (
-                  colLeads.map(lead => (
+                  <>
+                    {colLeads.slice(0, getVisibleLimit(col.id)).map(lead => (
                     <div key={lead.id} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-amber-500/50 transition-colors relative group">
                       {/* Acciones de Edición/Borrado */}
                       <div className="absolute top-2 right-2 flex gap-1 opacity-100 transition-opacity">
@@ -236,6 +248,16 @@ export function LeadsTab({
                       </div>
                     </div>
                   ))
+                }
+                {colLeads.length > getVisibleLimit(col.id) && (
+                  <button
+                    onClick={() => loadMore(col.id)}
+                    className="w-full mt-4 py-2 bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold rounded-lg transition-colors border border-white/10"
+                  >
+                    Mostrar más ({colLeads.length - getVisibleLimit(col.id)} restantes)
+                  </button>
+                )}
+                </>
                 )}
               </div>
             </div>

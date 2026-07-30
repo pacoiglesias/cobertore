@@ -9,11 +9,13 @@ import { db } from './firebase';
  * la validación de seguridad. Ahora vive en un solo lugar: si hay que
  * agregar o quitar a alguien, se hace aquí y aplica en todo el sistema.
  */
-export const SUPER_ADMINS = [
-  'paco@cobertores.com',
-  'paco.iglesias@gmail.com',
-  'pacoismael@gmail.com',
-];
+export const SUPER_ADMINS = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAILS
+  ? process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAILS.split(',').map(e => e.trim())
+  : [
+      'paco@cobertores.com',
+      'paco.iglesias@gmail.com',
+      'pacoismael@gmail.com',
+    ];
 
 export function isSuperAdminEmail(email: string | null | undefined): boolean {
   if (!email) return false;

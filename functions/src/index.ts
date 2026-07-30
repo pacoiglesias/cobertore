@@ -9,11 +9,13 @@ admin.initializeApp();
 
 const parser = new Parser();
 
-const SUPER_ADMIN_EMAILS = [
-  'paco.iglesias@gmail.com',
-  'paco@cobertores.com',
-  'pacoismael@gmail.com',
-];
+const SUPER_ADMIN_EMAILS = process.env.SUPER_ADMIN_EMAILS 
+  ? process.env.SUPER_ADMIN_EMAILS.split(',').map(e => e.trim())
+  : [
+      'paco.iglesias@gmail.com',
+      'paco@cobertores.com',
+      'pacoismael@gmail.com',
+    ];
 
 // Mismas 3 fuentes que SystemSettings.tsx propone como default en el
 // dashboard. Si nadie ha guardado `newsSources` todavia en
