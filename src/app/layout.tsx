@@ -68,13 +68,6 @@ export async function generateMetadata(): Promise<Metadata> {
       address: false,
       telephone: false,
     },
-    alternates: {
-      canonical: '/',
-      languages: {
-        'es': '/es',
-        'en': '/en',
-      },
-    },
     openGraph: {
       title: dynamicTitle,
       description: dynamicDescription,
