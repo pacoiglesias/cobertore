@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, Timestamp, setDoc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, Timestamp, setDoc, getDoc, limit } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { auth, db, storage } from '../../../lib/firebase';
 import { isSuperAdminEmail } from '../../../lib/authorization';
@@ -186,14 +186,14 @@ export default function Dashboard() {
     });
 
     // Listeners
-    const filesQuery = query(collection(db, 'intranet_files'), orderBy('createdAt', 'desc'));
+    const filesQuery = query(collection(db, 'intranet_files'), orderBy('createdAt', 'desc'), limit(150));
     const unsubscribeFiles = onSnapshot(filesQuery, (snapshot) => {
       setFiles(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as IntranetFile[]);
     }, (err) => {
       logger.error('Error en listener:', err);
     });
 
-    const leadsQuery = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
+    const leadsQuery = query(collection(db, 'leads'), orderBy('createdAt', 'desc'), limit(150));
     let initialLeadsLoad = true;
     const unsubscribeLeads = onSnapshot(leadsQuery, (snapshot) => {
       if (!initialLeadsLoad) {
@@ -221,14 +221,14 @@ export default function Dashboard() {
       logger.error('Error en listener:', err);
     });
 
-    const productsQuery = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+    const productsQuery = query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(150));
     const unsubscribeProducts = onSnapshot(productsQuery, (snapshot) => {
       setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as CatalogProduct[]);
     }, (err) => {
       logger.error('Error en listener:', err);
     });
 
-    const ordersQuery = query(collection(db, 'orders'), orderBy('updatedAt', 'desc'));
+    const ordersQuery = query(collection(db, 'orders'), orderBy('updatedAt', 'desc'), limit(150));
     const unsubOrders = onSnapshot(ordersQuery, (snapshot) => {
       setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Order[]);
     }, (err) => {
