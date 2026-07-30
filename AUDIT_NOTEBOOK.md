@@ -28,3 +28,7 @@
 - **Rutas Dinámicas (/noticias/[id])**: Se validó el inyector generateMetadata (OpenGraph/Twitter). Se actualizó para que consuma imágenes de Cloudinary y optimice el NewsArticle Schema.
 - **Verificación de Compilación**: 
 pm run build ejecutado exitosamente sin roturas de SSG.
+### 2026-07-30: Fase 16 - Prioridad 3 CRO (WhatsApp & Certificaciones)
+- **Botón Flotante WhatsApp**: Se inyectó con éxito un efecto de sonido (Web Audio API) en el botón nativo de WhatsApp. El botón ya estaba correctamente parametrizado desde Firestore (System Settings).
+- **Autoridad B2B (Certificaciones)**: Se diseñó e implementó un nuevo bloque visual UI responsivo (Bento Grid) en \LandingClient.tsx\ mostrando 4 pilares: Calidad B2B, Red Nacional, Fabricante Directo y +60 Años de Experiencia.
+- **Deploy Test**: Compilación Next.js \output: export\ exitosa.

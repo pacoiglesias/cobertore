@@ -85,6 +85,25 @@ export function WhatsAppButton({
             rel="noopener noreferrer"
             aria-label="Cotizar por WhatsApp"
             className="group relative"
+            onClick={(e) => {
+              try {
+                const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+                if (AudioContext) {
+                  const audioCtx = new AudioContext();
+                  const oscillator = audioCtx.createOscillator();
+                  const gainNode = audioCtx.createGain();
+                  oscillator.connect(gainNode);
+                  gainNode.connect(audioCtx.destination);
+                  oscillator.type = 'sine';
+                  oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                  gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                  gainNode.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.05);
+                  gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                  oscillator.start();
+                  oscillator.stop(audioCtx.currentTime + 0.2);
+                }
+              } catch (err) {}
+            }}
           >
             <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-20" />
             <div className="relative w-14 h-14 bg-green-500 hover:bg-green-400 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(34,197,94,0.4)] transition-all duration-300 group-hover:shadow-[0_4px_30px_rgba(34,197,94,0.6)] group-hover:scale-110">

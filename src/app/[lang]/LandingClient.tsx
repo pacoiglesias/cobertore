@@ -390,6 +390,53 @@ export default function LandingClient({ lang }: { lang: Lang }) {
         </div>
       </section>
 
+      {/* Sección de Certificaciones / Autoridad (B2B Trust) */}
+      <section className="py-16 md:py-24 relative bg-slate-50 dark:bg-[#070b14] border-t border-slate-200 dark:border-white/5 z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-900/5 via-transparent to-transparent pointer-events-none"></div>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">{lang === 'es' ? 'Nuestras Credenciales' : 'Our Credentials'}</h4>
+            <h2 className="text-3xl md:text-5xl font-serif text-slate-900 dark:text-white mb-6">
+              {lang === 'es' ? 'Certificaciones de Industria' : 'Industry Certifications'}
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col items-center text-center group">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white dark:bg-[#0a0f1d] border-2 border-slate-200 dark:border-white/10 flex items-center justify-center mb-4 shadow-xl group-hover:border-amber-500 transition-colors">
+                <ShieldCheck className="w-10 h-10 text-amber-500" />
+              </div>
+              <h3 className="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white mb-2">{lang === 'es' ? 'Calidad B2B' : 'B2B Quality'}</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{lang === 'es' ? 'Estándares industriales de alta resistencia' : 'High resistance industrial standards'}</p>
+            </motion.div>
+            
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="flex flex-col items-center text-center group">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white dark:bg-[#0a0f1d] border-2 border-slate-200 dark:border-white/10 flex items-center justify-center mb-4 shadow-xl group-hover:border-amber-500 transition-colors">
+                <Globe className="w-10 h-10 text-amber-500" />
+              </div>
+              <h3 className="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white mb-2">{lang === 'es' ? 'Red Nacional' : 'National Network'}</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{lang === 'es' ? 'Capacidad logística a todo el país' : 'Nationwide logistics capacity'}</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="flex flex-col items-center text-center group">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white dark:bg-[#0a0f1d] border-2 border-slate-200 dark:border-white/10 flex items-center justify-center mb-4 shadow-xl group-hover:border-amber-500 transition-colors">
+                <Factory className="w-10 h-10 text-amber-500" />
+              </div>
+              <h3 className="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white mb-2">{lang === 'es' ? 'Fabricante Directo' : 'Direct Manufacturer'}</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{lang === 'es' ? 'Precios de fábrica sin intermediarios' : 'Factory prices without middlemen'}</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="flex flex-col items-center text-center group">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white dark:bg-[#0a0f1d] border-2 border-slate-200 dark:border-white/10 flex items-center justify-center mb-4 shadow-xl group-hover:border-amber-500 transition-colors">
+                <Star className="w-10 h-10 text-amber-500" />
+              </div>
+              <h3 className="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white mb-2">{lang === 'es' ? '+60 Años' : '+60 Years'}</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{lang === 'es' ? 'De experiencia textil ininterrumpida' : 'Of uninterrupted textile experience'}</p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Catálogo de Productos Premium */}
       <section id="productos" className="py-24 md:py-32 relative z-10 border-t border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#070b14]">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/10 via-transparent dark:via-[#070b14] to-transparent dark:to-[#070b14] z-0 pointer-events-none"></div>
