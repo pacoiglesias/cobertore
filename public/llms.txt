@@ -1,0 +1,27 @@
+# Mano Fil S.A. (cobertores.com)
+
+> Fábrica textil mexicana fundada en 1962, con sede en Santa Ana Chiautempan, Tlaxcala. Fabricante y distribuidor mayorista de cobertores, cobijas y tilmas para clientes corporativos (B2B), con suministro industrial de alto volumen y logística a gran escala en México. Opera además una división de desarrollo inmobiliario (parques industriales, naves logísticas y complejos comerciales).
+
+Mano Fil S.A. es una empresa manufacturera con más de 60 años de operación. Su línea principal es la producción y venta por mayoreo de cobertores térmicos, cobijas y tilmas (uso industrial, hospitalario, de donación y logístico), con precios directos de fábrica y capacidad de respuesta rápida para contingencias (heladas, inundaciones, sismos) y pedidos de gran volumen. Hace 8 años diversificó su operación hacia el sector inmobiliario.
+
+Sede operativa: Calle El Grullo, Santa Ana Chiautempan, Tlaxcala, C.P. 90800, México.
+Oficinas comerciales: San Borja 613 Int. 702, Col. Del Valle Sur, C.P. 03104, Ciudad de México.
+Contacto: ventas@cobertores.com · +52 246 464 2891
+
+## Páginas principales
+
+- [Sitio en español](https://cobertores.com/es): Catálogo de productos, historia de la empresa, divisiones de negocio y formulario de cotización por volumen.
+- [Sitio en inglés](https://cobertores.com/en): English version — wholesale blanket and textile manufacturer since 1962.
+- [Noticias](https://cobertores.com/noticias): Noticias y actualizaciones relacionadas con la industria textil y la empresa.
+- [Seguimiento de pedidos](https://cobertores.com/seguimiento): Consulta de estatus de pedidos para clientes.
+
+## Legal
+
+- [Política de privacidad](https://cobertores.com/privacidad)
+- [Términos legales](https://cobertores.com/terminos)
+- [Política de cookies](https://cobertores.com/cookies)
+
+## Notas para agentes y LLMs
+
+- El dominio raíz (https://cobertores.com/) redirige (301) a https://cobertores.com/es; la versión canónica en español vive en /es y la versión en inglés en /en.
+- El catálogo de productos y las cotizaciones se gestionan de forma dinámica; para información de precios o disponibilidad vigente, remitir al formulario de contacto o al correo de ventas.

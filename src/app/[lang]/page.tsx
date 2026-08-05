@@ -1,10 +1,46 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import LandingClient from './LandingClient';
+import { db } from '../../lib/firebase';
+import { CatalogProduct, NewsItem } from '../../lib/types';
 import { Lang } from '../../lib/i18n/dictionaries';
 
 export function generateStaticParams() {
   return [{ lang: 'es' }, { lang: 'en' }];
+}
+
+// FIX SEO/GEO 2026-08-04: LandingClient es un client component que traía
+// el catálogo y las noticias con onSnapshot (Firestore) YA MONTADO en el
+// navegador. Con `output: 'export'` eso significa que el HTML estático
+// generado en build no contenía ese contenido -- el catálogo tenía un
+// fallback estático (dictionaries) pero la sección de noticias no tenía
+// ninguno y desaparecía por completo del HTML (`latestNews.length > 0 &&`).
+// Los rastreadores de IA/LLM (y muchos crawlers en general) no ejecutan
+// JS ni esperan a que resuelva Firestore, así que veían la página casi
+// vacía -- de ahí el bajo % de "Contenido Renderizado". Se trae la data
+// aquí, en build, con getDocs (mismo patrón que ya usa sitemap.ts), y se
+// pasa como prop inicial a LandingClient, que sigue usando onSnapshot
+// para refrescar en vivo una vez montado en el cliente.
+async function getInitialCatalogAndNews(): Promise<{ products: CatalogProduct[]; news: NewsItem[] }> {
+  let products: CatalogProduct[] = [];
+  let news: NewsItem[] = [];
+
+  try {
+    const productsSnap = await getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc')));
+    products = productsSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as CatalogProduct[];
+  } catch (error) {
+    console.error('Error obteniendo catálogo en build:', error);
+  }
+
+  try {
+    const newsSnap = await getDocs(query(collection(db, 'news'), orderBy('createdAt', 'desc'), limit(3)));
+    news = newsSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as NewsItem[];
+  } catch (error) {
+    console.error('Error obteniendo noticias en build:', error);
+  }
+
+  return { products, news };
 }
 
 function resolveLang(raw: string | undefined): Lang {
@@ -65,5 +101,6 @@ export async function generateMetadata(
 
 export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  return <LandingClient lang={resolveLang(lang)} />;
+  const { products, news } = await getInitialCatalogAndNews();
+  return <LandingClient lang={resolveLang(lang)} initialProducts={products} initialNews={news} />;
 }

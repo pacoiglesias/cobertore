@@ -45,18 +45,37 @@ async function getNews(): Promise<NewsItem[]> {
   }
 }
 
+// FIX SEO 2026-08-04: BreadcrumbList para la sección de noticias.
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://cobertores.com/es' },
+    { '@type': 'ListItem', position: 2, name: 'Noticias', item: 'https://cobertores.com/noticias' },
+  ],
+};
+
 export default async function NoticiasPage() {
   const news = await getNews();
 
   return (
     <div className="min-h-screen bg-slate-50 selection:bg-amber-500 selection:text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       {/* Header Público Simplificado */}
       <nav className="bg-slate-900 border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <ManoFilLogo className="w-10 h-10 group-hover:scale-105 transition-transform" showText={false} variant="light" />
             <div>
-              <h1 className="font-serif text-xl text-white">Mano Fil S.A.</h1>
+              {/* FIX SEO 2026-08-04: esto era un <h1>, duplicando el <h1>
+                  real de la página ("Novedades y Lanzamientos" más abajo).
+                  Dos H1 en una misma página diluye la señal de tema
+                  principal para los buscadores -- se cambia a texto normal,
+                  el logo/nombre de marca no necesita ser un encabezado. */}
+              <p className="font-serif text-xl text-white">Mano Fil S.A.</p>
               <span className="text-[10px] uppercase tracking-widest text-amber-500 font-bold">Portal de Noticias</span>
             </div>
           </Link>

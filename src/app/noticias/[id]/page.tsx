@@ -51,14 +51,17 @@ export async function generateMetadata(
     openGraph: {
       title,
       description,
-      images: news.imgUrl ? [buildCloudinaryUrl(news.imgUrl)] : [],
+      // FIX SEO/Perf 2026-08-04: 1200px es el ancho recomendado por
+      // Facebook/Twitter para tarjetas de vista previa -- sin esto se
+      // enlazaba la imagen a resolución original.
+      images: news.imgUrl ? [buildCloudinaryUrl(news.imgUrl, 1200)] : [],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: news.imgUrl ? [buildCloudinaryUrl(news.imgUrl)] : [],
+      images: news.imgUrl ? [buildCloudinaryUrl(news.imgUrl, 1200)] : [],
     }
   };
 }
@@ -115,11 +118,28 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
     articleBody: news.body
   };
 
+  // FIX SEO 2026-08-04: BreadcrumbList -- ayuda a que Google muestre la
+  // ruta de navegación (Inicio > Noticias > Título) en los resultados de
+  // búsqueda en vez de solo la URL cruda.
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://cobertores.com/es' },
+      { '@type': 'ListItem', position: 2, name: 'Noticias', item: 'https://cobertores.com/noticias' },
+      { '@type': 'ListItem', position: 3, name: news.title, item: `https://cobertores.com/noticias/${id}` },
+    ],
+  };
+
   return (
     <div className="bg-slate-50 dark:bg-[#070b14] min-h-screen pt-24 pb-32">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       
       <div className="max-w-4xl mx-auto px-6">
@@ -151,8 +171,14 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
           
           {news.imgUrl && (
             <div className="w-full h-[400px] md:h-[500px] relative rounded-3xl overflow-hidden mb-12">
+              {/* FIX SEO/Perf 2026-08-04: mismo problema que en la landing
+                  -- sin ancho, se servía la imagen a resolución completa.
+                  Esta sí es el candidato a LCP de la página (priority),
+                  así que aquí el ancho pesa el doble para el rendimiento
+                  móvil. 1400px cubre el contenedor full-width en desktop
+                  sin mandar el archivo original sin comprimir. */}
               <Image
-                src={buildCloudinaryUrl(news.imgUrl)}
+                src={buildCloudinaryUrl(news.imgUrl, 1400)}
                 alt={news.title}
                 fill
                 priority

@@ -186,12 +186,22 @@ export default function RootLayout({
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 "@context": "https://schema.org",
-                "@type": ["ManufacturingBusiness", "WholesaleStore", "B2BBusiness"],
+                // FIX SEO/GEO 2026-08-04: se agrega "Organization" de forma
+                // explícita al arreglo de @type. Antes solo se usaban
+                // subtipos (ManufacturingBusiness/WholesaleStore/B2BBusiness);
+                // aunque heredan de Organization en schema.org, varias
+                // herramientas de auditoría buscan el string literal
+                // "Organization" y no lo detectaban.
+                "@type": ["Organization", "ManufacturingBusiness", "WholesaleStore", "B2BBusiness"],
                 "name": "Mano Fil S.A.",
+                "legalName": "Mano Fil S.A.",
+                "alternateName": "MANO FIL Cobertores",
+                "logo": "https://cobertores.com/logo-oficial.png",
                 "image": "https://cobertores.com/logo-oficial.png",
                 "@id": "https://cobertores.com",
                 "url": "https://cobertores.com",
                 "telephone": "+522464642891",
+                "email": "ventas@cobertores.com",
                 "address": {
                   "@type": "PostalAddress",
                   "streetAddress": "Calle El Grullo",
@@ -205,6 +215,16 @@ export default function RootLayout({
                   "latitude": 19.3135,
                   "longitude": -98.1969
                 },
+                "contactPoint": [
+                  {
+                    "@type": "ContactPoint",
+                    "telephone": "+522464642891",
+                    "email": "ventas@cobertores.com",
+                    "contactType": "sales",
+                    "areaServed": "MX",
+                    "availableLanguage": ["es", "en"]
+                  }
+                ],
                 "foundingDate": "1962",
                 "description": "Fábrica textil de cobertores y tilmas por mayoreo en México. Calidad industrial B2B y suministro a gran escala."
               })

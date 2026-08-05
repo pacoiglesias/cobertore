@@ -67,7 +67,15 @@ const playSuccessSound = () => {
 };
 
 
-export default function LandingClient({ lang }: { lang: Lang }) {
+export default function LandingClient({
+  lang,
+  initialProducts = [],
+  initialNews = [],
+}: {
+  lang: Lang;
+  initialProducts?: CatalogProduct[];
+  initialNews?: NewsItem[];
+}) {
   const t = dictionaries[lang];
 
   // Los productos del catálogo se guardan en Firestore en español. Si el
@@ -92,8 +100,12 @@ export default function LandingClient({ lang }: { lang: Lang }) {
 
 
   // Dynamic Catalog State
-  const [catalogProducts, setCatalogProducts] = useState<CatalogProduct[]>([]);
-  const [latestNews, setLatestNews] = useState<NewsItem[]>([]);
+  // FIX SEO/GEO 2026-08-04: se inicializa con los datos traídos en build
+  // (ver [lang]/page.tsx) en vez de un arreglo vacío, para que el HTML
+  // estático exportado ya incluya catálogo y noticias reales -- antes
+  // quedaban vacíos hasta que Firestore respondía en el cliente.
+  const [catalogProducts, setCatalogProducts] = useState<CatalogProduct[]>(initialProducts);
+  const [latestNews, setLatestNews] = useState<NewsItem[]>(initialNews);
 
   // Contact Form States
   const [formData, setFormData] = useState({ name: '', phone: '', email: '', quantity: '', message: '', _honey: '' });
@@ -296,13 +308,27 @@ export default function LandingClient({ lang }: { lang: Lang }) {
         
         <div className="absolute inset-0 z-0 opacity-40">
           <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-[#070b14] via-transparent to-slate-50 dark:to-[#070b14] z-10"></div>
-          <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline 
+          {/* FIX SEO/Perf 2026-08-04: el video de fondo (1080p, CDN externo)
+              se descargaba completo también en móvil solo para verse como
+              decoración -- eso es directo al PageSpeed móvil (datos +
+              batería + main thread). En pantallas chicas (<md) se muestra
+              una imagen estática en su lugar; el video con autoplay solo
+              se renderiza de md hacia arriba. */}
+          <Image
+            src="/video-poster.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover mix-blend-luminosity opacity-50 md:hidden"
+          />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
             poster="/video-poster.webp"
-            className="w-full h-full object-cover mix-blend-luminosity opacity-50"
+            className="hidden md:block w-full h-full object-cover mix-blend-luminosity opacity-50"
           >
              {/* Placeholder industrial sewing/textile video. Replace with own corporate video when available */}
              <source src="https://cdn.coverr.co/videos/coverr-a-man-operating-a-sewing-machine-2810/1080p.mp4" type="video/mp4" />
@@ -469,7 +495,15 @@ export default function LandingClient({ lang }: { lang: Lang }) {
 
                 <div className="h-72 overflow-hidden relative p-4">
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-100 dark:from-[#070b14] to-transparent z-10 opacity-60"></div>
-                  <Image src={buildCloudinaryUrl(item.imgUrl || item.img)} alt={item.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transform group-hover:scale-110 transition-transform duration-1000" />
+                  {/* FIX SEO/Perf 2026-08-04: buildCloudinaryUrl() sin ancho
+                      devolvía la imagen a resolución completa aunque esta
+                      tarjeta mide ~33vw en desktop y 100vw en móvil -- con
+                      `images.unoptimized: true` (obligatorio en output:
+                      'export'), Next no genera variantes por tamaño, así
+                      que el celular bajaba la misma imagen pesada que el
+                      escritorio. Se limita a 900px, suficiente para pantallas
+                      retina en esta tarjeta, y baja mucho el peso en móvil. */}
+                  <Image src={buildCloudinaryUrl(item.imgUrl || item.img, 900)} alt={item.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transform group-hover:scale-110 transition-transform duration-1000" />
                   <div className="absolute top-8 right-8 bg-black/60 backdrop-blur-md text-amber-500 text-[10px] font-black tracking-widest uppercase px-4 py-2 rounded-full border border-amber-500/30 z-20 shadow-lg">
                     {item.weight}
                   </div>
@@ -529,7 +563,7 @@ export default function LandingClient({ lang }: { lang: Lang }) {
               {latestNews.map((news) => (
                 <Link href="/noticias" key={news.id} className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden hover:border-amber-500/30 transition-all group flex flex-col hover:-translate-y-2">
                   <div className="h-48 overflow-hidden relative">
-                    <Image src={buildCloudinaryUrl(news.imgUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000')} alt={news.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <Image src={buildCloudinaryUrl(news.imgUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000', 900)} alt={news.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover group-hover:scale-110 transition-transform duration-700" />
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <span className="text-amber-500 text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
@@ -734,18 +768,19 @@ export default function LandingClient({ lang }: { lang: Lang }) {
               "name": item.title,
               "image": `https://cobertores.com${item.imgUrl || item.img}`,
               "description": item.desc,
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "5.0",
-                "reviewCount": "24"
-              },
-              "offers": {
-                "@type": "AggregateOffer",
-                "priceCurrency": "MXN",
-                "lowPrice": "0",
-                "highPrice": "0",
-                "offerCount": "1",
-                "availability": "https://schema.org/InStock"
+              // FIX SEO 2026-08-04: se quitaron "aggregateRating" (5.0/24
+              // reseñas fijas, iguales en los 4 productos, sin reseñas
+              // reales detrás) y "offers" (precio $0 inventado, ya que la
+              // venta es por cotización, no precio fijo). Google prohíbe
+              // marcado de reseñas/calificaciones falsas o no verificables
+              // en las guías de rich results -- ese patrón es justo el que
+              // dispara una acción manual por "structured data spam" y
+              // saca al sitio del índice hasta corregirlo y pedir revisión.
+              // Cuando existan reseñas reales de clientes, se puede volver
+              // a agregar aggregateRating con datos verificables.
+              "brand": {
+                "@type": "Brand",
+                "name": "MANO FIL"
               }
             }))
           })
