@@ -1,19 +1,18 @@
 @echo off
 setlocal enabledelayedexpansion
-title Instalador de mejoras SEO - Ronda 3 (rendimiento movil) - cobertores.com
+title Instalador de mejoras SEO - Ronda 4 (OpenGraph/Twitter) - cobertores.com
 
 echo ============================================================
-echo   Instalador de mejoras SEO - Ronda 3 - cobertores.com
+echo   Instalador de mejoras SEO - Ronda 4 - cobertores.com
 echo ============================================================
 echo.
 echo   Este script:
-echo    1. Respalda los archivos actuales (como .zip, fuera del build)
-echo    2. Extrae cobertore_seo_mejoras_3.zip
-echo    3. Sobrescribe los 2 archivos con las versiones mejoradas:
-echo       - Imagenes de producto/noticias con ancho definido para
-echo         Cloudinary (bajan de tamaño en movil, ayuda al LCP)
-echo       - El video de fondo del hero ya NO se descarga en movil
-echo         (se ve una imagen estatica en su lugar)
+echo    1. Respalda el archivo actual (como .zip, fuera del build)
+echo    2. Extrae cobertore_seo_mejoras_4.zip
+echo    3. Sobrescribe src\app\[lang]\page.tsx:
+echo       - Arregla las meta-etiquetas OpenGraph/Twitter que faltaban
+echo         en /es y /en (afectaba la vista previa al compartir el
+echo         link en WhatsApp, Facebook, LinkedIn)
 echo    4. (opcional) Compila y despliega el sitio a Firebase Hosting
 echo.
 
@@ -26,7 +25,7 @@ if not exist "next.config.ts" (
     exit /b 1
 )
 
-set "ZIPFILE=cobertore_seo_mejoras_3.zip"
+set "ZIPFILE=cobertore_seo_mejoras_4.zip"
 if not exist "%ZIPFILE%" (
     echo [ERROR] No se encontro "%ZIPFILE%" en esta carpeta.
     echo         Descarga el zip que te di y colocalo junto a este .bat
@@ -58,23 +57,20 @@ set "TS="
 for /f "tokens=*" %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmmss"') do set "TS=%%i"
 if "%TS%"=="" set "TS=respaldo"
 
-echo ===== Paso 1/4: Respaldando archivos actuales (zip, fuera del build) =====
+echo ===== Paso 1/4: Respaldando archivo actual (zip, fuera del build) =====
 if not exist "respaldos" mkdir "respaldos"
-set "STAGE_DIR=%TEMP%\cobertore_stage3_%RANDOM%"
+set "STAGE_DIR=%TEMP%\cobertore_stage4_%RANDOM%"
 mkdir "%STAGE_DIR%\src\app\[lang]" 2>nul
-mkdir "%STAGE_DIR%\src\app\noticias\[id]" 2>nul
+if exist "src\app\[lang]\page.tsx" copy /Y "src\app\[lang]\page.tsx" "%STAGE_DIR%\src\app\[lang]\page.tsx" >nul
 
-if exist "src\app\[lang]\LandingClient.tsx"  copy /Y "src\app\[lang]\LandingClient.tsx" "%STAGE_DIR%\src\app\[lang]\LandingClient.tsx" >nul
-if exist "src\app\noticias\[id]\page.tsx"    copy /Y "src\app\noticias\[id]\page.tsx" "%STAGE_DIR%\src\app\noticias\[id]\page.tsx" >nul
-
-set "BACKUP_ZIP=respaldos\pre-seo3-%TS%.zip"
+set "BACKUP_ZIP=respaldos\pre-seo4-%TS%.zip"
 powershell -NoProfile -Command "Compress-Archive -Path '%STAGE_DIR%\*' -DestinationPath '%BACKUP_ZIP%' -Force"
 rmdir /S /Q "%STAGE_DIR%" 2>nul
 echo   OK - respaldo guardado en %BACKUP_ZIP%
 
 echo.
 echo ===== Paso 2/4: Extrayendo %ZIPFILE% a una carpeta temporal =====
-set "TEMP_DIR=%TEMP%\cobertore_seo3_%RANDOM%"
+set "TEMP_DIR=%TEMP%\cobertore_seo4_%RANDOM%"
 powershell -NoProfile -Command "Expand-Archive -LiteralPath '%CD%\%ZIPFILE%' -DestinationPath '%TEMP_DIR%' -Force"
 if errorlevel 1 (
     echo [ERROR] No se pudo extraer el zip. Verifica que no este dañado.
@@ -84,23 +80,17 @@ if errorlevel 1 (
 echo   OK - zip extraido.
 
 echo.
-echo ===== Paso 3/4: Copiando los archivos nuevos sobre el proyecto =====
-set "OK=1"
-xcopy /Y /I "%TEMP_DIR%\src\app\[lang]\LandingClient.tsx" "src\app\[lang]\" >nul      || set "OK=0"
-xcopy /Y /I "%TEMP_DIR%\src\app\noticias\[id]\page.tsx" "src\app\noticias\[id]\" >nul || set "OK=0"
-rmdir /S /Q "%TEMP_DIR%" 2>nul
-
-if "%OK%"=="0" (
-    echo   [ADVERTENCIA] Alguna copia pudo haber fallado. Revisa arriba
-    echo                 cual archivo no se copio. Tu respaldo esta a salvo
-    echo                 en %BACKUP_ZIP%
+echo ===== Paso 3/4: Copiando el archivo nuevo sobre el proyecto =====
+xcopy /Y /I "%TEMP_DIR%\src\app\[lang]\page.tsx" "src\app\[lang]\" >nul
+if errorlevel 1 (
+    echo   [ADVERTENCIA] La copia pudo haber fallado. Tu respaldo esta a
+    echo                 salvo en %BACKUP_ZIP%
     pause
     exit /b 1
 )
-echo   OK - 2 archivos actualizados:
-echo     - src\app\[lang]\LandingClient.tsx
-echo     - src\app\noticias\[id]\page.tsx
-echo   Respaldo de las versiones anteriores en: %BACKUP_ZIP%
+rmdir /S /Q "%TEMP_DIR%" 2>nul
+echo   OK - src\app\[lang]\page.tsx actualizado.
+echo   Respaldo de la version anterior en: %BACKUP_ZIP%
 
 echo.
 echo ===== Paso 4/4: Compilar y desplegar =====
@@ -172,8 +162,8 @@ powershell -NoProfile -Command ^
 
 echo.
 echo ============================================================
-echo   TODO LISTO. Corre PageSpeed Insights (movil) de nuevo en unos
-echo   minutos: https://pagespeed.web.dev/?url=https://www.cobertores.com
+echo   TODO LISTO. Prueba tu link compartido con el validador de
+echo   Facebook: https://developers.facebook.com/tools/debug/
 echo   Respaldo de este punto: %BACKUP_ZIP%
 echo ============================================================
 echo.

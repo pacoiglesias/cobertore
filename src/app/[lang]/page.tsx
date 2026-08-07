@@ -89,12 +89,37 @@ export async function generateMetadata(
         'x-default': '/es',
       },
     },
+    // FIX SEO 2026-08-04: cuando esta página define su propio `openGraph`,
+    // Next.js reemplaza TODO el objeto openGraph heredado del layout raíz
+    // en vez de combinar campo por campo -- como aquí solo se ponían
+    // title/description/locale/type/url, se perdían "images" y "siteName"
+    // que sí estaban en el layout raíz. Resultado: al compartir el link
+    // de /es o /en (las páginas reales, no la raíz) en WhatsApp, Facebook
+    // o LinkedIn, no aparecía imagen de vista previa. Mismo problema con
+    // "twitter": al no declararlo aquí, se quedaba con el título en
+    // español del layout raíz incluso en /en. Se completan ambos objetos
+    // explícitamente para que cada idioma sea autosuficiente.
     openGraph: {
       title: meta.title,
       description: meta.description,
       locale: validLang === 'en' ? 'en_US' : 'es_MX',
       type: 'website',
       url: `https://cobertores.com/${validLang}`,
+      siteName: 'MANO FIL Cobertores',
+      images: [
+        {
+          url: 'https://cobertores.com/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: meta.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: meta.title,
+      description: meta.description,
+      images: ['https://cobertores.com/og-image.png'],
     },
   };
 }
