@@ -487,8 +487,9 @@ export default function LandingClient({
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: index * 0.15, duration: 0.7, ease: "easeOut" }}
-                className={`bg-white/[0.02] backdrop-blur-2xl rounded-3xl overflow-hidden border border-white/5 hover:border-amber-500/50 group transition-all duration-500 flex flex-col hover:shadow-[0_0_40px_rgba(245,158,11,0.25)] hover:-translate-y-2 relative md:col-span-3 lg:col-span-6`}
+                whileHover={{ y: -10, scale: 1.02 }}
+                transition={{ delay: Math.min(index, 5) * 0.1, duration: 0.5, ease: "easeOut" }}
+                className={`bg-white/[0.02] backdrop-blur-2xl rounded-3xl overflow-hidden border border-white/5 hover:border-amber-500/50 group transition-all duration-500 flex flex-col hover:shadow-[0_0_40px_rgba(245,158,11,0.25)] relative md:col-span-3 lg:col-span-6`}
               >
                 {/* Glow Background on Hover */}
                 <div className="absolute inset-0 bg-gradient-to-b from-amber-500/0 via-amber-500/5 to-amber-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10"></div>

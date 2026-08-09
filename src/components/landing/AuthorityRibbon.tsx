@@ -46,23 +46,24 @@ export function AuthorityRibbon({ lang = 'es' }: { lang?: Lang }) {
           {STATS.map((stat, i) => {
             const Icon = stat.icon;
             return (
-              <motion.div
-                key={stat.label}
-                custom={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.4 }}
-                className="text-center group"
-              >
-                <div className="w-14 h-14 mx-auto mb-4 bg-slate-200 dark:bg-white/5 rounded-2xl flex items-center justify-center border border-slate-300 dark:border-white/10 group-hover:border-amber-500/30 transition-colors">
-                    <Icon className="text-amber-500" size={26} strokeWidth={1.5} />
-                </div>
-                <p className="font-serif text-slate-900 dark:text-white text-3xl lg:text-4xl drop-shadow-md">{stat.value}</p>
-                <p className="font-mono text-[11px] tracking-widest uppercase text-slate-600 dark:text-slate-400 mt-3 max-w-[200px] mx-auto">
-                  {stat.label}
-                </p>
-              </motion.div>
+                <motion.div
+                  key={stat.label}
+                  custom={i}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="show"
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  className="text-center group cursor-pointer"
+                >
+                  <div className="w-14 h-14 mx-auto mb-4 bg-slate-200 dark:bg-white/5 rounded-2xl flex items-center justify-center border border-slate-300 dark:border-white/10 group-hover:border-amber-500/50 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.2)] transition-all duration-300">
+                      <Icon className="text-amber-500 group-hover:scale-110 transition-transform duration-300" size={26} strokeWidth={1.5} />
+                  </div>
+                  <p className="font-serif text-slate-900 dark:text-white text-3xl lg:text-4xl drop-shadow-md group-hover:text-amber-500 transition-colors duration-300">{stat.value}</p>
+                  <p className="font-mono text-[11px] tracking-widest uppercase text-slate-600 dark:text-slate-400 mt-3 max-w-[200px] mx-auto group-hover:text-slate-900 dark:group-hover:text-white transition-colors duration-300">
+                    {stat.label}
+                  </p>
+                </motion.div>
             );
           })}
         </div>

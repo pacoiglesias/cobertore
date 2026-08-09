@@ -1,11 +1,11 @@
-const admin = require('firebase-admin');
+const { initializeApp } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
 
 // Inicializamos con Application Default Credentials
-// Esto funcionará automáticamente si tienes sesión iniciada con firebase CLI (o gcloud)
-admin.initializeApp();
+initializeApp();
 
 async function cleanNews() {
-  const db = admin.firestore();
+  const db = getFirestore();
   const newsRef = db.collection('news');
   
   console.log("Iniciando escaneo de la colección 'news'...");

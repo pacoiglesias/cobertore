@@ -7,9 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy:hosting": "npm run build && firebase deploy --only hosting",
+    "test:e2e": "playwright test",
+    "deploy:hosting": "npm run test:e2e && npm run build && firebase deploy --only hosting",
     "deploy:functions": "cd functions && npm run build && firebase deploy --only functions",
-    "deploy:all": "npm run build && cd functions && npm run build && cd .. && firebase deploy"
+    "deploy:all": "npm run test:e2e && npm run build && cd functions && npm run build && cd .. && firebase deploy"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -29,6 +30,7 @@
     "recharts": "^3.10.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

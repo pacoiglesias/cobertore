@@ -50,20 +50,20 @@ function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt,
         className="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-700 grayscale group-hover:grayscale-0 mix-blend-luminosity absolute inset-0"
       />
       <div
-        className={`absolute inset-0 ${
+        className={`absolute inset-0 z-10 transition-opacity duration-500 ${
           isTextil
-            ? "bg-gradient-to-t from-white via-white/85 to-white/60 dark:from-[#0a0f1d] dark:via-[#0a0f1d]/85 dark:to-[#0a0f1d]/60"
-            : "bg-gradient-to-t from-slate-50 via-slate-50/85 to-slate-50/60 dark:from-[#070b14] dark:via-[#070b14]/85 dark:to-[#070b14]/60"
+            ? "bg-gradient-to-t from-white via-white/85 to-white/60 dark:from-[#0a0f1d] dark:via-[#0a0f1d]/85 dark:to-[#0a0f1d]/60 group-hover:opacity-90"
+            : "bg-gradient-to-t from-slate-50 via-slate-50/85 to-slate-50/60 dark:from-[#070b14] dark:via-[#070b14]/85 dark:to-[#070b14]/60 group-hover:opacity-90"
         }`}
       />
       
       {/* Icon */}
       <div className="absolute top-10 right-10 z-20">
-         <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border backdrop-blur-md shadow-xl dark:shadow-2xl transition-colors ${
-            isTextil ? "bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-white group-hover:border-slate-300 dark:group-hover:border-white/30" : "bg-amber-600/10 border-amber-500/20 text-amber-500 group-hover:border-amber-500/50"
+         <motion.div whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }} transition={{ duration: 0.5 }} className={`w-14 h-14 rounded-2xl flex items-center justify-center border backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300 ${
+            isTextil ? "bg-white/40 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-white group-hover:border-amber-500/50 group-hover:bg-white/60 dark:group-hover:bg-white/10" : "bg-amber-600/10 border-amber-500/20 text-amber-500 group-hover:border-amber-500/60 group-hover:bg-amber-600/20"
          }`}>
            {isTextil ? <Factory size={24} /> : <Building2 size={24} />}
-         </div>
+         </motion.div>
       </div>
 
       <div className="relative flex flex-col h-full z-20">
