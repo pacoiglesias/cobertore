@@ -202,6 +202,7 @@ export default function RootLayout({
                 "url": "https://cobertores.com",
                 "telephone": "+522464642891",
                 "email": "ventas@cobertores.com",
+                "priceRange": "$$",
                 "address": {
                   "@type": "PostalAddress",
                   "streetAddress": "Calle El Grullo",
