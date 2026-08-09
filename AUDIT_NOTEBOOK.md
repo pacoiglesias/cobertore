@@ -32,3 +32,11 @@ pm run build ejecutado exitosamente sin roturas de SSG.
 - **Botón Flotante WhatsApp**: Se inyectó con éxito un efecto de sonido (Web Audio API) en el botón nativo de WhatsApp. El botón ya estaba correctamente parametrizado desde Firestore (System Settings).
 - **Autoridad B2B (Certificaciones)**: Se diseñó e implementó un nuevo bloque visual UI responsivo (Bento Grid) en \LandingClient.tsx\ mostrando 4 pilares: Calidad B2B, Red Nacional, Fabricante Directo y +60 Años de Experiencia.
 - **Deploy Test**: Compilación Next.js \output: export\ exitosa.
+### 2026-08-09: Correcciones de Indexación SEO en Google Search Console
+- **Canonicals y Trailing Slashes**: Se corrigió una discrepancia crítica entre \	railingSlash: true\ en \
+ext.config.ts\ y los canonicals generados en \src/app/[lang]/page.tsx\ y \src/app/noticias/[id]/page.tsx\. Ahora todas las URLs de metadatos (incluyendo og:url) llevan explícitamente la barra diagonal inversa (\/\) al final, eliminando las advertencias de 'Duplicada: el usuario no ha indicado versión canónica'.
+- **Sitemap.ts**: Se añadieron trailing slashes a todas las entradas. Se implementó una validación robusta para la fecha \createdAt\ de las noticias. Si la fecha es inválida o no existe, se usa la fecha actual en su lugar. Esto soluciona los errores temporales de procesamiento del Sitemap en Google.
+- **Redirecciones y 404s**: Se ajustó \irebase.json\ para que la redirección de la raíz \/\ apunte directamente a \/es/\. Además, se inyectó \
+oindex, nofollow\ directamente en los metadatos de \
+ot-found.tsx\ y en el caso 404 dinámico de las noticias, solucionando cientos de errores Soft 404 rastreados por arañas heredadas o links rotos de prueba.
+- **NOTA DE DESPLIEGUE**: El código fuente se corrigió y compiló al 100% (npm run build) y se subió a git + backup local. Para subirlo a Firebase Hosting se requiere ejecutar \irebase login --reauth\ manualmente en la consola por expiración de token.
