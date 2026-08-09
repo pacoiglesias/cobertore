@@ -75,7 +75,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "MANO FIL Cobertores",
       images: [
         {
-          url: "/og-image.png",
+          url: "https://cobertores.com/og-image.png",
           width: 1200,
           height: 630,
           alt: "MANO FIL Cobertores - Fabricantes de Cobertores por Mayoreo desde Tlaxcala",
@@ -88,7 +88,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: dynamicTitle,
       description: dynamicDescription,
-      images: ["/og-image.png"],
+      images: ["https://cobertores.com/og-image.png"],
     },
     robots: {
       index: true,

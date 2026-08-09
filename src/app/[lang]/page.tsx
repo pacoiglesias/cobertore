@@ -1,7 +1,10 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
-import LandingClient from './LandingClient';
+import dynamic from 'next/dynamic';
+
+const LandingClient = dynamic(() => import('./LandingClient'), { ssr: true });
+
 import { db } from '../../lib/firebase';
 import { CatalogProduct, NewsItem } from '../../lib/types';
 import { Lang } from '../../lib/i18n/dictionaries';
