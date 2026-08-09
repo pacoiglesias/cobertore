@@ -1,6 +1,15 @@
 import Link from 'next/link';
 import { ArrowLeft, Search, Factory } from 'lucide-react';
 import { ManoFilLogo } from '@/components/ManoFilLogo';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '404 - No Encontrado | MANO FIL',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function NotFound() {
   return (

@@ -18,9 +18,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     newsEntries = snap.docs.map((doc) => {
       const data = doc.data();
       const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
+      const validDate = isNaN(createdAt.getTime()) ? new Date() : createdAt;
       return {
-        url: `${baseUrl}/noticias/${doc.id}`,
-        lastModified: createdAt,
+        url: `${baseUrl}/noticias/${doc.id}/`,
+        lastModified: validDate,
         changeFrequency: 'monthly' as const,
         priority: 0.6,
       };
@@ -36,56 +37,56 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Además `/en` no aparecía en ningún lado del sitemap, así que Google
     // no tenía forma de descubrir la versión en inglés del sitio.
     {
-      url: `${baseUrl}/es`,
+      url: `${baseUrl}/es/`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
       alternates: {
         languages: {
-          es: `${baseUrl}/es`,
-          en: `${baseUrl}/en`,
+          es: `${baseUrl}/es/`,
+          en: `${baseUrl}/en/`,
         },
       },
     },
     {
-      url: `${baseUrl}/en`,
+      url: `${baseUrl}/en/`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.9,
       alternates: {
         languages: {
-          es: `${baseUrl}/es`,
-          en: `${baseUrl}/en`,
+          es: `${baseUrl}/es/`,
+          en: `${baseUrl}/en/`,
         },
       },
     },
     {
-      url: `${baseUrl}/noticias`,
+      url: `${baseUrl}/noticias/`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,
     },
     ...newsEntries,
     {
-      url: `${baseUrl}/seguimiento`,
+      url: `${baseUrl}/seguimiento/`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/privacidad`,
+      url: `${baseUrl}/privacidad/`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/terminos`,
+      url: `${baseUrl}/terminos/`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/cookies`,
+      url: `${baseUrl}/cookies/`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.3,

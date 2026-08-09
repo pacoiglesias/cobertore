@@ -82,11 +82,11 @@ export async function generateMetadata(
     },
     description: meta.description,
     alternates: {
-      canonical: `/${validLang}`,
+      canonical: `/${validLang}/`,
       languages: {
-        'es': '/es',
-        'en': '/en',
-        'x-default': '/es',
+        'es': '/es/',
+        'en': '/en/',
+        'x-default': '/es/',
       },
     },
     // FIX SEO 2026-08-04: cuando esta página define su propio `openGraph`,
@@ -104,7 +104,7 @@ export async function generateMetadata(
       description: meta.description,
       locale: validLang === 'en' ? 'en_US' : 'es_MX',
       type: 'website',
-      url: `https://cobertores.com/${validLang}`,
+      url: `https://cobertores.com/${validLang}/`,
       siteName: 'MANO FIL Cobertores',
       images: [
         {

@@ -35,7 +35,7 @@ export async function generateMetadata(
   const snap = await getDoc(docRef);
   
   if (!snap.exists()) {
-    return { title: 'Noticia no encontrada' };
+    return { title: 'Noticia no encontrada', robots: { index: false, follow: false } };
   }
   
   const news = snap.data() as any;
@@ -46,7 +46,7 @@ export async function generateMetadata(
     title,
     description,
     alternates: {
-      canonical: `/noticias/${id}`,
+      canonical: `/noticias/${id}/`,
     },
     openGraph: {
       title,
