@@ -759,36 +759,6 @@ export default function LandingClient({
         </div>
       </footer>
 
-      {/* JSON-LD Schema para Catálogo de Productos */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@graph": (catalogProducts.length > 0 ? (catalogProducts as any[]).map(traducirProducto) : t.products.items).map((item: { title: string; desc: string; imgUrl?: string; img?: string }, idx: number) => ({
-              "@type": "Product",
-              "@id": `https://cobertores.com/#product-${idx}`,
-              "name": item.title,
-              "image": `https://cobertores.com${item.imgUrl || item.img}`,
-              "description": item.desc,
-              // FIX SEO 2026-08-04: se quitaron "aggregateRating" (5.0/24
-              // reseñas fijas, iguales en los 4 productos, sin reseñas
-              // reales detrás) y "offers" (precio $0 inventado, ya que la
-              // venta es por cotización, no precio fijo). Google prohíbe
-              // marcado de reseñas/calificaciones falsas o no verificables
-              // en las guías de rich results -- ese patrón es justo el que
-              // dispara una acción manual por "structured data spam" y
-              // saca al sitio del índice hasta corregirlo y pedir revisión.
-              // Cuando existan reseñas reales de clientes, se puede volver
-              // a agregar aggregateRating con datos verificables.
-              "brand": {
-                "@type": "Brand",
-                "name": "MANO FIL"
-              }
-            }))
-          })
-        }}
-      />
 
       {/* JSON-LD Schema para FAQ */}
       <script
