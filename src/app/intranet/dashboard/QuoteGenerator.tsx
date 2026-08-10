@@ -263,7 +263,7 @@ export function QuoteGenerator({ products, userEmail }: Props) {
   const saveQuoteToHistory = async (pdfBlob: Blob, existingUrl?: string) => {
     try {
       let downloadUrl = existingUrl;
-      
+
       // If we don't have an existing URL (e.g. from generatePDF or sharePDF), upload it
       if (!downloadUrl) {
         const storageRef = ref(storage, `quotes/${folio}.pdf`);
@@ -282,9 +282,48 @@ export function QuoteGenerator({ products, userEmail }: Props) {
         itemsCount: items.length,
         createdAt: serverTimestamp(),
       });
+
+      // FIX 2026-08-10: sincroniza automáticamente con /seguimiento --
+      // antes había que crear el "pedido" manualmente en otro lugar del
+      // sistema para que el cliente pudiera rastrear su folio; ahora, al
+      // generar/descargar/compartir/enviar la cotización, se crea (o se
+      // actualiza sin pisar el status si ya avanzó) el registro en
+      // 'orders' con el mismo folio automáticamente.
+      await syncToSeguimiento(downloadUrl);
     } catch (e) {
       logger.error('Error saving quote to history:', e);
       // We don't throw, we just log it so it doesn't break the main flow
+    }
+  };
+
+  const syncToSeguimiento = async (pdfUrl?: string) => {
+    try {
+      const orderRef = doc(db, 'orders', folio);
+      const existing = await getDoc(orderRef);
+      if (existing.exists()) {
+        // Ya existe (p. ej. se reenvió la misma cotización): no pisamos
+        // el status si ya avanzó más allá de "Cotizado", solo refrescamos
+        // datos de contacto y fecha.
+        await setDoc(orderRef, {
+          folio,
+          clientName: clientName || 'Sin Nombre',
+          pdfUrl: pdfUrl || null,
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+      } else {
+        await setDoc(orderRef, {
+          folio,
+          clientName: clientName || 'Sin Nombre',
+          status: 'Cotizado',
+          pdfUrl: pdfUrl || null,
+          sellerName,
+          sellerEmail,
+          updatedAt: serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      logger.error('Error syncing quote to /seguimiento (orders):', e);
+      // No interrumpe el flujo principal de generar/enviar la cotización.
     }
   };
 

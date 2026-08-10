@@ -1,7 +1,7 @@
 import React from 'react';
-import { ImageIcon, Package, Trash2, Download } from 'lucide-react';
+import { ImageIcon, Package, Trash2, Download, Pencil, X } from 'lucide-react';
 
-interface CatalogProduct {
+export interface CatalogProduct {
   id: string;
   title: string;
   weight: string;
@@ -10,6 +10,7 @@ interface CatalogProduct {
   composition: string;
   imgUrl: string;
   storagePath: string;
+  createdAt?: any;
 }
 
 // Campos en inglés opcionales: si están vacíos, el sitio en /en muestra
@@ -28,6 +29,9 @@ interface ProductsTabProps {
   handleProductUpload: (e: React.FormEvent) => Promise<void>;
   handleDeleteProduct: (id: string, path: string) => Promise<void>;
   exportCatalogPDF: () => void;
+  editingProductId?: string | null;
+  onStartEditProduct?: (product: CatalogProduct) => void;
+  onCancelEditProduct?: () => void;
 }
 
 export function ProductsTab({
@@ -38,8 +42,12 @@ export function ProductsTab({
   productImgRef,
   handleProductUpload,
   handleDeleteProduct,
-  exportCatalogPDF
+  exportCatalogPDF,
+  editingProductId,
+  onStartEditProduct,
+  onCancelEditProduct
 }: ProductsTabProps) {
+  const isEditing = !!editingProductId;
   return (
     <div>
       <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -60,7 +68,21 @@ export function ProductsTab({
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Formulario */}
         <div className="lg:col-span-1 bg-[#0a0f1d] border border-white/10 p-6 rounded-3xl self-start">
-          <h3 className="text-white font-bold mb-6 flex items-center gap-2"><ImageIcon className="w-5 h-5 text-amber-500"/> Subir Producto</h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-white font-bold flex items-center gap-2">
+              <ImageIcon className="w-5 h-5 text-amber-500"/> {isEditing ? 'Editar Producto' : 'Subir Producto'}
+            </h3>
+            {isEditing && onCancelEditProduct && (
+              <button
+                type="button"
+                onClick={onCancelEditProduct}
+                className="p-1.5 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white rounded-md transition-colors"
+                title="Cancelar edición"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           <form onSubmit={handleProductUpload} className="space-y-4">
             <div>
               <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Nombre del Producto</label>
@@ -116,11 +138,13 @@ export function ProductsTab({
             </details>
 
             <div>
-              <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Foto (Requerida)</label>
-              <input type="file" ref={productImgRef} accept="image/*" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-slate-400 text-sm outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-amber-500/10 file:text-amber-500 hover:file:bg-amber-500 hover:file:text-white transition-all"/>
+              <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">
+                Foto {isEditing ? '(opcional, deja vacío para conservar la actual)' : '(Requerida)'}
+              </label>
+              <input type="file" ref={productImgRef} accept="image/*" required={!isEditing} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-slate-400 text-sm outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-amber-500/10 file:text-amber-500 hover:file:bg-amber-500 hover:file:text-white transition-all"/>
             </div>
             <button type="submit" disabled={uploading} className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl uppercase tracking-widest text-xs transition-colors disabled:opacity-50">
-              {uploading ? 'Subiendo...' : 'Publicar Producto'}
+              {uploading ? (isEditing ? 'Actualizando...' : 'Subiendo...') : (isEditing ? 'Actualizar Producto' : 'Publicar Producto')}
             </button>
           </form>
         </div>
@@ -140,14 +164,19 @@ export function ProductsTab({
           ) : (
             <div className="grid md:grid-cols-2 gap-4">
               {products.map(product => (
-                <div key={product.id} className="bg-[#0a0f1d] border border-white/10 p-4 rounded-2xl flex gap-4 hover:border-amber-500/30 transition-colors">
+                <div key={product.id} className={`bg-[#0a0f1d] border p-4 rounded-2xl flex gap-4 transition-colors ${editingProductId === product.id ? 'border-amber-500' : 'border-white/10 hover:border-amber-500/30'}`}>
                   <img src={product.imgUrl} alt={product.title} className="w-24 h-24 object-cover rounded-xl" />
                   <div className="flex-grow flex flex-col justify-between">
                     <div>
                       <h4 className="text-white font-medium">{product.title}</h4>
                       <p className="text-[10px] text-amber-500 uppercase tracking-widest font-bold">{product.weight}</p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right flex justify-end gap-2">
+                      {onStartEditProduct && (
+                        <button onClick={() => onStartEditProduct(product)} className="p-2 text-blue-400 bg-blue-500/10 hover:bg-blue-500 hover:text-white rounded-lg transition-colors" title="Editar">
+                          <Pencil className="w-4 h-4"/>
+                        </button>
+                      )}
                       <button onClick={() => handleDeleteProduct(product.id, product.storagePath)} className="p-2 text-red-500 bg-red-500/10 hover:bg-red-500 hover:text-white rounded-lg transition-colors" title="Borrar">
                         <Trash2 className="w-4 h-4"/>
                       </button>

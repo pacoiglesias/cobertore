@@ -1,11 +1,12 @@
 import React from 'react';
-import { User as UserIcon, MessageSquare, Phone, Download, Clock, CheckCircle, CheckSquare, Inbox, Edit, Trash2, Smartphone } from 'lucide-react';
+import { User as UserIcon, MessageSquare, Phone, Mail, Download, Clock, CheckCircle, CheckSquare, Inbox, Edit, Trash2, Smartphone } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 interface Lead {
   id: string;
   name: string;
   phone: string;
+  email?: string;
   quantity: string;
   message: string;
   createdAt: Timestamp;
@@ -39,10 +40,11 @@ export function LeadsTab({
   editLead
 }: LeadsTabProps) {
   
-  const filteredLeads = leads.filter(lead => 
-    (lead.name || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) || 
+  const filteredLeads = leads.filter(lead =>
+    (lead.name || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) ||
     (lead.message || '').toLowerCase().includes(leadSearchTerm.toLowerCase()) ||
-    (lead.phone || '').includes(leadSearchTerm)
+    (lead.phone || '').includes(leadSearchTerm) ||
+    (lead.email || '').toLowerCase().includes(leadSearchTerm.toLowerCase())
   );
 
   const [visibleLimits, setVisibleLimits] = React.useState<Record<string, number>>({});
@@ -181,9 +183,11 @@ export function LeadsTab({
                             if (newName === null) return; // Cancelado
                             const newPhone = prompt('Editar teléfono:', lead.phone);
                             if (newPhone === null) return;
+                            const newEmail = prompt('Editar email:', lead.email || '');
+                            if (newEmail === null) return;
                             const newQty = prompt('Editar cantidad:', lead.quantity);
                             if (newQty === null) return;
-                            editLead(lead.id, { name: newName, phone: newPhone, quantity: newQty });
+                            editLead(lead.id, { name: newName, phone: newPhone, email: newEmail, quantity: newQty });
                           }}
                           className="p-1.5 bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white rounded-md transition-colors"
                           title="Editar prospecto"
@@ -218,6 +222,14 @@ export function LeadsTab({
                             <Smartphone className="w-3 h-3" /> Chat
                           </button>
                         </div>
+                        {lead.email && (
+                          <div className="flex items-center gap-2">
+                            <Mail className="w-3 h-3 text-slate-500" />
+                            <a href={`mailto:${lead.email}`} className="flex-1 truncate hover:text-amber-400 transition-colors" title={lead.email}>
+                              {lead.email}
+                            </a>
+                          </div>
+                        )}
                         <p className="flex items-center gap-2"><CheckSquare className="w-3 h-3 text-slate-500" /> Cantidad: <span className="font-bold text-emerald-400">{lead.quantity}</span></p>
                       </div>
 

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, Timestamp, setDoc, getDoc, limit } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, Timestamp, setDoc, getDoc, updateDoc, limit } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { auth, db, storage } from '../../../lib/firebase';
 import { isSuperAdminEmail } from '../../../lib/authorization';
@@ -12,7 +12,7 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useAudioFeedback } from '../../../hooks/useAudioFeedback';
 import { SkeletonTable } from '@/components/Skeleton';
-import { type ProductForm } from './components/ProductsTab';
+import { type ProductForm, type CatalogProduct } from './components/ProductsTab';
 
 const QuoteGenerator = dynamic(() => import('./QuoteGenerator').then(m => m.QuoteGenerator));
 const QuotesHistoryManager = dynamic(() => import('./QuotesHistoryManager').then(m => m.QuotesHistoryManager));
@@ -56,6 +56,7 @@ interface Lead {
   id: string;
   name: string;
   phone: string;
+  email?: string;
   quantity: string;
   message: string;
   createdAt: Timestamp;
@@ -68,18 +69,6 @@ interface Order {
   clientName: string;
   status: 'Cotizado' | 'En Producción' | 'Listo para Carga' | 'Entregado' | 'Cancelado' | 'Abandonado';
   updatedAt: Timestamp;
-}
-
-interface CatalogProduct {
-  id: string;
-  title: string;
-  weight: string;
-  desc: string;
-  measures: string;
-  composition: string;
-  imgUrl: string;
-  storagePath: string;
-  createdAt: Timestamp;
 }
 
 export default function Dashboard() {
@@ -331,11 +320,12 @@ export default function Dashboard() {
   const exportLeadsToCSV = () => {
     if (leads.length === 0) return;
     
-    const headers = ['Nombre', 'Teléfono', 'Volumen', 'Mensaje', 'Fecha'];
-    
+    const headers = ['Nombre', 'Teléfono', 'Email', 'Volumen', 'Mensaje', 'Fecha'];
+
     const rows = leads.map(lead => [
       `"${lead.name || ''}"`,
       `"${lead.phone || ''}"`,
+      `"${lead.email || ''}"`,
       `"${lead.quantity || ''}"`,
       `"${(lead.message || '').replace(/"/g, '""')}"`,
       `"${lead.createdAt?.toDate().toLocaleDateString('es-MX') || ''}"`
@@ -373,40 +363,94 @@ export default function Dashboard() {
   const [productForm, setProductForm] = useState<ProductForm>({ title: '', weight: '', desc: '', measures: '', composition: '', title_en: '', desc_en: '', measures_en: '', composition_en: '' });
   const productImgRef = useRef<HTMLInputElement>(null);
 
+  // FIX 2026-08-10: edición de productos del catálogo -- antes solo se
+  // podían subir productos nuevos o borrarlos; para corregir un error o
+  // actualizar precio/medidas había que borrar y volver a subir (perdiendo
+  // el orden y regenerando la imagen). Ahora "Editar" precarga el formulario
+  // y reutiliza el mismo doc + imagen si no se sube una nueva foto.
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [editingProduct, setEditingProduct] = useState<CatalogProduct | null>(null);
+
+  const handleStartEditProduct = (product: CatalogProduct) => {
+    setEditingProductId(product.id);
+    setEditingProduct(product);
+    setProductForm({
+      title: product.title || '',
+      weight: product.weight || '',
+      desc: product.desc || '',
+      measures: product.measures || '',
+      composition: product.composition || '',
+      title_en: (product as any).title_en || '',
+      desc_en: (product as any).desc_en || '',
+      measures_en: (product as any).measures_en || '',
+      composition_en: (product as any).composition_en || '',
+    });
+    if (productImgRef.current) productImgRef.current.value = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelEditProduct = () => {
+    setEditingProductId(null);
+    setEditingProduct(null);
+    setProductForm({ title: '', weight: '', desc: '', measures: '', composition: '', title_en: '', desc_en: '', measures_en: '', composition_en: '' });
+    if (productImgRef.current) productImgRef.current.value = '';
+  };
+
   const handleProductUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!productImgRef.current?.files || productImgRef.current.files.length === 0 || !isEditor) return;
-    
+    if (!isEditor) return;
+    const hasNewFile = !!(productImgRef.current?.files && productImgRef.current.files.length > 0);
+    if (!editingProductId && !hasNewFile) return; // Alta nueva: foto requerida
+
     setUploading(true);
-    setUploadProgress('Comprimiendo imagen...');
-    const file = productImgRef.current.files[0];
-    
     try {
-      const options = {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true
-      };
-      const compressedFile = await imageCompression(file, options);
-      
-      setUploadProgress('Subiendo producto al catálogo...');
-      const storageRef = ref(storage, `catalog/${Date.now()}_${compressedFile.name}`);
-      await uploadBytes(storageRef, compressedFile);
-      const url = await getDownloadURL(storageRef);
-      
-      await addDoc(collection(db, 'products'), {
-        ...productForm,
-        imgUrl: url,
-        storagePath: storageRef.fullPath,
-        createdAt: Timestamp.now()
-      });
-      
+      let url = editingProduct?.imgUrl || '';
+      let storagePath = editingProduct?.storagePath || '';
+
+      if (hasNewFile) {
+        setUploadProgress('Comprimiendo imagen...');
+        const file = productImgRef.current!.files![0];
+        const options = { maxSizeMB: 0.5, maxWidthOrHeight: 1920, useWebWorker: true };
+        const compressedFile = await imageCompression(file, options);
+
+        setUploadProgress('Subiendo producto al catálogo...');
+        const newStorageRef = ref(storage, `catalog/${Date.now()}_${compressedFile.name}`);
+        await uploadBytes(newStorageRef, compressedFile);
+        url = await getDownloadURL(newStorageRef);
+        const oldStoragePath = storagePath;
+        storagePath = newStorageRef.fullPath;
+
+        // Si estábamos editando y se subió una foto nueva, borramos la anterior
+        if (editingProductId && oldStoragePath) {
+          try { await deleteObject(ref(storage, oldStoragePath)); } catch (e) { logger.error('No se pudo borrar la imagen anterior:', e); }
+        }
+      }
+
+      if (editingProductId) {
+        await updateDoc(doc(db, 'products', editingProductId), {
+          ...productForm,
+          imgUrl: url,
+          storagePath,
+          updatedAt: Timestamp.now()
+        });
+        toast.success('Producto actualizado exitosamente.');
+      } else {
+        await addDoc(collection(db, 'products'), {
+          ...productForm,
+          imgUrl: url,
+          storagePath,
+          createdAt: Timestamp.now()
+        });
+        toast.success('Producto subido exitosamente.');
+      }
+
+      setEditingProductId(null);
+      setEditingProduct(null);
       setProductForm({ title: '', weight: '', desc: '', measures: '', composition: '', title_en: '', desc_en: '', measures_en: '', composition_en: '' });
       if (productImgRef.current) productImgRef.current.value = '';
-      toast.success('Producto subido exitosamente.');
     } catch (error) {
       logger.error(error);
-      toast.error("Error al subir el producto.");
+      toast.error(editingProductId ? "Error al actualizar el producto." : "Error al subir el producto.");
     } finally {
       setUploading(false);
       setUploadProgress('');
@@ -419,6 +463,7 @@ export default function Dashboard() {
     try {
       if (storagePath) await deleteObject(ref(storage, storagePath));
       await deleteDoc(doc(db, 'products', productId));
+      if (editingProductId === productId) handleCancelEditProduct();
     } catch (error) {
       logger.error(error);
       toast.error("No se pudo borrar el producto.");
@@ -905,6 +950,9 @@ export default function Dashboard() {
             handleProductUpload={handleProductUpload}
             handleDeleteProduct={handleDeleteProduct}
             exportCatalogPDF={exportCatalogPDF}
+            editingProductId={editingProductId}
+            onStartEditProduct={handleStartEditProduct}
+            onCancelEditProduct={handleCancelEditProduct}
           />
         )}
 
