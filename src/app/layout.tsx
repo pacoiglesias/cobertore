@@ -121,6 +121,20 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="#070b14" />
         <link rel="manifest" href="/manifest.json" />
+        {/* FIX SEO/Perf 2026-08-09: todas las imágenes del catálogo y de
+            noticias se sirven vía res.cloudinary.com (buildCloudinaryUrl),
+            y el video de fondo del hero viene de cdn.coverr.co -- ninguno
+            de los dos dominios tenía un hint de conexión anticipada, así
+            que el navegador solo empezaba el DNS+TLS handshake hasta que
+            veía la primera URL real en el HTML. preconnect adelanta ese
+            costo (habitualmente 100-300ms por dominio en conexiones
+            móviles), lo que ayuda directamente al LCP -- una de las
+            métricas de Core Web Vitals que Google usa como señal de
+            ranking. */}
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://cdn.coverr.co" />
+        <link rel="dns-prefetch" href="https://cdn.coverr.co" />
       </head>
       <body className="min-h-full flex flex-col bg-slate-50 dark:bg-[#070b14] text-slate-900 dark:text-slate-300 transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
