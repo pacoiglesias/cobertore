@@ -1,0 +1,100 @@
+============================================================ 
+ DEPLOY AUTOMATICO - cobertores.com - 2026-08-09 
+ Inicio: 10/08/2026  7:36:51.64 
+============================================================ 
+ 
+--- Paso 1/2: git push --- 
+To https://github.com/pacoiglesias/cobertore.git
+   9b09cf6..860e554  audit/pre-refactor-2026-07-29 -> audit/pre-refactor-2026-07-29
+git push termino con codigo 0 
+ 
+--- Paso 2/2: npm run deploy:hosting (test:e2e + build + firebase deploy) --- 
+
+> cobertore@0.3.1 deploy:hosting
+> npm run test:e2e && npm run build && firebase deploy --only hosting
+
+
+> cobertore@0.3.1 test:e2e
+> playwright test
+
+
+Running 5 tests using 5 workers
+
+[1/5] [chromium] › tests\e2e\landing.spec.ts:12:7 › Landing Page E2E › should display catalog products
+[2/5] [chromium] › tests\e2e\intranet.spec.ts:4:7 › Intranet E2E › should load the login page at /intranet
+[3/5] [chromium] › tests\e2e\landing.spec.ts:19:7 › Landing Page E2E › should change language to English
+[4/5] [chromium] › tests\e2e\landing.spec.ts:4:7 › Landing Page E2E › should load the homepage and redirect to /es/
+[5/5] [chromium] › tests\e2e\intranet.spec.ts:11:7 › Intranet E2E › should block unauthorized access to dashboard
+  5 passed (1.9m)
+
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report[39m
+[36m[39m
+
+> cobertore@0.3.1 build
+> next build
+
+▲ Next.js 16.2.11 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 23.4s
+  Running TypeScript ...
+  Finished TypeScript in 13.6s ...
+  Collecting page data using 17 workers ...
+  Generating static pages using 17 workers (0/21) ...
+  Generating static pages using 17 workers (5/21) 
+  Generating static pages using 17 workers (10/21) 
+  Generating static pages using 17 workers (15/21) 
+✓ Generating static pages using 17 workers (21/21) in 3.8s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ● /[lang]
+│ ├ /es
+│ └ /en
+├ ○ /apple-icon.png
+├ ○ /cookies
+├ ○ /icon.png
+├ ○ /intranet
+├ ○ /intranet/dashboard
+├ ○ /noticias
+├ ● /noticias/[id]
+│ ├ /noticias/aHR0cHM6Ly93d3cuaG9s
+│ ├ /noticias/aHR0cHM6Ly9ibG9nLmNv
+│ ├ /noticias/aHR0cHM6Ly8yNC1ob3Jh
+│ └ [+2 more paths]
+├ ○ /privacidad
+├ ○ /robots.txt
+├ ○ /seguimiento
+├ ○ /sitemap.xml
+└ ○ /terminos
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
+
+[1m[37m===[39m Deploying to 'cobertores-web'...[22m
+
+[36m[1mi [22m[39m deploying [1mhosting[22m
+[36m[1mi  hosting[cobertores-web]:[22m[39m beginning deploy...
+[36m[1mi  hosting[cobertores-web]:[22m[39m found 225 files in [1mout[22m
+[32m[1m+  hosting[cobertores-web]:[22m[39m file upload complete
+[36m[1mi  hosting[cobertores-web]:[22m[39m finalizing version...
+[32m[1m+  hosting[cobertores-web]:[22m[39m version finalized
+[36m[1mi  hosting[cobertores-web]:[22m[39m releasing new version...
+[32m[1m+  hosting[cobertores-web]:[22m[39m release complete
+
+[32m[1m+ [22m[39m [1m[4mDeploy complete![24m[22m
+
+[1mProject Console:[22m https://console.firebase.google.com/project/cobertores-web/overview
+[1mHosting URL:[22m https://cobertores-web.web.app
+npm run deploy:hosting termino con codigo 0 
+ 
+Fin: 10/08/2026  7:41:04.65 
+ 
+RESULTADO: EXITO. Publicado en https://cobertores.com 
