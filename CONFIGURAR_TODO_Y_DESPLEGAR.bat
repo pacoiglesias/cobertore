@@ -22,7 +22,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [PASO 2/5] Compilando proyecto Next.js (Generando out/ con sitemap y robots)...
-call npm run build
+call "build_fast.bat"
 if %errorlevel% neq 0 (
     echo.
     echo [ERROR] La compilación de Next.js falló. Revisa los errores arriba.
@@ -32,7 +32,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [PASO 3/5] Desplegando a Firebase Hosting, Reglas de Firestore y Storage...
-call npx -y firebase-tools deploy --only hosting,firestore:rules,storage:rules
+call npx -y firebase-tools deploy --only hosting,firestore:rules,storage
 if %errorlevel% neq 0 (
     echo.
     echo [ERROR] El despliegue a Firebase falló.
