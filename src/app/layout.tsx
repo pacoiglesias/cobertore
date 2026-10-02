@@ -40,7 +40,28 @@ export async function generateMetadata(): Promise<Metadata> {
       template: "%s | MANO FIL Cobertores.com"
     },
     description: dynamicDescription,
-    keywords: ["cobertores gruesos", "cobertores para invierno", "cobertores ultra cálidos", "venta de cobertores por mayoreo", "cobertores matrimoniales", "cobertores king size", "MANO FIL Cobertores", "fábrica textil Tlaxcala", "Mano Fil S.A."],
+    keywords: [
+      "cobertores gruesos",
+      "cobertores para invierno",
+      "cobertores ultra cálidos",
+      "cobertores pachoncitos",
+      "venta de cobertores por mayoreo",
+      "cobertores matrimoniales",
+      "cobertores king size",
+      "cobertores de doble vista",
+      "cobertores económicos",
+      "cobertores México",
+      "cobertores Tlaxcala",
+      "fábrica de cobertores",
+      "MANO FIL Cobertores",
+      "Mano Fil S.A.",
+      "fábrica textil Tlaxcala",
+      "tilmas por mayoreo",
+      "mantas térmicas industriales",
+      "cobertores.com",
+      "suministro textil México",
+      "cobertores calidad industrial"
+    ],
     authors: [{ name: "MANO FIL Cobertores" }],
     creator: "MANO FIL Cobertores",
     publisher: "MANO FIL Cobertores",
@@ -151,10 +172,8 @@ export default function RootLayout({
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                    logger.log('ServiceWorker registration successful');
-                  }, function(err) {
-                    logger.log('ServiceWorker registration failed: ', err);
+                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                    console.error('ServiceWorker registration failed: ', err);
                   });
                 });
               }
@@ -167,12 +186,18 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": ["ManufacturingBusiness", "WholesaleStore", "B2BBusiness"],
+              "@type": ["ManufacturingBusiness", "WholesaleStore"],
               "name": "Mano Fil S.A.",
-              "image": "https://cobertores.com/logo-oficial.png",
+              "alternateName": "MANO FIL Cobertores",
+              "image": [
+                "https://cobertores.com/logo-oficial.png",
+                "https://cobertores.com/hero-bg.webp"
+              ],
               "@id": "https://cobertores.com",
               "url": "https://cobertores.com",
               "telephone": "+522464642891",
+              "email": "ventas@cobertores.com",
+              "priceRange": "$$",
               "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Calle El Grullo",
@@ -186,8 +211,24 @@ export default function RootLayout({
                 "latitude": 19.3135,
                 "longitude": -98.1969
               },
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+                  "opens": "09:00",
+                  "closes": "18:00"
+                }
+              ],
               "foundingDate": "1962",
-              "description": "Fábrica textil de cobertores y tilmas por mayoreo en México. Calidad industrial B2B y suministro a gran escala."
+              "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 50 },
+              "areaServed": {
+                "@type": "Country",
+                "name": "México"
+              },
+              "description": "Fábrica textil de cobertores y tilmas por mayoreo en México desde 1962. Suministro industrial B2B, cobertores para invierno ultra cálidos, matrimoniales, king size y tilmas económicas.",
+              "sameAs": [
+                "https://cobertores.com"
+              ]
             })
           }}
         />

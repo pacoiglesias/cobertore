@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: '/intranet/',
+      disallow: ['/intranet', '/intranet/'],
     },
     sitemap: 'https://cobertores.com/sitemap.xml',
   };
