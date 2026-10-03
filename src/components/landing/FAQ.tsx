@@ -42,7 +42,7 @@ const FAQ_DATA: Record<'es' | 'en', {
       },
       {
         question: '¿Cómo puedo solicitar muestras físicas de los cobertores?',
-        answer: 'Puedes solicitar muestras físicas para evaluación de tu comité de compras o licitación contactando a nuestro equipo comercial por WhatsApp al +52 246 464 2891 o llenando el formulario directo en esta página. Enviamos muestras por mensajería express a cualquier parte del país.'
+        answer: 'Puedes solicitar muestras físicas para evaluación de tu comité de compras o licitación contactando a nuestro equipo comercial por WhatsApp al +52 246 464 2891 o llenando el formulario directo en esta página. Enviamos muestras por mensajería express a cualquier parte del país. Las muestras y su envío tienen un costo inicial; sin embargo, al concretar tu pedido mayorista, dicho importe se bonifica íntegramente en tu factura final.'
       }
     ]
   },
@@ -69,7 +69,7 @@ const FAQ_DATA: Record<'es' | 'en', {
       },
       {
         question: 'How can I request physical fabric and blanket samples?',
-        answer: 'You can request physical samples for procurement review by contacting our corporate team via WhatsApp at +52 246 464 2891 or by completing the direct quotation form on this page. We dispatch samples via express courier worldwide.'
+        answer: 'You can request physical samples for procurement review by contacting our corporate team via WhatsApp at +52 246 464 2891 or by completing the direct quotation form on this page. We dispatch samples via express courier worldwide. Samples and shipping carry an initial nominal cost; however, upon closing your bulk wholesale order, the full sample cost is credited directly towards your final invoice.'
       }
     ]
   }
