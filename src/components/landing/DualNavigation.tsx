@@ -71,7 +71,7 @@ function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt,
           ))}
         </ul>
         <a
-          href="#contacto"
+          href={isTextil ? "#productos" : "#contacto"}
           className={`mt-auto pt-10 inline-flex items-center gap-2 font-mono text-[12px] tracking-widest uppercase font-bold transition-colors w-fit ${
             isTextil ? "text-white hover:text-amber-500" : "text-amber-500 hover:text-amber-400"
           }`}
@@ -86,7 +86,7 @@ function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt,
 
 export function DualNavigation() {
   return (
-    <section className="py-24 lg:py-32 bg-[#0a0f1d] relative z-10">
+    <section id="divisiones" className="py-24 lg:py-32 bg-[#0a0f1d] relative z-10 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <motion.div
           variants={fadeUp}
