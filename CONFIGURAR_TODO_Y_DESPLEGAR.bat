@@ -12,7 +12,7 @@ echo.
 cd /d "D:\COBERTORES"
 
 echo [PASO 1/5] Verificando entorno y proyecto Firebase...
-call npx -y firebase-tools use cobertores-web
+call firebase use cobertores-web
 if %errorlevel% neq 0 (
     echo.
     echo [ALERTA] Sesión de Firebase requiere renovación.
@@ -32,7 +32,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [PASO 3/5] Desplegando a Firebase Hosting, Reglas de Firestore y Storage...
-call npx -y firebase-tools deploy --only hosting,firestore:rules,storage
+call firebase deploy --only hosting,firestore:rules,storage
 if %errorlevel% neq 0 (
     echo.
     echo [ERROR] El despliegue a Firebase falló.
@@ -42,8 +42,10 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [PASO 4/5] Creando Respaldo Completo en USB D:...
-for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /value') do set datetime=%%I
-set BACKUP_DIR=D:\RESPALDOS_COBERTORES\RESPALDO_%datetime:~0,8%_%datetime:~8,6%
+for /f %%I in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmmss"') do set datetime=%%I
+if "%datetime%"=="" set datetime=%date:~6,4%%date:~3,2%%date:~0,2%_%time:~0,2%%time:~3,2%%time:~6,2%
+set datetime=%datetime: =0%
+set BACKUP_DIR=D:\RESPALDOS_COBERTORES\RESPALDO_%datetime%
 
 echo Destino: %BACKUP_DIR%
 mkdir "%BACKUP_DIR%" 2>nul
@@ -56,7 +58,7 @@ echo Respaldo en USB D: completado en %BACKUP_DIR%
 echo.
 echo [PASO 5/5] Respaldando y Sincronizando con Repositorio Git (GitHub)...
 call git add .
-call git commit -m "feat(seo-hardening): sitemap corregido sin redirects, robots actualizado, headers SEO y reglas de seguridad"
+call git commit -m "chore(sync): sincronizacion de proyecto y deploy a produccion"
 call git push origin main
 if %errorlevel% neq 0 (
     echo [AVISO] Git push con 'main' tuvo código %errorlevel%, intentando con rama activa...

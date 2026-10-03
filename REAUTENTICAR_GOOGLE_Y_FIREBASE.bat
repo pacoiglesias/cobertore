@@ -16,32 +16,33 @@ echo.
 pause
 
 echo.
-echo [1/3] Renovando Application Default Credentials (ADC) de Google Cloud...
-call "C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin\gcloud.cmd" auth application-default login
+echo [1/2] Renovando sesión de Firebase CLI...
+echo Se abrirá tu navegador para confirmar el acceso con paco@cobertores.com
+call firebase login --reauth
 if %errorlevel% neq 0 (
-    echo [AVISO] Intentando con gcloud directo en PATH...
-    gcloud auth application-default login
+    echo.
+    echo [AVISO] Intentando modo seguro (--no-localhost)...
+    call firebase login --no-localhost
 )
 
 echo.
-echo [2/3] Renovando sesión principal de Google Cloud...
-call "C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin\gcloud.cmd" auth login
-if %errorlevel% neq 0 (
-    gcloud auth login
+echo Seleccionando proyecto activo en Firebase (cobertores-web)...
+call firebase use cobertores-web
+
+echo.
+echo [2/2] ¿Deseas renovar también credenciales de Google Cloud SDK (gcloud / ADC)? (S/N):
+set /p renovar_gcloud=
+if /i "%renovar_gcloud%"=="S" (
+    echo Renovando sesión de Google Cloud...
+    call "C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin\gcloud.cmd" auth application-default login
+    call "C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin\gcloud.cmd" auth login
 )
-
-echo.
-echo [3/3] Renovando sesión de Firebase CLI...
-call npx -y firebase-tools login --reauth
-
-echo.
-echo Seleccionando proyecto activo en Firebase...
-call npx -y firebase-tools use cobertores-web
 
 echo.
 echo =========================================================================
 echo    ¡REAUTENTICACIÓN COMPLETADA EXITOSAMENTE!
-echo    Google Cloud ADC, Firestore y Firebase CLI están listos.
+echo    Firebase CLI está conectado y listo en cobertores-web.
 echo =========================================================================
 echo.
 pause
+
