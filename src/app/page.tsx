@@ -406,7 +406,7 @@ export default function LandingPage() {
             >
               <Globe className="w-4 h-4" /> {lang === 'es' ? 'EN' : 'ES'}
             </button>
-            <a href="/intranet" className="hidden md:block bg-white/5 hover:bg-amber-600 border border-white/10 hover:border-amber-500 text-white px-6 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+            <a href="/intranet" rel="nofollow" className="hidden md:block bg-white/5 hover:bg-amber-600 border border-white/10 hover:border-amber-500 text-white px-6 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
               {t.nav.portal}
             </a>
           </div>
@@ -737,7 +737,7 @@ export default function LandingPage() {
           <div>
             <h4 className="text-white font-bold uppercase tracking-widest mb-6 md:mb-8 text-xs">{t.footer.intra}</h4>
             <ul className="space-y-4 text-sm font-light">
-              <li><a href="/intranet" className="hover:text-amber-500 transition-colors text-left">{t.footer.i1}</a></li>
+              <li><a href="/intranet" rel="nofollow" className="hover:text-amber-500 transition-colors text-left">{t.footer.i1}</a></li>
               <li><a href="/noticias" className="hover:text-amber-500 transition-colors text-left">Portal de Noticias (RSS)</a></li>
               <li><a href="/privacidad" className="hover:text-amber-500 transition-colors text-left">{t.footer.i2}</a></li>
               <li><a href="/terminos" className="hover:text-amber-500 transition-colors text-left">{t.footer.i3}</a></li>

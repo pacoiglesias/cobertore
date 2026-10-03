@@ -6,7 +6,7 @@ import { ManoFilLogo } from '../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Términos y Condiciones Legales | Mano Fil S.A.",
+  title: "Términos y Condiciones Legales",
   description: "Términos y condiciones legales para el uso del sitio web y transacciones comerciales de Mano Fil S.A.",
   alternates: {
     canonical: '/terminos',

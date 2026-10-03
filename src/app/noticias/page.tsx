@@ -11,7 +11,7 @@ import { logger } from '../../lib/logger';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: "Noticias y Novedades Textiles | Mano Fil S.A.",
+  title: "Noticias y Novedades Textiles",
   description: "Entérate de las últimas tendencias, innovaciones y lanzamientos de cobertores industriales en México. Información directa desde nuestra fábrica en Tlaxcala.",
   alternates: {
     canonical: '/noticias',
@@ -53,7 +53,7 @@ export default async function NoticiasPage() {
           <Link href="/" className="flex items-center gap-3 group">
             <ManoFilLogo className="w-10 h-10 group-hover:scale-105 transition-transform" showText={false} variant="light" />
             <div>
-              <h1 className="font-serif text-xl text-white">Mano Fil S.A.</h1>
+              <span className="font-serif text-xl text-white block">Mano Fil S.A.</span>
               <span className="text-[10px] uppercase tracking-widest text-amber-500 font-bold">Portal de Noticias</span>
             </div>
           </Link>

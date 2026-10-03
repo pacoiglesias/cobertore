@@ -6,7 +6,7 @@ import { ManoFilLogo } from '../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Aviso de Privacidad | Mano Fil S.A.",
+  title: "Aviso de Privacidad",
   description: "Políticas de privacidad y tratamiento de datos personales de Mano Fil S.A.",
   alternates: {
     canonical: '/privacidad',

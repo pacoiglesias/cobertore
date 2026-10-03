@@ -19,7 +19,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { logger } from '../lib/logger';
 
 export async function generateMetadata(): Promise<Metadata> {
-  let dynamicTitle = "Cobertores Ultra Cálidos para Invierno | MANO FIL Cobertores.com";
+  let dynamicTitle = "Cobertores Ultra Cálidos para Invierno | MANO FIL";
   let dynamicDescription = "Descubre la colección de cobertores MANO FIL: gruesos, pachoncitos y con diseños exclusivos para conservar el calor. Calidad premium en cobertores ligeros, de invierno, matrimoniales y king size.";
 
   try {
@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       default: dynamicTitle,
-      template: "%s | MANO FIL Cobertores.com"
+      template: "%s | MANO FIL Cobertores"
     },
     description: dynamicDescription,
     keywords: [

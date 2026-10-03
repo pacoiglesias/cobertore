@@ -6,7 +6,7 @@ import { ManoFilLogo } from '../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Política de Cookies | Mano Fil S.A.",
+  title: "Política de Cookies",
   description: "Información sobre el uso de cookies y tecnologías de rastreo en nuestro sitio web corporativo.",
   alternates: {
     canonical: '/cookies',
