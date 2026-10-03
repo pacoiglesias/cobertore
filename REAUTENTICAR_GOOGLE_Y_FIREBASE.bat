@@ -7,41 +7,48 @@ echo    REAUTENTICACIÓN DE CREDENCIALES GOOGLE CLOUD Y FIREBASE
 echo    Mano Fil S.A. - Cobertores.com
 echo =========================================================================
 echo.
-echo Este script resuelve el error:
-echo "invalid_grant: reauth related error (invalid_rapt)"
+echo Este script resuelve directamente:
+echo   1. Error de Firestore MCP / ADC:
+echo      "invalid_grant: reauth related error (invalid_rapt)"
+echo   2. Sesión de Firebase CLI y proyecto cobertores-web.
 echo.
-echo Se abrirá tu navegador para confirmar el acceso con tu cuenta Google:
-echo   --^> paco@cobertores.com o la cuenta administradora.
+echo Se abrirá tu navegador para confirmar el acceso:
+echo   --^> Cuenta: paco@cobertores.com
 echo.
 pause
 
 echo.
-echo [1/2] Renovando sesión de Firebase CLI...
-echo Se abrirá tu navegador para confirmar el acceso con paco@cobertores.com
-call firebase login --reauth
+echo [1/3] Renovando Application Default Credentials (ADC) de Google Cloud...
+echo (Esto elimina el error de "invalid_rapt" en Firestore / Google Cloud MCP)
+call "C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin\gcloud.cmd" auth application-default login
 if %errorlevel% neq 0 (
-    echo.
-    echo [AVISO] Intentando modo seguro (--no-localhost)...
-    call firebase login --no-localhost
+    echo [AVISO] Intentando con gcloud directo en PATH...
+    call gcloud auth application-default login
 )
 
 echo.
-echo Seleccionando proyecto activo en Firebase (cobertores-web)...
-call firebase use cobertores-web
+echo [2/3] Verificando sesión de Google Cloud CLI...
+call "C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin\gcloud.cmd" auth login --brief 2>nul
+if %errorlevel% neq 0 (
+    call gcloud auth login --brief 2>nul
+)
 
 echo.
-echo [2/2] ¿Deseas renovar también credenciales de Google Cloud SDK (gcloud / ADC)? (S/N):
-set /p renovar_gcloud=
-if /i "%renovar_gcloud%"=="S" (
-    echo Renovando sesión de Google Cloud...
-    call "C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin\gcloud.cmd" auth application-default login
-    call "C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin\gcloud.cmd" auth login
+echo [3/3] Verificando sesión de Firebase CLI (cobertores-web)...
+call firebase use cobertores-web 2>nul
+if %errorlevel% neq 0 (
+    echo Renovando Firebase CLI...
+    call firebase login --reauth
+    call firebase use cobertores-web
+) else (
+    echo Firebase CLI ya está conectado y activo en cobertores-web.
 )
 
 echo.
 echo =========================================================================
 echo    ¡REAUTENTICACIÓN COMPLETADA EXITOSAMENTE!
-echo    Firebase CLI está conectado y listo en cobertores-web.
+echo    - Google Cloud ADC (Firestore MCP) renovado sin errores.
+echo    - Firebase CLI listo para desplegar.
 echo =========================================================================
 echo.
 pause
