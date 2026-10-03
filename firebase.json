@@ -7,6 +7,23 @@
       "**/node_modules/**"
     ],
     "cleanUrls": true,
+    "redirects": [
+      {
+        "source": "/es",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/es.html",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/es/**",
+        "destination": "/",
+        "type": 301
+      }
+    ],
     "headers": [
       {
         "source": "**/*.@(js|css|woff2|woff|ttf|eot)",
