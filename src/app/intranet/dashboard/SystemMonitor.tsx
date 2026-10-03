@@ -51,7 +51,7 @@ export default function SystemMonitor() {
     // 2. Limpiar Service Workers si hay PWA trabada
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
+        for (const registration of registrations) {
           registration.unregister();
         }
       });

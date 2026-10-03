@@ -38,7 +38,7 @@ export default function TerminosPage() {
           <section>
             <h2 className="text-xl text-white font-medium mb-4">1. Aceptación de los Términos</h2>
             <p>
-              Al acceder, navegar y utilizar el sitio web <strong>cobertores.com</strong> (en adelante el "Sitio"), propiedad de <strong>Mano Fil S.A. de C.V.</strong>, usted acepta sin reservas los presentes Términos y Condiciones. Si no está de acuerdo con alguno de ellos, le solicitamos abstenerse de utilizar nuestro Sitio y nuestros servicios corporativos.
+              Al acceder, navegar y utilizar el sitio web <strong>cobertores.com</strong> (en adelante el &quot;Sitio&quot;), propiedad de <strong>Mano Fil S.A. de C.V.</strong>, usted acepta sin reservas los presentes Términos y Condiciones. Si no está de acuerdo con alguno de ellos, le solicitamos abstenerse de utilizar nuestro Sitio y nuestros servicios corporativos.
             </p>
           </section>
 
@@ -55,7 +55,7 @@ export default function TerminosPage() {
           <section>
             <h2 className="text-xl text-white font-medium mb-4">3. Intranet y Acceso Restringido</h2>
             <p>
-              La sección denominada "Portal Privado" o "Intranet" es de uso exclusivo para empleados, administradores y personal autorizado de Mano Fil S.A. Cualquier intento de acceso no autorizado, vulneración de contraseñas, o extracción de información confidencial será reportado a las autoridades cibernéticas correspondientes.
+              La sección denominada &quot;Portal Privado&quot; o &quot;Intranet&quot; es de uso exclusivo para empleados, administradores y personal autorizado de Mano Fil S.A. Cualquier intento de acceso no autorizado, vulneración de contraseñas, o extracción de información confidencial será reportado a las autoridades cibernéticas correspondientes.
             </p>
           </section>
 

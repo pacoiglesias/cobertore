@@ -682,7 +682,7 @@ export default function Dashboard() {
                     <span className="text-amber-500 font-bold">{lead.quantity}</span>
                   </div>
                   <div className="max-w-md text-sm text-slate-300 italic border-l border-white/10 pl-4 py-2">
-                    "{lead.message}"
+                    &quot;{lead.message}&quot;
                   </div>
                   <div className="text-right text-[10px] text-slate-500 uppercase font-bold tracking-widest shrink-0">
                     {lead.createdAt?.toDate().toLocaleDateString('es-MX')}
@@ -729,7 +729,7 @@ export default function Dashboard() {
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2">Aún no hay pedidos</h3>
                   <p className="text-slate-400 max-w-md mx-auto">
-                    No tienes ningún pedido registrado en el sistema. Haz clic en "Registrar Nuevo Pedido" para comenzar el seguimiento.
+                    No tienes ningún pedido registrado en el sistema. Haz clic en &quot;Registrar Nuevo Pedido&quot; para comenzar el seguimiento.
                   </p>
                 </div>
               )}

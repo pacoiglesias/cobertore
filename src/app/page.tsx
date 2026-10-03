@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Factory, Leaf, Award, MapPin, Phone, Mail, ChevronRight, ArrowRight, ShieldCheck, TrendingUp, Globe, Hammer, Star, Send, Loader2, Clock } from 'lucide-react';
+import { Building2, Factory, Leaf, Award, MapPin, Phone, Mail, ChevronRight, ArrowRight, ShieldCheck, TrendingUp, Globe, Hammer, Star, Send, Loader2, Clock, Menu, X } from 'lucide-react';
 import { ManoFilLogo } from '../components/ManoFilLogo';
 import { addDoc, collection, Timestamp, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -220,6 +220,7 @@ export default function LandingPage() {
   
   const [isScrolled, setIsScrolled] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Dynamic Catalog State
   const [catalogProducts, setCatalogProducts] = useState<CatalogProduct[]>([]);
@@ -266,7 +267,7 @@ export default function LandingPage() {
     sessionStorage.clear();
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
+        for (const registration of registrations) {
           registration.unregister();
         }
       });
@@ -402,15 +403,108 @@ export default function LandingPage() {
           <div className="flex items-center gap-2 md:gap-4">
             <button 
               onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
-              className="flex items-center gap-1 text-slate-300 hover:text-amber-500 text-xs font-bold uppercase tracking-wider transition-colors mr-2"
+              className="flex items-center gap-1 text-slate-300 hover:text-amber-500 text-xs font-bold uppercase tracking-wider transition-colors mr-1 sm:mr-2"
+              aria-label="Cambiar idioma"
             >
               <Globe className="w-4 h-4" /> {lang === 'es' ? 'EN' : 'ES'}
             </button>
             <a href="/intranet" rel="nofollow" className="hidden md:block bg-white/5 hover:bg-amber-600 border border-white/10 hover:border-amber-500 text-white px-6 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
               {t.nav.portal}
             </a>
+            {/* Botón Hamburguesa para Móviles */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 text-slate-300 hover:text-amber-500 transition-colors focus:outline-none rounded-lg"
+              aria-label="Abrir menú de navegación"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Menú desplegable para móviles */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="lg:hidden bg-[#070b14]/95 backdrop-blur-2xl border-b border-white/10 px-6 py-8 overflow-hidden shadow-2xl"
+            >
+              <div className="flex flex-col gap-5 text-xs font-bold tracking-widest uppercase text-slate-300">
+                <a 
+                  href="#hero" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
+                >
+                  {t.nav.home} <ChevronRight className="w-4 h-4 text-amber-500" />
+                </a>
+                <a 
+                  href="#productos" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
+                >
+                  {t.nav.catalog} <ChevronRight className="w-4 h-4 text-amber-500" />
+                </a>
+                <a 
+                  href="#divisiones" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
+                >
+                  {t.nav.divisions} <ChevronRight className="w-4 h-4 text-amber-500" />
+                </a>
+                <a 
+                  href="#herencia" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
+                >
+                  {t.nav.legacy} <ChevronRight className="w-4 h-4 text-amber-500" />
+                </a>
+                <a 
+                  href="#contacto" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
+                >
+                  {lang === 'es' ? 'Cotizaciones B2B' : 'B2B Quotes'} <ChevronRight className="w-4 h-4 text-amber-500" />
+                </a>
+                <a 
+                  href="/noticias" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
+                >
+                  Noticias <ChevronRight className="w-4 h-4 text-amber-500" />
+                </a>
+                <a 
+                  href="/seguimiento" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
+                >
+                  Rastreo de Pedidos <ChevronRight className="w-4 h-4 text-amber-500" />
+                </a>
+                
+                <div className="pt-4 flex flex-col gap-3">
+                  <a
+                    href="https://wa.me/522464642891?text=Hola,%20solicito%20cotizaci%C3%B3n%20de%20cobertores%20por%20mayoreo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3.5 rounded-full text-xs text-center tracking-widest uppercase transition-colors shadow-lg shadow-green-600/30 flex items-center justify-center gap-2"
+                  >
+                    <Phone className="w-4 h-4" /> Cotizar por WhatsApp
+                  </a>
+                  <a 
+                    href="/intranet" 
+                    rel="nofollow"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full bg-white/5 hover:bg-amber-600 border border-white/10 text-white py-3 rounded-full text-xs text-center font-bold tracking-widest uppercase transition-all"
+                  >
+                    {t.nav.portal}
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section Épico */}

@@ -48,12 +48,12 @@ export default function CookiesPage() {
             
             <h3 className="text-lg text-white mt-6 mb-2">1. Cookies Estrictamente Necesarias (Intranet)</h3>
             <p>
-              Utilizamos cookies administradas por <strong>Firebase Authentication</strong> para mantener la sesión segura de nuestros empleados y administradores al acceder al "Portal Privado" o Intranet. Sin estas cookies, la zona privada del sitio no funcionaría.
+              Utilizamos cookies administradas por <strong>Firebase Authentication</strong> para mantener la sesión segura de nuestros empleados y administradores al acceder al &quot;Portal Privado&quot; o Intranet. Sin estas cookies, la zona privada del sitio no funcionaría.
             </p>
             
             <h3 className="text-lg text-white mt-6 mb-2">2. Cookies de Seguridad y Prevención de Spam (Local Storage)</h3>
             <p>
-              Para proteger nuestros servidores de ataques maliciosos o correos basura masivos, utilizamos el almacenamiento local de su navegador (`localStorage`) para registrar el momento en el que envía una solicitud de "Cotización Directa". Esto nos permite aplicar una regla de <em>Rate Limiting</em> (límite de velocidad) que impide enviar más de un correo cada 5 minutos.
+              Para proteger nuestros servidores de ataques maliciosos o correos basura masivos, utilizamos el almacenamiento local de su navegador (`localStorage`) para registrar el momento en el que envía una solicitud de &quot;Cotización Directa&quot;. Esto nos permite aplicar una regla de <em>Rate Limiting</em> (límite de velocidad) que impide enviar más de un correo cada 5 minutos.
             </p>
           </section>
 

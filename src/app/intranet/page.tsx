@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
@@ -109,9 +110,9 @@ export default function IntranetLogin() {
           </form>
           
           <div className="mt-8 text-center">
-            <a href="/" className="text-slate-500 text-xs hover:text-white transition-colors">
+            <Link href="/" className="text-slate-500 text-xs hover:text-white transition-colors">
               &larr; Volver al sitio público
-            </a>
+            </Link>
           </div>
         </div>
       </div>

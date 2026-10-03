@@ -38,13 +38,13 @@ export default function PrivacidadPage() {
           <section>
             <h2 className="text-xl text-white font-medium mb-4">1. Identidad y domicilio del Responsable</h2>
             <p>
-              <strong>Mano Fil S.A. de C.V.</strong> (en adelante "El Responsable"), con domicilio en Calle El Grullo, Santa Ana Chiautempan 90800, Tlaxcala, México, es responsable del tratamiento y protección de sus datos personales, en estricto apego a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) de los Estados Unidos Mexicanos y normativas internacionales aplicables.
+              <strong>Mano Fil S.A. de C.V.</strong> (en adelante &quot;El Responsable&quot;), con domicilio en Calle El Grullo, Santa Ana Chiautempan 90800, Tlaxcala, México, es responsable del tratamiento y protección de sus datos personales, en estricto apego a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) de los Estados Unidos Mexicanos y normativas internacionales aplicables.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl text-white font-medium mb-4">2. Datos Personales que Recabamos</h2>
-            <p>Para las finalidades señaladas en el presente aviso, podemos recabar sus datos personales cuando nos los proporciona directamente a través del formulario de "Cotización Directa":</p>
+            <p>Para las finalidades señaladas en el presente aviso, podemos recabar sus datos personales cuando nos los proporciona directamente a través del formulario de &quot;Cotización Directa&quot;:</p>
             <ul className="list-disc pl-6 mt-4 space-y-2">
               <li>Nombre completo o razón social de la empresa.</li>
               <li>Número de teléfono (fijo o móvil) / WhatsApp.</li>
