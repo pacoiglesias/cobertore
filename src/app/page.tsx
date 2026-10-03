@@ -12,6 +12,8 @@ import { AuthorityRibbon } from '../components/landing/AuthorityRibbon';
 import { DualNavigation } from '../components/landing/DualNavigation';
 import { Heritage } from '../components/landing/Heritage';
 import { Sustainability } from '../components/landing/Sustainability';
+import { FAQ } from '../components/landing/FAQ';
+import { FloatingWhatsApp } from '../components/landing/FloatingWhatsApp';
 import { RefreshCw } from 'lucide-react';
 import { CatalogProduct, NewsItem } from '../lib/types';
 import { logger } from '../lib/logger';
@@ -63,7 +65,7 @@ const playSuccessSound = () => {
 
 const translations = {
   es: {
-    nav: { home: 'Inicio', catalog: 'Catálogo', divisions: 'Divisiones', legacy: 'Legado', portal: 'Portal Privado' },
+    nav: { home: 'Inicio', catalog: 'Catálogo', divisions: 'Divisiones', legacy: 'Legado', faq: 'Preguntas', portal: 'Portal Privado' },
     hero: {
       since: 'Suministro Textil Especializado • Desde 1962',
       title1: 'Ingeniería Térmica.',
@@ -133,11 +135,35 @@ const translations = {
       c3_title: 'Compromiso Logístico',
       c3_desc: 'Nuestra prioridad es la eficiencia comercial: cumplir con la entrega exacta y brindar un servicio y atención insuperable.'
     },
+    contact: {
+      title: 'Cotización Directa',
+      desc: 'Solicita precios de mayoreo para pedidos industriales o licitaciones.',
+      successTitle: '¡Solicitud Enviada!',
+      successDesc: 'Nuestro equipo corporativo se pondrá en contacto contigo a la brevedad.',
+      nameLabel: 'Nombre o Empresa *',
+      namePlaceholder: 'Ej. Grupo Industrial M...',
+      phoneLabel: 'Teléfono / WhatsApp *',
+      phonePlaceholder: '+52 123 456 7890',
+      emailLabel: 'Correo Electrónico *',
+      emailPlaceholder: 'tu@empresa.com',
+      quantityLabel: 'Volumen Requerido *',
+      quantityPlaceholder: 'Ej. 20,000 piezas',
+      messageLabel: 'Detalles del Proyecto *',
+      messagePlaceholder: 'Especifica modelos de interés, fecha de entrega y destino...',
+      btnSubmit: 'Enviar Solicitud',
+      btnSending: 'Enviando...',
+    },
+    news: {
+      tag: 'Actualidad',
+      title: 'Últimas Noticias',
+      readMore: 'Leer Artículo',
+      viewAll: 'Ver Todas las Noticias',
+    },
     dev: 'Sistema Seguro - Conexión Cifrada',
     wip: 'Módulo en mantenimiento'
   },
   en: {
-    nav: { home: 'Home', catalog: 'Catalog', divisions: 'Divisions', legacy: 'Legacy', portal: 'Private Portal' },
+    nav: { home: 'Home', catalog: 'Catalog', divisions: 'Divisions', legacy: 'Legacy', faq: 'FAQ', portal: 'Private Portal' },
     hero: {
       since: 'Specialized Textile Supply • Since 1962',
       title1: 'Thermal Engineering.',
@@ -190,7 +216,7 @@ const translations = {
       d1: 'Textile & Fibers Division',
       d2: 'Industrial Development',
       d3: 'Commercial Plazas',
-      intra: 'Intranet',
+      intra: 'Corporate Portal',
       i1: 'Employee Portal',
       i2: 'Privacy Policy',
       i3: 'Legal Terms',
@@ -206,6 +232,30 @@ const translations = {
       c2_desc: 'Backed by high-level strategic alliances, we have the capacity to supply massive quantities in extraordinarily short delivery times.',
       c3_title: 'Logistics Commitment',
       c3_desc: 'Our priority is commercial efficiency: fulfilling exact deliveries and providing unsurpassed service and attention.'
+    },
+    contact: {
+      title: 'Direct Wholesale Quote',
+      desc: 'Request volume wholesale pricing for industrial orders, tenders, or export supply.',
+      successTitle: 'Request Submitted!',
+      successDesc: 'Our corporate sales team will contact you shortly.',
+      nameLabel: 'Company or Contact Name *',
+      namePlaceholder: 'e.g. Acme Industrial Group...',
+      phoneLabel: 'Phone / WhatsApp *',
+      phonePlaceholder: '+1 555 123 4567',
+      emailLabel: 'Corporate Email *',
+      emailPlaceholder: 'you@company.com',
+      quantityLabel: 'Required Volume *',
+      quantityPlaceholder: 'e.g. 20,000 units',
+      messageLabel: 'Project Details *',
+      messagePlaceholder: 'Specify blanket models, target delivery date, and destination...',
+      btnSubmit: 'Submit Request',
+      btnSending: 'Submitting...',
+    },
+    news: {
+      tag: 'Press & Updates',
+      title: 'Latest News',
+      readMore: 'Read Article',
+      viewAll: 'View All News',
     },
     dev: 'Site Under Development - Coming Soon',
     wip: 'Section under construction'
@@ -398,6 +448,7 @@ export default function LandingPage() {
             <a href="#productos" className="hover:text-amber-500 transition-colors">{t.nav.catalog}</a>
             <a href="#divisiones" className="hover:text-amber-500 transition-colors">{t.nav.divisions}</a>
             <a href="#herencia" className="hover:text-amber-500 transition-colors">{t.nav.legacy}</a>
+            <a href="#faq" className="hover:text-amber-500 transition-colors">{t.nav.faq}</a>
           </div>
           
           <div className="flex items-center gap-2 md:gap-4">
@@ -462,6 +513,13 @@ export default function LandingPage() {
                   {t.nav.legacy} <ChevronRight className="w-4 h-4 text-amber-500" />
                 </a>
                 <a 
+                  href="#faq" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
+                >
+                  {t.nav.faq} <ChevronRight className="w-4 h-4 text-amber-500" />
+                </a>
+                <a 
                   href="#contacto" 
                   onClick={() => setMobileMenuOpen(false)}
                   className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
@@ -473,14 +531,14 @@ export default function LandingPage() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
                 >
-                  Noticias <ChevronRight className="w-4 h-4 text-amber-500" />
+                  {lang === 'es' ? 'Noticias' : 'News'} <ChevronRight className="w-4 h-4 text-amber-500" />
                 </a>
                 <a 
                   href="/seguimiento" 
                   onClick={() => setMobileMenuOpen(false)}
                   className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
                 >
-                  Rastreo de Pedidos <ChevronRight className="w-4 h-4 text-amber-500" />
+                  {lang === 'es' ? 'Rastreo de Pedidos' : 'Order Tracking'} <ChevronRight className="w-4 h-4 text-amber-500" />
                 </a>
                 
                 <div className="pt-4 flex flex-col gap-3">
@@ -490,7 +548,7 @@ export default function LandingPage() {
                     rel="noopener noreferrer"
                     className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3.5 rounded-full text-xs text-center tracking-widest uppercase transition-colors shadow-lg shadow-green-600/30 flex items-center justify-center gap-2"
                   >
-                    <Phone className="w-4 h-4" /> Cotizar por WhatsApp
+                    <Phone className="w-4 h-4" /> {lang === 'es' ? 'Cotizar por WhatsApp' : 'Quote via WhatsApp'}
                   </a>
                   <a 
                     href="/intranet" 
@@ -562,7 +620,7 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      <AuthorityRibbon />
+      <AuthorityRibbon lang={lang} />
 
       {/* Pilares */}
       <section className="py-20 md:py-32 relative bg-[#0a0f1d] border-t border-white/5 z-10">
@@ -674,17 +732,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <DualNavigation />
-      <Heritage />
-      <Sustainability />
+      <DualNavigation lang={lang} />
+      <Heritage lang={lang} />
+      <Sustainability lang={lang} />
 
       {/* Sección de Noticias (SEO) */}
       {latestNews.length > 0 && (
         <section className="py-24 md:py-32 relative bg-[#070b14] border-t border-white/5 z-10">
           <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
             <div className="text-center mb-16 md:mb-20">
-              <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">Actualidad</h4>
-              <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">Últimas Noticias</h2>
+              <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">{t.news?.tag || 'Actualidad'}</h4>
+              <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">{t.news?.title || 'Últimas Noticias'}</h2>
             </div>
             
             <div className="grid md:grid-cols-3 gap-8">
@@ -696,12 +754,12 @@ export default function LandingPage() {
                   <div className="p-6 flex flex-col flex-grow">
                     <span className="text-amber-500 text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
                       <Clock className="w-3 h-3" />
-                      {news.createdAt?.toDate().toLocaleDateString('es-MX')}
+                      {news.createdAt?.toDate().toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US')}
                     </span>
                     <h3 className="text-xl font-bold text-white mb-3 leading-tight">{news.title}</h3>
                     <p className="text-slate-400 text-sm mb-6 flex-grow line-clamp-3">{news.summary}</p>
                     <span className="text-amber-500 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:text-amber-400">
-                      Leer Artículo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      {t.news?.readMore || 'Leer Artículo'} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </a>
@@ -709,19 +767,22 @@ export default function LandingPage() {
             </div>
             <div className="text-center mt-12">
               <a href="/noticias" className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-colors">
-                Ver Todas las Noticias
+                {t.news?.viewAll || 'Ver Todas las Noticias'}
               </a>
             </div>
           </div>
         </section>
       )}
 
+      {/* Preguntas Frecuentes (FAQ) + Schema SEO */}
+      <FAQ lang={lang} />
+
       {/* Formulario de Cotización */}
       <section id="contacto" className="py-24 md:py-32 relative bg-[#0a0f1d] border-t border-white/5 z-10">
         <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">Cotización Directa</h2>
-            <p className="text-slate-400 font-light">Solicita precios de mayoreo para pedidos industriales o licitaciones.</p>
+            <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">{t.contact.title}</h2>
+            <p className="text-slate-400 font-light">{t.contact.desc}</p>
           </div>
           
           <div className="bg-white/5 border border-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-sm shadow-2xl relative overflow-hidden">
@@ -742,8 +803,8 @@ export default function LandingPage() {
                 >
                   <ShieldCheck className="w-10 h-10" />
                 </motion.div>
-                <h3 className="text-2xl font-serif text-white mb-2">¡Solicitud Enviada!</h3>
-                <p className="text-slate-400">Nuestro equipo corporativo se pondrá en contacto contigo a la brevedad.</p>
+                <h3 className="text-2xl font-serif text-white mb-2">{t.contact.successTitle}</h3>
+                <p className="text-slate-400">{t.contact.successDesc}</p>
               </motion.div>
             ) : (
               <form onSubmit={handleFormSubmit} className="space-y-6">
@@ -752,33 +813,33 @@ export default function LandingPage() {
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Nombre o Empresa *</label>
-                    <input type="text" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. Grupo Industrial M..." />
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.nameLabel}</label>
+                    <input type="text" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.namePlaceholder} />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Teléfono / WhatsApp *</label>
-                    <input type="tel" required value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="+52 123 456 7890" />
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.phoneLabel}</label>
+                    <input type="tel" required value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.phonePlaceholder} />
                   </div>
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Correo Electrónico *</label>
-                    <input type="email" required value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="tu@empresa.com" />
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.emailLabel}</label>
+                    <input type="email" required value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.emailPlaceholder} />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Volumen Requerido *</label>
-                    <input type="text" required value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder="Ej. 20,000 piezas" />
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.quantityLabel}</label>
+                    <input type="text" required value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.quantityPlaceholder} />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Detalles del Proyecto *</label>
-                  <textarea required value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder="Especifica modelos de interés, fecha de entrega y destino..."></textarea>
+                  <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.messageLabel}</label>
+                  <textarea required value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder={t.contact.messagePlaceholder}></textarea>
                 </div>
                 
                 <button type="submit" disabled={submitting} className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-4 rounded-xl uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                  {submitting ? <><Loader2 className="w-5 h-5 animate-spin"/> Enviando...</> : <><Send className="w-5 h-5"/> Enviar Solicitud</>}
+                  {submitting ? <><Loader2 className="w-5 h-5 animate-spin"/> {t.contact.btnSending}</> : <><Send className="w-5 h-5"/> {t.contact.btnSubmit}</>}
                 </button>
               </form>
             )}
@@ -832,7 +893,7 @@ export default function LandingPage() {
             <h4 className="text-white font-bold uppercase tracking-widest mb-6 md:mb-8 text-xs">{t.footer.intra}</h4>
             <ul className="space-y-4 text-sm font-light">
               <li><a href="/intranet" rel="nofollow" className="hover:text-amber-500 transition-colors text-left">{t.footer.i1}</a></li>
-              <li><a href="/noticias" className="hover:text-amber-500 transition-colors text-left">Portal de Noticias (RSS)</a></li>
+              <li><a href="/noticias" className="hover:text-amber-500 transition-colors text-left">{lang === 'es' ? 'Portal de Noticias (RSS)' : 'News Portal (RSS)'}</a></li>
               <li><a href="/privacidad" className="hover:text-amber-500 transition-colors text-left">{t.footer.i2}</a></li>
               <li><a href="/terminos" className="hover:text-amber-500 transition-colors text-left">{t.footer.i3}</a></li>
               <li><a href="/cookies" className="hover:text-amber-500 transition-colors text-left">{t.footer.i4}</a></li>
@@ -869,6 +930,8 @@ export default function LandingPage() {
           })
         }}
       />
+      {/* Botón Flotante de WhatsApp para Conversión Inmediata */}
+      <FloatingWhatsApp lang={lang} />
     </main>
   );
 }

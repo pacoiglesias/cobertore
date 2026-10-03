@@ -11,7 +11,48 @@ const fadeUp: any = {
   }),
 };
 
-export function Sustainability() {
+interface SustainabilityProps {
+  lang?: 'es' | 'en';
+}
+
+const CONTENT = {
+  es: {
+    eyebrow: "Compromiso ambiental",
+    title: "Solidez industrial con responsabilidad de largo plazo.",
+    blocks: [
+      {
+        tag: "Producción Textil",
+        title: "Procesos textiles de menor impacto",
+        copy: "Optimización del consumo hídrico y energético en el proceso de hilado y teñido, uso creciente de fibras de origen responsable, y tratamiento de aguas residuales previo a su reincorporación al proceso productivo.",
+      },
+      {
+        tag: "Desarrollo Inmobiliario",
+        title: "Edificaciones de bajo impacto",
+        copy: "Criterios de eficiencia energética e hídrica en el diseño de naves y desarrollos comerciales, gestión responsable de residuos de obra y selección de materiales de menor huella ambiental en cada proyecto.",
+      },
+    ],
+  },
+  en: {
+    eyebrow: "Environmental Commitment",
+    title: "Industrial strength with long-term responsibility.",
+    blocks: [
+      {
+        tag: "Textile Manufacturing",
+        title: "Low-impact textile processes",
+        copy: "Optimization of water and energy consumption in spinning and dyeing, increasing use of responsibly sourced fibers, and wastewater treatment prior to reintroduction into the production cycle.",
+      },
+      {
+        tag: "Real Estate Development",
+        title: "Low-impact building design",
+        copy: "Energy and water efficiency criteria in industrial warehouses and commercial developments, responsible construction waste management, and selection of sustainable materials with lower carbon footprints.",
+      },
+    ],
+  },
+};
+
+export function Sustainability({ lang = 'es' }: SustainabilityProps) {
+  const t = CONTENT[lang];
+
   return (
     <section id="sustentabilidad" className="py-24 lg:py-32 bg-[#0a0f1d] border-t border-white/5 relative z-10">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -22,25 +63,14 @@ export function Sustainability() {
           viewport={{ once: true, amount: 0.4 }}
           className="max-w-2xl mb-16 text-center mx-auto"
         >
-          <p className="font-mono text-[11px] tracking-[0.28em] uppercase text-amber-500 font-bold mb-4">Compromiso ambiental</p>
+          <p className="font-mono text-[11px] tracking-[0.28em] uppercase text-amber-500 font-bold mb-4">{t.eyebrow}</p>
           <h2 className="font-serif text-3xl lg:text-4xl text-white leading-tight drop-shadow-md">
-            Solidez industrial con responsabilidad de largo plazo.
+            {t.title}
           </h2>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-10">
-          {[
-            {
-              tag: "Producción Textil",
-              title: "Procesos textiles de menor impacto",
-              copy: "Optimización del consumo hídrico y energético en el proceso de hilado y teñido, uso creciente de fibras de origen responsable, y tratamiento de aguas residuales previo a su reincorporación al proceso productivo.",
-            },
-            {
-              tag: "Desarrollo Inmobiliario",
-              title: "Edificaciones de bajo impacto",
-              copy: "Criterios de eficiencia energética e hídrica en el diseño de naves y desarrollos comerciales, gestión responsable de residuos de obra y selección de materiales de menor huella ambiental en cada proyecto.",
-            },
-          ].map((block, i) => (
+          {t.blocks.map((block, i) => (
             <motion.div
               key={block.tag}
               custom={i}

@@ -2,11 +2,31 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Factory, Building2, ShieldCheck, MapPin } from 'lucide-react';
 
-const STATS = [
-  { icon: Building2, value: "300,000 m²", label: "Superficie desarrollada y administrada" },
-  { icon: ShieldCheck, value: "60+", label: "Años de operación ininterrumpida" },
-  { icon: MapPin, value: "+15 países", label: "Cobertura de exportación" },
-];
+interface AuthorityRibbonProps {
+  lang?: 'es' | 'en';
+}
+
+const STATS = {
+  es: [
+    { icon: Building2, value: "300,000 m²", label: "Superficie desarrollada y administrada" },
+    { icon: ShieldCheck, value: "60+", label: "Años de operación ininterrumpida" },
+    { icon: MapPin, value: "+15 países", label: "Cobertura de exportación" },
+  ],
+  en: [
+    { icon: Building2, value: "300,000 m²", label: "Developed & managed facilities" },
+    { icon: ShieldCheck, value: "60+", label: "Years of continuous operation" },
+    { icon: MapPin, value: "15+ Countries", label: "International export reach" },
+  ],
+};
+
+const TEXTS = {
+  es: {
+    badge: "Fundada en 1964 — Más de 6 décadas de liderazgo industrial",
+  },
+  en: {
+    badge: "Founded in 1964 — Over 6 decades of industrial leadership",
+  },
+};
 
 const fadeUp: any = {
   hidden: { opacity: 0, y: 24 },
@@ -17,7 +37,10 @@ const fadeUp: any = {
   }),
 };
 
-export function AuthorityRibbon() {
+export function AuthorityRibbon({ lang = 'es' }: AuthorityRibbonProps) {
+  const stats = STATS[lang];
+  const t = TEXTS[lang];
+
   return (
     <section className="bg-[#070b14] py-16 lg:py-20 border-t border-white/5 relative z-10">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/10 via-[#070b14] to-[#070b14] z-0 pointer-events-none"></div>
@@ -30,11 +53,11 @@ export function AuthorityRibbon() {
           className="text-center mb-14"
         >
           <span className="inline-block font-mono text-[11px] tracking-[0.3em] uppercase text-amber-500 border border-amber-500/40 rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(245,158,11,0.15)] bg-amber-500/5 backdrop-blur-sm">
-            Fundada en 1964 — Más de 6 décadas de liderazgo industrial
+            {t.badge}
           </span>
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 lg:gap-8 max-w-4xl mx-auto">
-          {STATS.map((stat, i) => {
+          {stats.map((stat, i) => {
             const Icon = stat.icon;
             return (
               <motion.div

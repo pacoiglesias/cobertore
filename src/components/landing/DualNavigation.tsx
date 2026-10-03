@@ -84,7 +84,68 @@ function DivisionCard({ id, eyebrow, title, copy, bullets, ctaLabel, image, alt,
   );
 }
 
-export function DualNavigation() {
+interface DualNavigationProps {
+  lang?: 'es' | 'en';
+}
+
+const CONTENT = {
+  es: {
+    eyebrow: "Dos divisiones, un mismo grupo",
+    title: "Comercialización logística y patrimonio inmobiliario, bajo una sola disciplina corporativa.",
+    textil: {
+      eyebrow: "División Textil · Cobertores.com",
+      title: "Distribución Textil de Alta Gama.",
+      copy: "Cobertores, blancos para el hogar, hilos y telas técnicas. Suministramos volúmenes corporativos respaldados por rigurosos controles de calidad y alianzas estratégicas a nivel nacional e internacional.",
+      bullets: [
+        "Cobertores y blancos para el hogar",
+        "Hilos industriales y telas técnicas",
+        "Distribución logística certificada",
+      ],
+      ctaLabel: "Explorar catálogo textil",
+    },
+    inmobiliaria: {
+      eyebrow: "División Inmobiliaria",
+      title: "Bienes raíces & desarrollos industriales.",
+      copy: "Naves industriales, desarrollos comerciales y activos residenciales estratégicos, planeados con el mismo rigor operativo que ha definido a nuestra comercialización logística desde 1964. Patrimonio que se administra, no solo se construye.",
+      bullets: [
+        "Naves y parques industriales",
+        "Desarrollos comerciales",
+        "Activos residenciales estratégicos",
+      ],
+      ctaLabel: "Ver portafolio inmobiliario",
+    },
+  },
+  en: {
+    eyebrow: "Two divisions, one group",
+    title: "Logistics commercialization and real estate equity, under uniform corporate discipline.",
+    textil: {
+      eyebrow: "Textile Division · Cobertores.com",
+      title: "High-End Textile Distribution.",
+      copy: "Blankets, home textiles, industrial yarns, and technical fabrics. We supply corporate volumes backed by rigorous quality control and national and international strategic alliances.",
+      bullets: [
+        "Blankets & home linens",
+        "Industrial yarns & technical fabrics",
+        "Certified logistics distribution",
+      ],
+      ctaLabel: "Explore textile catalog",
+    },
+    inmobiliaria: {
+      eyebrow: "Real Estate Division",
+      title: "Real estate & industrial developments.",
+      copy: "Industrial parks, logistics facilities, and strategic commercial developments, designed with the same operational rigor that has defined our logistics operations since 1964. Assets managed, not merely built.",
+      bullets: [
+        "Industrial parks & warehouses",
+        "Commercial developments",
+        "Strategic residential assets",
+      ],
+      ctaLabel: "View real estate portfolio",
+    },
+  },
+};
+
+export function DualNavigation({ lang = 'es' }: DualNavigationProps) {
+  const t = CONTENT[lang];
+
   return (
     <section id="divisiones" className="py-24 lg:py-32 bg-[#0a0f1d] relative z-10 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -95,9 +156,9 @@ export function DualNavigation() {
           viewport={{ once: true, amount: 0.4 }}
           className="max-w-2xl mb-16"
         >
-          <SectionEyebrow className="mb-4">Dos divisiones, un mismo grupo</SectionEyebrow>
+          <SectionEyebrow className="mb-4">{t.eyebrow}</SectionEyebrow>
           <h2 className="font-serif text-3xl lg:text-5xl text-white leading-tight drop-shadow-xl">
-            Comercialización logística y patrimonio inmobiliario, bajo una sola disciplina corporativa.
+            {t.title}
           </h2>
         </motion.div>
 
@@ -105,30 +166,22 @@ export function DualNavigation() {
           <DivisionCard
             id="textil"
             variant="textil"
-            eyebrow="División Textil · Cobertores.com"
-            title="Distribución Textil de Alta Gama."
-            copy="Cobertores, blancos para el hogar, hilos y telas técnicas. Suministramos volúmenes corporativos respaldados por rigurosos controles de calidad y alianzas estratégicas a nivel nacional e internacional."
-            bullets={[
-              "Cobertores y blancos para el hogar",
-              "Hilos industriales y telas técnicas",
-              "Distribución logística certificada",
-            ]}
-            ctaLabel="Explorar catálogo textil"
+            eyebrow={t.textil.eyebrow}
+            title={t.textil.title}
+            copy={t.textil.copy}
+            bullets={t.textil.bullets}
+            ctaLabel={t.textil.ctaLabel}
             image="/division-textile.webp"
             alt="Textura de cobertor de lujo sobre telar industrial"
           />
           <DivisionCard
             id="inmobiliaria"
             variant="inmobiliaria"
-            eyebrow="División Inmobiliaria"
-            title="Bienes raíces & desarrollos industriales."
-            copy="Naves industriales, desarrollos comerciales y activos residenciales estratégicos, planeados con el mismo rigor operativo que ha definido a nuestra comercialización logística desde 1964. Patrimonio que se administra, no solo se construye."
-            bullets={[
-              "Naves y parques industriales",
-              "Desarrollos comerciales",
-              "Activos residenciales estratégicos",
-            ]}
-            ctaLabel="Ver portafolio inmobiliario"
+            eyebrow={t.inmobiliaria.eyebrow}
+            title={t.inmobiliaria.title}
+            copy={t.inmobiliaria.copy}
+            bullets={t.inmobiliaria.bullets}
+            ctaLabel={t.inmobiliaria.ctaLabel}
             image="/division-realestate.webp"
             alt="Fachada de nave industrial moderna del portafolio inmobiliario"
           />
