@@ -32,6 +32,20 @@ echo [4/4] Copiando carpeta estatica out/ a %SOURCE_DIR%\out...
 cd /d "%SOURCE_DIR%"
 robocopy "%BUILD_DIR%\out" "%SOURCE_DIR%\out" /E /NFL /NDL /NJH /NJS
 
+echo [4.1/4] Asegurando compatibilidad dual (index.html en subdirectorios para 0 errores 404)...
+if not exist "%SOURCE_DIR%\out\privacidad" mkdir "%SOURCE_DIR%\out\privacidad" 2>nul
+copy /y "%SOURCE_DIR%\out\privacidad.html" "%SOURCE_DIR%\out\privacidad\index.html" >nul 2>nul
+if not exist "%SOURCE_DIR%\out\cookies" mkdir "%SOURCE_DIR%\out\cookies" 2>nul
+copy /y "%SOURCE_DIR%\out\cookies.html" "%SOURCE_DIR%\out\cookies\index.html" >nul 2>nul
+if not exist "%SOURCE_DIR%\out\terminos" mkdir "%SOURCE_DIR%\out\terminos" 2>nul
+copy /y "%SOURCE_DIR%\out\terminos.html" "%SOURCE_DIR%\out\terminos\index.html" >nul 2>nul
+if not exist "%SOURCE_DIR%\out\noticias" mkdir "%SOURCE_DIR%\out\noticias" 2>nul
+copy /y "%SOURCE_DIR%\out\noticias.html" "%SOURCE_DIR%\out\noticias\index.html" >nul 2>nul
+if not exist "%SOURCE_DIR%\out\seguimiento" mkdir "%SOURCE_DIR%\out\seguimiento" 2>nul
+copy /y "%SOURCE_DIR%\out\seguimiento.html" "%SOURCE_DIR%\out\seguimiento\index.html" >nul 2>nul
+if not exist "%SOURCE_DIR%\out\intranet" mkdir "%SOURCE_DIR%\out\intranet" 2>nul
+copy /y "%SOURCE_DIR%\out\intranet.html" "%SOURCE_DIR%\out\intranet\index.html" >nul 2>nul
+
 echo =========================================================================
 echo    COMPILACION COMPLETADA CON EXITO EN out/!
 echo =========================================================================
