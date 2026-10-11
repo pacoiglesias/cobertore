@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, ShieldCheck, Truck, PackageCheck } from 'lucide-react';
-import { ManoFilLogo } from '../../components/ManoFilLogo';
+import { ManoFilLogo } from '../../../components/ManoFilLogo';
 
 import { Metadata } from 'next';
 

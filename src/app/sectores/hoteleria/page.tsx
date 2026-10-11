@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, BedDouble, Sparkles, RefreshCw } from 'lucide-react';
-import { ManoFilLogo } from '../../components/ManoFilLogo';
+import { ManoFilLogo } from '../../../components/ManoFilLogo';
 
 import { Metadata } from 'next';
 
