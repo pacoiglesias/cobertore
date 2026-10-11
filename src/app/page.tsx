@@ -68,8 +68,8 @@ const translations = {
     nav: { home: 'Inicio', catalog: 'Catálogo', divisions: 'Divisiones', legacy: 'Legado', faq: 'Preguntas', portal: 'Portal Privado' },
     hero: {
       since: 'Suministro Textil Especializado • Desde 1962',
-      title1: 'Ingeniería Térmica.',
-      title2: 'Precisión Logística.',
+      title1: 'Cobertores por Mayoreo.',
+      title2: 'Fábrica Textil desde 1962.',
       desc: 'Infraestructura textil de alto rendimiento. En Mano Fil S.A. suministramos cobertores y tilmas a escala corporativa, garantizando capacidad de respuesta inmediata.',
       btnCatalog: 'Ver Catálogo',
       btnMore: 'Nuestra Trayectoria'
@@ -166,8 +166,8 @@ const translations = {
     nav: { home: 'Home', catalog: 'Catalog', divisions: 'Divisions', legacy: 'Legacy', faq: 'FAQ', portal: 'Private Portal' },
     hero: {
       since: 'Specialized Textile Supply • Since 1962',
-      title1: 'Thermal Engineering.',
-      title2: 'Logistics Precision.',
+      title1: 'Wholesale Blankets.',
+      title2: 'Textile Factory since 1962.',
       desc: 'High-performance textile infrastructure. At Mano Fil S.A. we supply blankets and tilmas on a corporate scale, ensuring immediate response capacity.',
       btnCatalog: 'View Catalog',
       btnMore: 'Discover More'
