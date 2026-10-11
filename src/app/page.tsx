@@ -918,13 +918,10 @@ export default function LandingPage() {
               "name": item.title,
               "image": `https://cobertores.com${item.imgUrl || item.img}`,
               "description": item.desc,
-              "offers": {
-                "@type": "AggregateOffer",
-                "priceCurrency": "MXN",
-                "price": "Contact for quote",
-                "priceValidUntil": "2027-12-31",
-                "availability": "https://schema.org/InStock",
-                "url": "https://cobertores.com/#contacto"
+              "sku": item.id || `product-${idx}`,
+              "brand": {
+                "@type": "Brand",
+                "name": "Mano Fil"
               }
             }))
           })
