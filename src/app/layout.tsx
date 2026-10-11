@@ -80,11 +80,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     alternates: {
       canonical: '/',
-      languages: {
-        'es-MX': 'https://cobertores.com/',
-        'en': 'https://cobertores.com/',
-        'x-default': 'https://cobertores.com/'
-      }
     },
     openGraph: {
       title: dynamicTitle,
