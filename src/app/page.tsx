@@ -115,9 +115,9 @@ const translations = {
       tlaxcala: '<strong class="text-white font-medium">Centro de Distribución Tlaxcala</strong><br/>Calle El Grullo, Santa Ana Chiautempan 90800, Tlaxcala, México',
       cdmx: '<strong class="text-white font-medium">Oficinas Comerciales CDMX</strong><br/>San Borja 613 Int. 702, Col. Del Valle Sur, C.P. 03104',
       divs: 'Sectores',
-      d1: 'División Manufactura Textil',
-      d2: 'División Inmobiliaria y Construcción',
-      d3: 'Gestión Comercial',
+      s1: 'Gobierno y Ayuda Humanitaria',
+      s2: 'Hotelería y Blancos',
+      s3: 'Licitaciones Públicas',
       intra: 'Plataforma Segura',
       i1: 'Intranet Corporativa',
       i2: 'Políticas de Privacidad',
@@ -212,10 +212,10 @@ const translations = {
       locations: 'Locations',
       tlaxcala: '<strong class="text-white font-medium">Tlaxcala Distribution Center</strong><br/>Calle El Grullo, Santa Ana Chiautempan 90800, Tlaxcala, Mexico',
       cdmx: '<strong class="text-white font-medium">CDMX Commercial Offices</strong><br/>San Borja 613 Int. 702, Col. Del Valle Sur, C.P. 03104',
-      divs: 'Divisions',
-      d1: 'Textile & Fibers Division',
-      d2: 'Industrial Development',
-      d3: 'Commercial Plazas',
+      divs: 'Sectors',
+      s1: 'Government & Relief Aid',
+      s2: 'Hospitality & Linens',
+      s3: 'Public Tenders',
       intra: 'Corporate Portal',
       i1: 'Employee Portal',
       i2: 'Privacy Policy',
@@ -390,11 +390,6 @@ export default function LandingPage() {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const showWipToast = (e: React.MouseEvent) => {
-    e.preventDefault();
-    toast("Esta sección estará disponible pronto.", { icon: "🛠️" });
   };
 
   const fadeUp = {
@@ -879,9 +874,9 @@ export default function LandingPage() {
           <div>
             <h4 className="text-white font-bold uppercase tracking-widest mb-6 md:mb-8 text-xs">{t.footer.divs}</h4>
             <ul className="space-y-4 text-sm font-light">
-              <li><button onClick={showWipToast} className="hover:text-amber-500 transition-colors text-left">{t.footer.d1}</button></li>
-              <li><button onClick={showWipToast} className="hover:text-amber-500 transition-colors text-left">{t.footer.d2}</button></li>
-              <li><button onClick={showWipToast} className="hover:text-amber-500 transition-colors text-left">{t.footer.d3}</button></li>
+              <li><a href="/sectores/gobierno" className="hover:text-amber-500 transition-colors text-left">{t.footer.s1}</a></li>
+              <li><a href="/sectores/hoteleria" className="hover:text-amber-500 transition-colors text-left">{t.footer.s2}</a></li>
+              <li><a href="/sectores/licitaciones" className="hover:text-amber-500 transition-colors text-left">{t.footer.s3}</a></li>
               <li className="flex items-center gap-4 mt-6 pt-6 md:mt-8 md:pt-8 border-t border-white/5">
                 <Mail className="w-5 h-5 text-amber-500 shrink-0" />
                 <span className="text-white font-medium break-all">{safeEmail || 'v•••••@••••••••••.com'}</span>
