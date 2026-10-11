@@ -19,8 +19,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { logger } from '../lib/logger';
 
 export async function generateMetadata(): Promise<Metadata> {
-  let dynamicTitle = "Cobertores Ultra Cálidos para Invierno | MANO FIL";
-  let dynamicDescription = "Descubre la colección de cobertores MANO FIL: gruesos, pachoncitos y con diseños exclusivos para conservar el calor. Calidad premium en cobertores ligeros, de invierno, matrimoniales y king size.";
+  let dynamicTitle = "Fábrica de Cobertores por Mayoreo | MANO FIL";
+  let dynamicDescription = "Fábrica textil de cobertores, cobijas y tilmas por mayoreo desde 1962. Suministro industrial, licitaciones y exportación desde Tlaxcala, México.";
 
   try {
     const settingsRef = doc(db, "system_settings", "global");
@@ -96,7 +96,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/logo-oficial.png",
           width: 1200,
           height: 630,
-          alt: "MANO FIL Cobertores - Ultra Suaves y Calientitos",
+          alt: "MANO FIL Cobertores - Fábrica Textil Mayorista",
         }
       ],
       locale: "es_MX",
