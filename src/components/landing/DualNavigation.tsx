@@ -106,7 +106,7 @@ const CONTENT = {
     inmobiliaria: {
       eyebrow: "División Inmobiliaria",
       title: "Bienes raíces & desarrollos industriales.",
-      copy: "Naves industriales, desarrollos comerciales y activos residenciales estratégicos, planeados con el mismo rigor operativo que ha definido a nuestra comercialización logística desde 1964. Patrimonio que se administra, no solo se construye.",
+      copy: "Naves industriales, desarrollos comerciales y activos residenciales estratégicos, planeados con el mismo rigor operativo que ha definido a nuestra comercialización logística desde 1962. Patrimonio que se administra, no solo se construye.",
       bullets: [
         "Naves y parques industriales",
         "Desarrollos comerciales",
@@ -132,7 +132,7 @@ const CONTENT = {
     inmobiliaria: {
       eyebrow: "Real Estate Division",
       title: "Real estate & industrial developments.",
-      copy: "Industrial parks, logistics facilities, and strategic commercial developments, designed with the same operational rigor that has defined our logistics operations since 1964. Assets managed, not merely built.",
+      copy: "Industrial parks, logistics facilities, and strategic commercial developments, designed with the same operational rigor that has defined our logistics operations since 1962. Assets managed, not merely built.",
       bullets: [
         "Industrial parks & warehouses",
         "Commercial developments",

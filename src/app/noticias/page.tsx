@@ -16,6 +16,10 @@ export const metadata = {
   alternates: {
     canonical: '/noticias',
   },
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 async function getNews(): Promise<NewsItem[]> {

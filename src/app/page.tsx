@@ -522,13 +522,6 @@ export default function LandingPage() {
                   {lang === 'es' ? 'Cotizaciones B2B' : 'B2B Quotes'} <ChevronRight className="w-4 h-4 text-amber-500" />
                 </a>
                 <a 
-                  href="/noticias" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
-                >
-                  {lang === 'es' ? 'Noticias' : 'News'} <ChevronRight className="w-4 h-4 text-amber-500" />
-                </a>
-                <a 
                   href="/seguimiento" 
                   onClick={() => setMobileMenuOpen(false)}
                   className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
@@ -724,6 +717,13 @@ export default function LandingPage() {
             <p>{t.products.disclaimer1}</p>
             <p>{t.products.disclaimer2}</p>
           </motion.div>
+          <div className="mt-10 flex flex-wrap items-center gap-3 max-w-4xl mx-auto md:mx-0">
+            <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">{lang === 'es' ? 'Fichas técnicas por modelo:' : 'Technical sheets by model:'}</span>
+            <a href="/productos/tilma-economica-1300-kg" className="text-amber-500 hover:text-amber-400 text-xs font-bold uppercase tracking-widest border border-amber-500/30 hover:border-amber-400/60 rounded-full px-4 py-2 transition-colors">Tilma Económica 1.300 KG</a>
+            <a href="/productos/manta-termica-2000-kg" className="text-amber-500 hover:text-amber-400 text-xs font-bold uppercase tracking-widest border border-amber-500/30 hover:border-amber-400/60 rounded-full px-4 py-2 transition-colors">Manta Térmica 2.000 KG</a>
+            <a href="/productos/tilma-ribeteada-1150-kg" className="text-amber-500 hover:text-amber-400 text-xs font-bold uppercase tracking-widest border border-amber-500/30 hover:border-amber-400/60 rounded-full px-4 py-2 transition-colors">Tilma Ribeteada 1.150 KG</a>
+            <a href="/productos/tilma-ligera-1000-kg" className="text-amber-500 hover:text-amber-400 text-xs font-bold uppercase tracking-widest border border-amber-500/30 hover:border-amber-400/60 rounded-full px-4 py-2 transition-colors">Tilma Ligera 1.000 KG</a>
+          </div>
         </div>
       </section>
 
@@ -888,7 +888,6 @@ export default function LandingPage() {
             <h4 className="text-white font-bold uppercase tracking-widest mb-6 md:mb-8 text-xs">{t.footer.intra}</h4>
             <ul className="space-y-4 text-sm font-light">
               <li><a href="/intranet" rel="nofollow" className="hover:text-amber-500 transition-colors text-left">{t.footer.i1}</a></li>
-              <li><a href="/noticias" className="hover:text-amber-500 transition-colors text-left">{lang === 'es' ? 'Portal de Noticias (RSS)' : 'News Portal (RSS)'}</a></li>
               <li><a href="/privacidad" className="hover:text-amber-500 transition-colors text-left">{t.footer.i2}</a></li>
               <li><a href="/terminos" className="hover:text-amber-500 transition-colors text-left">{t.footer.i3}</a></li>
               <li><a href="/cookies" className="hover:text-amber-500 transition-colors text-left">{t.footer.i4}</a></li>

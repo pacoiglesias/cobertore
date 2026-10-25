@@ -82,9 +82,9 @@ export default function HoteleriaPage() {
               en temporada alta. Nuestros productos para el sector:
             </p>
             <ul className="mt-4 space-y-3">
-              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Tilma Ribeteada 1.150 KG:</strong> acabado reforzado por ultrasonido, alta durabilidad ante lavados constantes.</span></li>
-              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Tilma Económica 1.300 KG:</strong> tejido compacto que soporta uso intensivo y lavandería industrial.</span></li>
-              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Manta Térmica 2.000 KG:</strong> para destinos de frío o habitaciones premium.</span></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium"><Link href="/productos/tilma-ribeteada-1150-kg" className="hover:text-amber-500 transition-colors">Tilma Ribeteada 1.150 KG:</Link></strong> acabado reforzado por ultrasonido, alta durabilidad ante lavados constantes.</span></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium"><Link href="/productos/tilma-economica-1300-kg" className="hover:text-amber-500 transition-colors">Tilma Económica 1.300 KG:</Link></strong> tejido compacto que soporta uso intensivo y lavandería industrial.</span></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium"><Link href="/productos/manta-termica-2000-kg" className="hover:text-amber-500 transition-colors">Manta Térmica 2.000 KG:</Link></strong> para destinos de frío o habitaciones premium.</span></li>
             </ul>
           </section>
 

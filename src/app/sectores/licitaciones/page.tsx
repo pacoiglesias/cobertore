@@ -79,7 +79,7 @@ export default function LicitacionesPage() {
               <ClipboardList className="w-6 h-6 text-amber-500" /> Lo que podemos documentar
             </h2>
             <ul className="mt-4 space-y-3">
-              <li className="flex gap-3"><span className="text-amber-500">—</span><span>Especificaciones técnicas por producto: gramaje, medidas, composición y acabados.</span></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><span>Especificaciones técnicas por producto: gramaje, medidas, composición y acabados. Ver fichas por modelo: <Link href="/productos/tilma-economica-1300-kg" className="text-white font-medium hover:text-amber-500 transition-colors">Tilma Económica 1.300 KG</Link>, <Link href="/productos/manta-termica-2000-kg" className="text-white font-medium hover:text-amber-500 transition-colors">Manta Térmica 2.000 KG</Link>, <Link href="/productos/tilma-ribeteada-1150-kg" className="text-white font-medium hover:text-amber-500 transition-colors">Tilma Ribeteada 1.150 KG</Link> y <Link href="/productos/tilma-ligera-1000-kg" className="text-white font-medium hover:text-amber-500 transition-colors">Tilma Ligera 1.000 KG</Link>.</span></li>
               <li className="flex gap-3"><span className="text-amber-500">—</span><span>Muestras físicas para evaluación contra ficha técnica.</span></li>
               <li className="flex gap-3"><span className="text-amber-500">—</span><span>Capacidad de producción y programa de entregas por etapas.</span></li>
               <li className="flex gap-3"><span className="text-amber-500">—</span><span>Facturación y documentación fiscal en regla como Mano Fil S.A.</span></li>
