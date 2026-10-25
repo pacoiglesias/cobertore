@@ -8,7 +8,7 @@ interface HeritageProps {
 const TIMELINE = {
   es: [
     {
-      year: "1964",
+      year: "1962",
       title: "Fundación del taller textil",
       copy: "Inicio de operaciones de manufactura textil, con foco en calidad de hilado y confección a escala.",
     },
@@ -30,7 +30,7 @@ const TIMELINE = {
   ],
   en: [
     {
-      year: "1964",
+      year: "1962",
       title: "Textile Mill Foundation",
       copy: "Commencement of textile manufacturing operations, focusing on yarn quality and scalable tailoring.",
     },
@@ -56,12 +56,12 @@ const TEXTS = {
   es: {
     eyebrow: "Herencia industrial",
     title: "De un telar a un grupo empresarial.",
-    p1: "Mano Fil S.A. nació en 1964 como un taller textil familiar orientado a la calidad manufacturera. Ese mismo rigor —precisión en el proceso, disciplina en la administración, visión de largo plazo— fue lo que, décadas después, nos permitió capitalizar nuestros activos y expandirnos hacia el desarrollo inmobiliario e industrial. Hoy, el grupo opera dos divisiones que comparten un mismo principio: construir valor que perdura.",
+    p1: "Mano Fil S.A. nació en 1962 como un taller textil familiar orientado a la calidad manufacturera. Ese mismo rigor —precisión en el proceso, disciplina en la administración, visión de largo plazo— fue lo que, décadas después, nos permitió capitalizar nuestros activos y expandirnos hacia el desarrollo inmobiliario e industrial. Hoy, el grupo opera dos divisiones que comparten un mismo principio: construir valor que perdura.",
   },
   en: {
     eyebrow: "Industrial Heritage",
     title: "From a single loom to an enterprise group.",
-    p1: "Mano Fil S.A. was founded in 1964 as a family textile mill focused on manufacturing quality. That same rigor—process precision, administrative discipline, long-term vision—allowed us decades later to leverage our assets and expand into industrial and commercial real estate development. Today, the group operates two divisions sharing the same core principle: building enduring value.",
+    p1: "Mano Fil S.A. was founded in 1962 as a family textile mill focused on manufacturing quality. That same rigor—process precision, administrative discipline, long-term vision—allowed us decades later to leverage our assets and expand into industrial and commercial real estate development. Today, the group operates two divisions sharing the same core principle: building enduring value.",
   },
 };
 

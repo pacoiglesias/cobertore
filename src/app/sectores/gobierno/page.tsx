@@ -83,9 +83,9 @@ export default function GobiernoPage() {
               más solicitados por el sector público:
             </p>
             <ul className="mt-4 space-y-3">
-              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Manta Térmica 2.000 KG:</strong> máximo gramaje para frío extremo y situaciones de emergencia.</span></li>
-              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Tilma Económica 1.300 KG:</strong> tejido compacto y duradero, ideal para distribución masiva.</span></li>
-              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Tilma Ligera 1.000 KG:</strong> optimización de peso y volumen para logística ágil.</span></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium"><Link href="/productos/manta-termica-2000-kg" className="hover:text-amber-500 transition-colors">Manta Térmica 2.000 KG:</Link></strong> máximo gramaje para frío extremo y situaciones de emergencia.</span></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium"><Link href="/productos/tilma-economica-1300-kg" className="hover:text-amber-500 transition-colors">Tilma Económica 1.300 KG:</Link></strong> tejido compacto y duradero, ideal para distribución masiva.</span></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium"><Link href="/productos/tilma-ligera-1000-kg" className="hover:text-amber-500 transition-colors">Tilma Ligera 1.000 KG:</Link></strong> optimización de peso y volumen para logística ágil.</span></li>
             </ul>
           </section>
 

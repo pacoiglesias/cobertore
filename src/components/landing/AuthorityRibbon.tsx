@@ -21,10 +21,10 @@ const STATS = {
 
 const TEXTS = {
   es: {
-    badge: "Fundada en 1964 — Más de 6 décadas de liderazgo industrial",
+    badge: "Fundada en 1962 — Más de 6 décadas de liderazgo industrial",
   },
   en: {
-    badge: "Founded in 1964 — Over 6 decades of industrial leadership",
+    badge: "Founded in 1962 — Over 6 decades of industrial leadership",
   },
 };
 
