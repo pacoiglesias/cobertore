@@ -13,61 +13,30 @@ export const metadata: Metadata = {
   },
 };
 
+// Sin marcado Product: precios solo por cotización, sin cifras públicas.
+// Un Product sin offers, review ni aggregateRating lo marca Search Console
+// como fragmento de producto no válido. Se conserva solo BreadcrumbList.
 const jsonLd = {
   "@context": "https://schema.org",
-  "@graph": [
+  "@type": "BreadcrumbList",
+  "itemListElement": [
     {
-      "@type": "Product",
-      "name": "Tilma Económica 1.300 KG",
-      "description": "Tilma Económica de 1.300 KG por mayoreo. Tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
-      "image": "https://cobertores.com/products/tilma-eco-1-3kg.webp",
-      "brand": {
-        "@type": "Brand",
-        "name": "Mano Fil"
-      },
-      "manufacturer": {
-        "@type": "Organization",
-        "name": "Mano Fil S.A.",
-        "url": "https://cobertores.com",
-        "telephone": "+522464642891",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Calle El Grullo",
-          "addressLocality": "Santa Ana Chiautempan",
-          "addressRegion": "Tlaxcala",
-          "postalCode": "90800",
-          "addressCountry": "MX"
-        }
-      },
-      "weight": {
-        "@type": "QuantitativeValue",
-        "value": 1.3,
-        "unitCode": "KGM"
-      },
-      "url": "https://cobertores.com/productos/tilma-economica-1300-kg"
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "https://cobertores.com"
     },
     {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Inicio",
-          "item": "https://cobertores.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Productos",
-          "item": "https://cobertores.com/#productos"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Tilma Económica 1.300 KG",
-          "item": "https://cobertores.com/productos/tilma-economica-1300-kg"
-        }
-      ]
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Productos",
+      "item": "https://cobertores.com/#productos"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Tilma Económica 1.300 KG",
+      "item": "https://cobertores.com/productos/tilma-economica-1300-kg"
     }
   ]
 };

@@ -129,6 +129,18 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-[#070b14] text-slate-300`}
     >
       <head>
+        {/* Redirección www→apex + limpieza de URLs legacy de la tienda anterior.
+            Firebase Hosting (estático) no permite redirects por host ni por query
+            string, así que se hace aquí, lo antes posible en <head>: Googlebot
+            ejecuta JS y consolida estas URLs en el apex. Sin precios inventados
+            ni cambios de contenido: solo canonización de host y de URLs legacy. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){try{var l=window.location;var www=l.hostname==='www.cobertores.com';var legacy=/(^|[?&])(add-to-cart|add_to_cart|sitemap_xml|shopdetail)/i.test(l.search);if(www){l.replace('https://cobertores.com'+(legacy?'/':l.pathname+l.search)+l.hash);}else if(l.hostname==='cobertores.com'&&legacy){l.replace('https://cobertores.com/'+l.hash);}}catch(e){}})();
+            `
+          }}
+        />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#070b14" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
@@ -242,44 +254,6 @@ export default function RootLayout({
                     { "@type": "AdministrativeArea", "name": "Worldwide" }
                   ],
                   "description": "Fábrica textil de cobertores, cobijas y tilmas por mayoreo desde 1962. Suministro industrial B2B, licitaciones, ayuda humanitaria y exportación internacional.",
-                  "hasOfferCatalog": {
-                    "@type": "OfferCatalog",
-                    "name": "Catálogo Textil Mayorista Mano Fil",
-                    "itemListElement": [
-                      {
-                        "@type": "Offer",
-                        "itemOffered": {
-                          "@type": "Product",
-                          "name": "Tilma Ligera 1.000 KG",
-                          "description": "Tilma económica para distribución ágil, mudanzas y embalaje industrial."
-                        }
-                      },
-                      {
-                        "@type": "Offer",
-                        "itemOffered": {
-                          "@type": "Product",
-                          "name": "Tilma Ribeteada 1.150 KG",
-                          "description": "Acabado reforzado por ultrasonido perimetral para alta durabilidad."
-                        }
-                      },
-                      {
-                        "@type": "Offer",
-                        "itemOffered": {
-                          "@type": "Product",
-                          "name": "Manta Térmica 2.000 KG",
-                          "description": "Cobertor térmico de alto gramaje para frío extremo y contingencias."
-                        }
-                      },
-                      {
-                        "@type": "Offer",
-                        "itemOffered": {
-                          "@type": "Product",
-                          "name": "Tilma Económica 1.300 KG",
-                          "description": "Tejido compacto y duradero de fibras regeneradas para uso intensivo."
-                        }
-                      }
-                    ]
-                  },
                   "sameAs": [
                     "https://cobertores.com"
                   ]

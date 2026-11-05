@@ -900,27 +900,10 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* JSON-LD Schema para Catálogo de Productos */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@graph": (catalogProducts.length > 0 ? catalogProducts : t.products.items).map((item: any, idx: number) => ({
-              "@type": "Product",
-              "@id": `https://cobertores.com/#product-${idx}`,
-              "name": item.title,
-              "image": `https://cobertores.com${item.imgUrl || item.img}`,
-              "description": item.desc,
-              "sku": item.id || `product-${idx}`,
-              "brand": {
-                "@type": "Brand",
-                "name": "Mano Fil"
-              }
-            }))
-          })
-        }}
-      />
+      {/* Sin JSON-LD Product en la home: precios solo por cotización, sin cifras
+          públicas. Un Product sin offers, review ni aggregateRating lo marca
+          Search Console como fragmento de producto no válido (8 en la home).
+          El catálogo visible de la página no cambia. */}
       {/* Botón Flotante de WhatsApp para Conversión Inmediata */}
       <FloatingWhatsApp lang={lang} />
     </main>
