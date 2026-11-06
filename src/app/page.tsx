@@ -450,7 +450,7 @@ export default function LandingPage() {
             <button 
               onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
               className="flex items-center gap-1 text-slate-300 hover:text-amber-500 text-xs font-bold uppercase tracking-wider transition-colors mr-1 sm:mr-2"
-              aria-label="Cambiar idioma"
+              aria-label={lang === 'es' ? 'Cambiar idioma' : 'Switch language'}
             >
               <Globe className="w-4 h-4" /> {lang === 'es' ? 'EN' : 'ES'}
             </button>
@@ -461,7 +461,9 @@ export default function LandingPage() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-2 text-slate-300 hover:text-amber-500 transition-colors focus:outline-none rounded-lg"
-              aria-label="Abrir menú de navegación"
+              aria-label={mobileMenuOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="menu-movil"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -472,6 +474,7 @@ export default function LandingPage() {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
+              id="menu-movil"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -808,29 +811,29 @@ export default function LandingPage() {
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.nameLabel}</label>
-                    <input type="text" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.namePlaceholder} />
+                    <label htmlFor="contacto-nombre" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.nameLabel}</label>
+                    <input id="contacto-nombre" type="text" required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.namePlaceholder} />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.phoneLabel}</label>
-                    <input type="tel" required value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.phonePlaceholder} />
+                    <label htmlFor="contacto-telefono" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.phoneLabel}</label>
+                    <input id="contacto-telefono" type="tel" required value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.phonePlaceholder} />
                   </div>
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.emailLabel}</label>
-                    <input type="email" required value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.emailPlaceholder} />
+                    <label htmlFor="contacto-email" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.emailLabel}</label>
+                    <input id="contacto-email" type="email" required value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.emailPlaceholder} />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.quantityLabel}</label>
-                    <input type="text" required value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.quantityPlaceholder} />
+                    <label htmlFor="contacto-cantidad" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.quantityLabel}</label>
+                    <input id="contacto-cantidad" type="text" required value={formData.quantity} onChange={e=>setFormData({...formData, quantity: e.target.value})} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors" placeholder={t.contact.quantityPlaceholder} />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.messageLabel}</label>
-                  <textarea required value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder={t.contact.messagePlaceholder}></textarea>
+                  <label htmlFor="contacto-mensaje" className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">{t.contact.messageLabel}</label>
+                  <textarea id="contacto-mensaje" required value={formData.message} onChange={e=>setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-[#070b14] border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 outline-none transition-colors resize-none" placeholder={t.contact.messagePlaceholder}></textarea>
                 </div>
                 
                 <button type="submit" disabled={submitting} className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-4 rounded-xl uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
