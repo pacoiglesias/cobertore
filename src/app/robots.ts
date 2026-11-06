@@ -32,7 +32,9 @@ export default function robots(): MetadataRoute.Robots {
       }
     ],
     sitemap: 'https://cobertores.com/sitemap.xml',
-    host: 'https://cobertores.com',
+    // La directiva `Host` de robots.txt lleva solo el dominio (sin esquema).
+    // Con 'https://cobertores.com' Next la emitía tal cual y no es un host válido.
+    host: 'cobertores.com',
   };
 }
 
