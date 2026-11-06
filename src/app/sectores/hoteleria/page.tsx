@@ -6,10 +6,35 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Blancos y Cobertores para Hotelería por Mayoreo | MANO FIL",
+  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
+  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
+  title: "Blancos y Cobertores para Hotelería por Mayoreo",
   description: "Cobertores y blancos por mayoreo para hoteles y hospedaje. Calidad consistente, reposición programada y suministro directo de fábrica en Tlaxcala.",
   alternates: {
     canonical: '/sectores/hoteleria',
+  },
+  // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
+  openGraph: {
+    title: "Blancos y Cobertores para Hotelería por Mayoreo | MANO FIL Cobertores",
+    description: "Cobertores y blancos por mayoreo para hoteles y hospedaje. Calidad consistente, reposición programada y suministro directo de fábrica en Tlaxcala.",
+    url: "https://cobertores.com/sectores/hoteleria",
+    siteName: "MANO FIL Cobertores",
+    images: [
+      {
+        url: "/hero-bg.webp",
+        width: 1920,
+        height: 1080,
+        alt: "Fábrica textil Mano Fil S.A. en Tlaxcala",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blancos y Cobertores para Hotelería por Mayoreo | MANO FIL Cobertores",
+    description: "Cobertores y blancos por mayoreo para hoteles y hospedaje. Calidad consistente, reposición programada y suministro directo de fábrica en Tlaxcala.",
+    images: ["/hero-bg.webp"],
   },
 };
 

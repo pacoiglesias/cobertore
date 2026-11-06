@@ -89,8 +89,10 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [
         {
           url: "/logo-oficial.png",
-          width: 1200,
-          height: 630,
+          // Dimensiones reales del archivo (591x422): antes se declaraba
+          // 1200x630 y las redes recortaban mal la vista previa.
+          width: 591,
+          height: 422,
           alt: "MANO FIL Cobertores - Fábrica Textil Mayorista",
         }
       ],

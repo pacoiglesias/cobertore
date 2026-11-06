@@ -6,10 +6,35 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL",
+  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
+  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
+  title: "Tilma Ribeteada 1.150 KG por Mayoreo",
   description: "Tilma Ribeteada de 1.150 KG por mayoreo. Acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
   alternates: {
     canonical: '/productos/tilma-ribeteada-1150-kg',
+  },
+  // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
+  openGraph: {
+    title: "Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL Cobertores",
+    description: "Tilma Ribeteada de 1.150 KG por mayoreo. Acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
+    url: "https://cobertores.com/productos/tilma-ribeteada-1150-kg",
+    siteName: "MANO FIL Cobertores",
+    images: [
+      {
+        url: "/products/tilma-ribeteada.webp",
+        width: 1200,
+        height: 896,
+        alt: "Tilma Ribeteada 1.150 KG",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL Cobertores",
+    description: "Tilma Ribeteada de 1.150 KG por mayoreo. Acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
+    images: ["/products/tilma-ribeteada.webp"],
   },
 };
 

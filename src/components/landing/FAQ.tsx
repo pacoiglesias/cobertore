@@ -137,6 +137,7 @@ export function FAQ({ lang = 'es' }: FAQProps) {
                   onClick={() => toggle(index)}
                   className="w-full text-left p-6 md:p-7 flex items-center justify-between gap-4 focus:outline-none"
                   aria-expanded={isOpen}
+                  aria-controls={`faq-respuesta-${index}`}
                 >
                   <span className="font-serif text-lg md:text-xl text-white font-medium">
                     {item.question}
@@ -155,6 +156,7 @@ export function FAQ({ lang = 'es' }: FAQProps) {
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
+                      id={`faq-respuesta-${index}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
