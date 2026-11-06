@@ -26,7 +26,7 @@ Este repositorio contiene el código fuente de la plataforma web de Mano Fil S.A
 ## 🔒 Reglas de Seguridad y Configuración
 
 ### 1. Firestore (`firestore.rules`)
-- **Súper Administradores:** Lista blanca estricta basada en correos electrónicos autorizados (`pacoismael@gmail.com`, `paco@cobertores.com`, `paco.iglesias@gmail.com`).
+- **Súper Administradores:** Lista blanca estricta basada en correos electrónicos autorizados (gestionada en `firestore.rules`; contacto público: `ventas@cobertores.com`).
 - **Verificación de Privilegios:** La función `hasValidPrivilege` verifica la existencia del documento en `user_privileges` usando `exists()` antes de consultar los datos de expiración con `get()`, evitando fallos silenciosos.
 
 ### 2. Cloud Storage (`storage.rules`)
