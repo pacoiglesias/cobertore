@@ -10,9 +10,9 @@ export const dynamic = "force-static";
 const LAST_MODIFIED: Record<string, string> = {
   '/': '2026-11-05', // pasada SEO 3 (39bd293)
   '/seguimiento': '2026-10-04',
-  '/sectores/gobierno': '2026-10-25', // pasada SEO 2 (0b3651a)
-  '/sectores/hoteleria': '2026-10-25', // pasada SEO 2 (0b3651a)
-  '/sectores/licitaciones': '2026-10-25', // pasada SEO 2 (0b3651a)
+  '/sectores/gobierno': '2026-11-05', // OG propio + título sin duplicar (b5a05ba/6a7017d)
+  '/sectores/hoteleria': '2026-11-05', // OG propio + título sin duplicar (b5a05ba/6a7017d)
+  '/sectores/licitaciones': '2026-11-05', // OG propio + título sin duplicar (b5a05ba/6a7017d)
   '/productos/tilma-economica-1300-kg': '2026-11-05', // pasada SEO 3 (39bd293)
   '/productos/manta-termica-2000-kg': '2026-11-05', // pasada SEO 3 (39bd293)
   '/productos/tilma-ribeteada-1150-kg': '2026-11-05', // pasada SEO 3 (39bd293)
