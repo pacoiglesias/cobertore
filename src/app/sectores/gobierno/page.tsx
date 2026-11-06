@@ -6,10 +6,35 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Cobertores para Gobierno y Ayuda Humanitaria | MANO FIL",
+  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
+  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
+  title: "Cobertores para Gobierno y Ayuda Humanitaria",
   description: "Suministro de cobertores y tilmas por mayoreo para gobierno, protección civil y ayuda humanitaria. Respuesta inmediata a contingencias desde Tlaxcala.",
   alternates: {
     canonical: '/sectores/gobierno',
+  },
+  // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
+  openGraph: {
+    title: "Cobertores para Gobierno y Ayuda Humanitaria | MANO FIL Cobertores",
+    description: "Suministro de cobertores y tilmas por mayoreo para gobierno, protección civil y ayuda humanitaria. Respuesta inmediata a contingencias desde Tlaxcala.",
+    url: "https://cobertores.com/sectores/gobierno",
+    siteName: "MANO FIL Cobertores",
+    images: [
+      {
+        url: "/hero-bg.webp",
+        width: 1920,
+        height: 1080,
+        alt: "Fábrica textil Mano Fil S.A. en Tlaxcala",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cobertores para Gobierno y Ayuda Humanitaria | MANO FIL Cobertores",
+    description: "Suministro de cobertores y tilmas por mayoreo para gobierno, protección civil y ayuda humanitaria. Respuesta inmediata a contingencias desde Tlaxcala.",
+    images: ["/hero-bg.webp"],
   },
 };
 

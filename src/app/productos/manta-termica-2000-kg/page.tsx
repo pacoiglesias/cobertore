@@ -6,10 +6,35 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Manta Térmica 2.000 KG por Mayoreo | MANO FIL",
+  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
+  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
+  title: "Manta Térmica 2.000 KG por Mayoreo",
   description: "Manta Térmica de 2.000 KG por mayoreo. El mayor gramaje del catálogo para frío extremo, contingencias, programas invernales y hotelería premium.",
   alternates: {
     canonical: '/productos/manta-termica-2000-kg',
+  },
+  // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
+  openGraph: {
+    title: "Manta Térmica 2.000 KG por Mayoreo | MANO FIL Cobertores",
+    description: "Manta Térmica de 2.000 KG por mayoreo. El mayor gramaje del catálogo para frío extremo, contingencias, programas invernales y hotelería premium.",
+    url: "https://cobertores.com/productos/manta-termica-2000-kg",
+    siteName: "MANO FIL Cobertores",
+    images: [
+      {
+        url: "/products/manta-eco-2kg.webp",
+        width: 1200,
+        height: 896,
+        alt: "Manta Térmica 2.000 KG",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Manta Térmica 2.000 KG por Mayoreo | MANO FIL Cobertores",
+    description: "Manta Térmica de 2.000 KG por mayoreo. El mayor gramaje del catálogo para frío extremo, contingencias, programas invernales y hotelería premium.",
+    images: ["/products/manta-eco-2kg.webp"],
   },
 };
 

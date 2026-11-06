@@ -6,10 +6,35 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Proveedor de Cobertores para Licitaciones | MANO FIL",
+  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
+  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
+  title: "Proveedor de Cobertores para Licitaciones",
   description: "Fabricante de cobertores para licitaciones públicas. Cumplimiento de especificaciones técnicas, capacidad de producción y entrega a nivel nacional.",
   alternates: {
     canonical: '/sectores/licitaciones',
+  },
+  // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
+  openGraph: {
+    title: "Proveedor de Cobertores para Licitaciones | MANO FIL Cobertores",
+    description: "Fabricante de cobertores para licitaciones públicas. Cumplimiento de especificaciones técnicas, capacidad de producción y entrega a nivel nacional.",
+    url: "https://cobertores.com/sectores/licitaciones",
+    siteName: "MANO FIL Cobertores",
+    images: [
+      {
+        url: "/hero-bg.webp",
+        width: 1920,
+        height: 1080,
+        alt: "Fábrica textil Mano Fil S.A. en Tlaxcala",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Proveedor de Cobertores para Licitaciones | MANO FIL Cobertores",
+    description: "Fabricante de cobertores para licitaciones públicas. Cumplimiento de especificaciones técnicas, capacidad de producción y entrega a nivel nacional.",
+    images: ["/hero-bg.webp"],
   },
 };
 

@@ -6,10 +6,35 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Tilma Ligera 1.000 KG por Mayoreo | MANO FIL",
+  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
+  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
+  title: "Tilma Ligera 1.000 KG por Mayoreo",
   description: "Tilma Ligera de 1.000 KG por mayoreo. Optimización de peso y volumen para distribución ágil, programas sociales y gobierno.",
   alternates: {
     canonical: '/productos/tilma-ligera-1000-kg',
+  },
+  // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
+  openGraph: {
+    title: "Tilma Ligera 1.000 KG por Mayoreo | MANO FIL Cobertores",
+    description: "Tilma Ligera de 1.000 KG por mayoreo. Optimización de peso y volumen para distribución ágil, programas sociales y gobierno.",
+    url: "https://cobertores.com/productos/tilma-ligera-1000-kg",
+    siteName: "MANO FIL Cobertores",
+    images: [
+      {
+        url: "/products/tilma-eco-1kg.webp",
+        width: 1200,
+        height: 896,
+        alt: "Tilma Ligera 1.000 KG",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tilma Ligera 1.000 KG por Mayoreo | MANO FIL Cobertores",
+    description: "Tilma Ligera de 1.000 KG por mayoreo. Optimización de peso y volumen para distribución ágil, programas sociales y gobierno.",
+    images: ["/products/tilma-eco-1kg.webp"],
   },
 };
 

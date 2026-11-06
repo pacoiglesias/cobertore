@@ -6,10 +6,35 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Tilma Económica 1.300 KG por Mayoreo | MANO FIL",
+  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
+  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
+  title: "Tilma Económica 1.300 KG por Mayoreo",
   description: "Tilma Económica de 1.300 KG por mayoreo. Tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
   alternates: {
     canonical: '/productos/tilma-economica-1300-kg',
+  },
+  // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
+  openGraph: {
+    title: "Tilma Económica 1.300 KG por Mayoreo | MANO FIL Cobertores",
+    description: "Tilma Económica de 1.300 KG por mayoreo. Tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
+    url: "https://cobertores.com/productos/tilma-economica-1300-kg",
+    siteName: "MANO FIL Cobertores",
+    images: [
+      {
+        url: "/products/tilma-eco-1-3kg.webp",
+        width: 1200,
+        height: 896,
+        alt: "Tilma Económica 1.300 KG",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tilma Económica 1.300 KG por Mayoreo | MANO FIL Cobertores",
+    description: "Tilma Económica de 1.300 KG por mayoreo. Tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
+    images: ["/products/tilma-eco-1-3kg.webp"],
   },
 };
 
