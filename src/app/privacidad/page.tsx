@@ -44,7 +44,7 @@ export default function PrivacidadPage() {
               Identidad y Domicilio del Responsable
             </h2>
             <p>
-              <strong>Mano Fil S.A. de C.V.</strong> (en adelante, &quot;El Responsable&quot; o &quot;Mano Fil&quot;), con domicilio fiscal y operativo en <strong className="text-white">Calle El Grullo, Santa Ana Chiautempan, C.P. 90800, Tlaxcala, México</strong>, y portal web oficial <strong className="text-amber-500">https://cobertores.com</strong>, es el responsable del uso, tratamiento y protección de sus datos personales, en estricto apego a la <em>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</em>, su Reglamento y los <em>Lineamientos del Aviso de Privacidad</em> emitidos por el órgano garante nacional en México (INAI).
+              <strong>Mano Fil S.A. de C.V.</strong> (en adelante, &quot;El Responsable&quot; o &quot;Mano Fil&quot;), con domicilio fiscal y operativo en <strong className="text-white">Calle El Grullo 7, Santa Ana Chiautempan, C.P. 90800, Tlaxcala, México</strong>, y portal web oficial <strong className="text-amber-500">https://cobertores.com</strong>, es el responsable del uso, tratamiento y protección de sus datos personales, en estricto apego a la <em>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</em>, su Reglamento y los <em>Lineamientos del Aviso de Privacidad</em> emitidos por el órgano garante nacional en México (INAI).
             </p>
           </section>
 
