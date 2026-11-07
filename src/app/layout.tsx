@@ -19,8 +19,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { logger } from '../lib/logger';
 
 export async function generateMetadata(): Promise<Metadata> {
-  let dynamicTitle = "Fábrica de Cobertores por Mayoreo | MANO FIL";
-  let dynamicDescription = "Fábrica textil de cobertores, cobijas y tilmas por mayoreo desde 1962. Suministro industrial, licitaciones y exportación desde Tlaxcala, México.";
+  let dynamicTitle = "Cobertores por Mayoreo | Fábrica Textil en Tlaxcala desde 1962 | MANO FIL";
+  let dynamicDescription = "Fábrica de cobertores por mayoreo en Tlaxcala. Cobertores, cobijas y tilmas para gobierno, hotelería y licitaciones. Envíos a todo México desde 1962.";
 
   try {
     const settingsRef = doc(db, "system_settings", "global");
@@ -88,23 +88,23 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "MANO FIL Cobertores",
       images: [
         {
-          url: "/logo-oficial.png",
-          // Dimensiones reales del archivo (591x422): antes se declaraba
-          // 1200x630 y las redes recortaban mal la vista previa.
-          width: 591,
-          height: 422,
-          alt: "MANO FIL Cobertores - Fábrica Textil Mayorista",
+          url: "/og-cover.jpg",
+          // Imagen OG real de 1200x630 (public/og-cover.jpg, nov 2026):
+          // antes se declaraba 1200x630 con el logo de 591x422 y las redes
+          // recortaban mal la vista previa.
+          width: 1200,
+          height: 630,
+          alt: "Cobertores por mayoreo — Fábrica Mano Fil en Tlaxcala",
         }
       ],
       locale: "es_MX",
-      alternateLocale: ["en_US", "es_ES"],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: dynamicTitle,
       description: dynamicDescription,
-      images: ["/logo-oficial.png"],
+      images: ["/og-cover.jpg"],
     },
     robots: {
       index: true,
