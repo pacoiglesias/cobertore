@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, Factory, Leaf, Award, MapPin, Phone, Mail, ChevronRight, ArrowRight, ShieldCheck, TrendingUp, Globe, Hammer, Star, Send, Loader2, Clock, Menu, X } from 'lucide-react';
 import { ManoFilLogo } from '../components/ManoFilLogo';
-import { addDoc, collection, Timestamp, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import emailjs from '@emailjs/browser';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { db, functions } from '../lib/firebase';
+import { httpsCallable } from 'firebase/functions';
 import toast from 'react-hot-toast';
 import { AuthorityRibbon } from '../components/landing/AuthorityRibbon';
 import { FAQ } from '../components/landing/FAQ';
@@ -374,36 +374,29 @@ export default function LandingPage() {
 
     setSubmitting(true);
     try {
-      const { _honey, ...cleanData } = formData;
-      await addDoc(collection(db, 'leads'), {
-        ...cleanData,
-        createdAt: Timestamp.now()
+      // C-1/C-2: el lead se crea y el correo se envía desde la Cloud Function
+      // submitLead (validación de email y rate-limit por IP en el servidor).
+      // La escritura directa en Firestore ya no está permitida por las reglas.
+      const submitLead = httpsCallable(functions, 'submitLead');
+      await submitLead({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        quantity: formData.quantity,
+        message: formData.message,
+        _honey: formData._honey,
       });
-
-      // ENVIAR NOTIFICACIÓN POR CORREO (EmailJS)
-      try {
-        await emailjs.send(
-          'service_xhdjd9e', 
-          'template_g523gds', 
-          {
-            name: cleanData.name,
-            phone: cleanData.phone,
-            email: cleanData.email,
-            quantity: cleanData.quantity,
-            message: cleanData.message,
-          }, 
-          'rnWVm41Zez5G-ehqq'
-        );
-      } catch (emailError) {
-        logger.error("Error enviando notificación de correo (EmailJS):", emailError);
-      }
 
       localStorage.setItem('last_lead_submit', now.toString());
       setFormData({ name: '', phone: '', email: '', quantity: '', message: '', _honey: '' });
       toast.success("¡Mensaje enviado con éxito! Nos pondremos en contacto contigo a la brevedad.");
-    } catch (error) {
+    } catch (error: any) {
       logger.error("Error submitting form: ", error);
-      toast.error("Hubo un error al enviar el mensaje. Intenta de nuevo.");
+      // La función devuelve el motivo (p. ej. el rate-limit de 5 minutos).
+      const message = typeof error?.message === 'string' && error.message
+        ? error.message
+        : "Hubo un error al enviar el mensaje. Intenta de nuevo.";
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }

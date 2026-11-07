@@ -93,7 +93,7 @@ export default function Dashboard() {
   const [previewFile, setPreviewFile] = useState<IntranetFile | null>(null);
 
   // Auth & Roles
-  const SUPER_ADMINS = ['paco@cobertores.com', 'paco.iglesias@gmail.com'];
+  const SUPER_ADMINS = ['paco@cobertores.com', 'paco.iglesias@gmail.com', 'pacoismael@gmail.com']; // C-11: misma lista que firestore.rules y storage.rules
   const isSuperAdmin = user?.email ? SUPER_ADMINS.includes(user.email) : false;
   
   // Check if current user has editor rights via privileges
