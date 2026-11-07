@@ -6,7 +6,7 @@ Este repositorio contiene el código fuente de la plataforma web de Mano Fil S.A
 
 ## 🏗️ Arquitectura del Sistema
 
-- **Frontend:** Next.js 16.2.11 (React 19.2.4) + TailwindCSS v4.
+- **Frontend:** Next.js 16.4.4 (React 19.3.1) + TailwindCSS v4.
 - **Backend:** Firebase (Firestore + Cloud Storage + Auth Anónimo/Email).
 - **Despliegue:** Firebase Hosting.
 - **SSG Export:** `output: 'export'` habilitado (Next.js genera archivos estáticos en la carpeta `out/`).
