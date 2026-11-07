@@ -3,6 +3,8 @@ service firebase.storage {
   match /b/{bucket}/o {
     
     // Función para verificar si es Súper Administrador
+    // Lista única de súper administradores (C-11: la misma que en
+    // firestore.rules, functions/src/index.ts y src/app/intranet/dashboard/page.tsx).
     function isSuperAdmin() {
       return request.auth != null && (
         request.auth.token.email == 'paco.iglesias@gmail.com' || 
@@ -20,9 +22,23 @@ service firebase.storage {
              firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.role == 'editor';
     }
 
+    // Función para verificar si el usuario tiene algún privilegio vigente
+    // (lector o editor) en Firestore (C-3: leer /intranet ya no vale con solo
+    // estar autenticado).
+    function hasPrivilege() {
+      return request.auth != null &&
+             firestore.exists(/databases/(default)/documents/user_privileges/$(request.auth.token.email)) &&
+             (firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt == null ||
+              firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.expiresAt > request.time) &&
+             (firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.role == 'lector' ||
+              firestore.get(/databases/(default)/documents/user_privileges/$(request.auth.token.email)).data.role == 'editor');
+    }
+
     match /intranet/{allPaths=**} {
-      // Permitir leer a cualquier persona autenticada (la app controla qué links ven mediante Firestore)
-      allow read: if request.auth != null;
+      // C-3: leer exige privilegio vigente (lector o editor), no solo estar
+      // autenticado. Antes cualquier cuenta autenticada podía leer (y listar)
+      // todos los archivos de la intranet.
+      allow read: if isSuperAdmin() || hasPrivilege();
       // Permitir subir solo a súper admins y editores autorizados
       allow write: if isSuperAdmin() || isEditor();
     }
@@ -36,8 +52,10 @@ service firebase.storage {
     match /catalog/{allPaths=**} {
       // Público para que la página web pueda mostrar las fotos
       allow read: if true;
-      // Solo usuarios autenticados pueden subir, máximo 5MB, y solo imágenes
-      allow write: if request.auth != null 
+      // C-3: solo súper admin o editor pueden subir, máximo 5MB, y solo imágenes.
+      // Antes bastaba con estar autenticado: cualquier cuenta podía subir
+      // imágenes al catálogo público.
+      allow write: if (isSuperAdmin() || isEditor())
                    && request.resource.size < 5 * 1024 * 1024
                    && request.resource.contentType.matches('image/.*');
     }
@@ -45,8 +63,9 @@ service firebase.storage {
     match /system_assets/{allPaths=**} {
       // Público para que el frontend pueda cargar el logo
       allow read: if true;
-      // Solo administradores pueden subir assets del sistema
-      allow write: if request.auth != null
+      // C-3: solo súper admin o editor pueden subir assets del sistema.
+      // Antes bastaba con estar autenticado.
+      allow write: if (isSuperAdmin() || isEditor())
                    && request.resource.size < 5 * 1024 * 1024
                    && request.resource.contentType.matches('image/.*');
     }

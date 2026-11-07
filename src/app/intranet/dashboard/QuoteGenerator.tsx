@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Plus, Trash2, Share2, MapPin, Mail, Phone, Building2, User as UserIcon, AlertCircle, Send } from 'lucide-react';
 import { ManoFilLogo } from '../../../components/ManoFilLogo';
-import { db, storage } from '../../../lib/firebase';
+import { db, storage, functions } from '../../../lib/firebase';
+import { httpsCallable } from 'firebase/functions';
 import { doc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import emailjs from '@emailjs/browser';
 import { logger } from '../../../lib/logger';
 
 interface CatalogProduct {
@@ -224,26 +224,23 @@ export function QuoteGenerator({ products, userEmail }: Props) {
       await uploadBytes(storageRef, pdfBlob);
       const downloadUrl = await getDownloadURL(storageRef);
       
-      // 2. Send Email via EmailJS
-      await emailjs.send(
-        'service_xhdjd9e', 
-        'template_g523gds', 
-        {
-          name: clientName || 'Cliente Estimado',
-          phone: sellerName,
-          email: clientEmailInput,
-          quantity: items.length.toString(),
-          message: `Adjuntamos la cotización oficial de Mano Fil S.A. Puedes descargar tu PDF seguro en el siguiente enlace: ${downloadUrl} (Cotización preparada por ${sellerName} - ${sellerEmail})`,
-        }, 
-        'rnWVm41Zez5G-ehqq'
-      );
+      // 2. Enviar el correo desde la Cloud Function (C-2: la clave ya no
+      // está en el navegador; solo súper admin o editor pueden llamarla).
+      const sendQuoteEmail = httpsCallable(functions, 'sendQuoteEmail');
+      await sendQuoteEmail({
+        name: clientName || 'Cliente Estimado',
+        phone: sellerName,
+        email: clientEmailInput,
+        quantity: items.length.toString(),
+        message: `Adjuntamos la cotización oficial de Mano Fil S.A. Puedes descargar tu PDF seguro en el siguiente enlace: ${downloadUrl} (Cotización preparada por ${sellerName} - ${sellerEmail})`,
+      });
       
       alert('¡Cotización enviada exitosamente por correo!');
       setClientEmailInput('');
       setFolio(generateNewFolio());
-    } catch (e) {
+    } catch (e: any) {
       logger.error("Email Error:", e);
-      alert('Error al enviar la cotización.');
+      alert(e?.message ? `Error al enviar la cotización: ${e.message}` : 'Error al enviar la cotización.');
     } finally {
       setIsGenerating(false);
     }

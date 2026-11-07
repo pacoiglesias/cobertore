@@ -3,6 +3,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // Función para verificar si es Súper Administrador
+    // Lista única de súper administradores (C-11: la misma que en storage.rules,
+    // functions/src/index.ts y src/app/intranet/dashboard/page.tsx).
     function isSuperAdmin() {
       return request.auth != null && (
         request.auth.token.email == 'paco.iglesias@gmail.com' || 
@@ -29,6 +31,14 @@ service cloud.firestore {
       allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
     }
 
+    // Reglas para documentos oficiales (C-10: no tenía regla y fallaba cerrado)
+    match /official_documents/{docId} {
+      // Leer: Súper admin o cualquier persona con privilegio (lector o editor) vigente
+      allow read: if isSuperAdmin() || hasValidPrivilege('lector') || hasValidPrivilege('editor');
+      // Crear/Borrar/Modificar: Súper admin o cualquier editor vigente
+      allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+
     // Reglas para gestión de privilegios
     match /user_privileges/{emailId} {
       // Leer: Súper Admin ve todo. El usuario solo ve el suyo.
@@ -39,23 +49,12 @@ service cloud.firestore {
 
     // Reglas para leads/cotizaciones
     match /leads/{leadId} {
-      // ANTI-SPAM: Solo permitir si el cuerpo tiene la estructura correcta y longitudes razonables
-      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'email', 'quantity', 'message', 'createdAt'])
-                    && request.resource.data.name is string
-                    && request.resource.data.name.size() > 2
-                    && request.resource.data.name.size() < 100
-                    && request.resource.data.phone is string
-                    && request.resource.data.phone.size() > 5
-                    && request.resource.data.phone.size() < 30
-                    && request.resource.data.email is string
-                    && request.resource.data.email.size() > 5
-                    && request.resource.data.email.size() < 100
-                    && request.resource.data.quantity is string
-                    && request.resource.data.message is string
-                    && request.resource.data.message.size() < 1000
-                    && !('__honey' in request.resource.data)
-                    && !('_honey' in request.resource.data);
-                    
+      // C-1: la creación pública directa está CERRADA. Los leads solo se crean
+      // desde la Cloud Function submitLead (Admin SDK, con validación de email
+      // y rate-limit por IP en el servidor). El formulario público ya la llama
+      // en vez de escribir directo en Firestore. Sin esta regla cualquiera
+      // podía crear leads ilimitados con el SDK, saltándose el honeypot y el
+      // límite de 5 minutos del navegador.
       // Solo el súper admin o un editor de la intranet puede leer/borrar cotizaciones
       allow read, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
     }
@@ -84,10 +83,23 @@ service cloud.firestore {
       allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
     }
 
-    // Reglas para system_settings (Configuraciones globales)
-    match /system_settings/{document=**} {
-      // Leer: Público (cualquiera puede ver configuración)
+    // Reglas para system_settings (C-4)
+    // Solo el documento global es de lectura pública: ahí solo deben vivir
+    // campos públicos (seoTitle, seoDescription, logoUrl, newsSources) que
+    // lee el sitio (layout.tsx) y la función de noticias. Las reglas no
+    // pueden restringir la lectura por campo, así que NUNCA se debe guardar
+    // un secreto ni un dato interno en system_settings/global.
+    match /system_settings/global {
+      // Leer: Público (solo este documento)
       allow read: if true;
+      // Escribir: Solo Súper admin o editor
+      allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
+    }
+    // Cualquier otro documento bajo system_settings es solo para personal
+    // con privilegio vigente (antes toda la ruta era de lectura pública).
+    match /system_settings/{document} {
+      // Leer: Súper admin o cualquier persona con privilegio (lector o editor) vigente
+      allow read: if isSuperAdmin() || hasValidPrivilege('lector') || hasValidPrivilege('editor');
       // Escribir: Solo Súper admin o editor
       allow create, update, delete: if isSuperAdmin() || hasValidPrivilege('editor');
     }
