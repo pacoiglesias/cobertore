@@ -50,7 +50,7 @@ const jsonLd = {
     "telephone": "+522464642891",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Calle El Grullo",
+      "streetAddress": "Calle El Grullo 7",
       "addressLocality": "Santa Ana Chiautempan",
       "addressRegion": "Tlaxcala",
       "postalCode": "90800",

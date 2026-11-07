@@ -119,7 +119,7 @@ const translations = {
     footer: {
       desc: 'Mano Fil S.A. - Transformando materias primas en soluciones de confort e infraestructura global.',
       locations: 'Sedes Operativas',
-      tlaxcala: '<strong class="text-white font-medium">Centro de Distribución Tlaxcala</strong><br/>Calle El Grullo, Santa Ana Chiautempan 90800, Tlaxcala, México',
+      tlaxcala: '<strong class="text-white font-medium">Centro de Distribución Tlaxcala</strong><br/>Calle El Grullo 7, Santa Ana Chiautempan 90800, Tlaxcala, México',
       cdmx: '<strong class="text-white font-medium">Oficinas Comerciales CDMX</strong><br/>San Borja 613 Int. 702, Col. Del Valle Sur, C.P. 03104',
       divs: 'Sectores',
       s1: 'Gobierno y Ayuda Humanitaria',
@@ -227,7 +227,7 @@ const translations = {
     footer: {
       desc: 'Uniting the textile heart of Tlaxcala with tomorrow\'s industrial development.',
       locations: 'Locations',
-      tlaxcala: '<strong class="text-white font-medium">Tlaxcala Distribution Center</strong><br/>Calle El Grullo, Santa Ana Chiautempan 90800, Tlaxcala, Mexico',
+      tlaxcala: '<strong class="text-white font-medium">Tlaxcala Distribution Center</strong><br/>Calle El Grullo 7, Santa Ana Chiautempan 90800, Tlaxcala, Mexico',
       cdmx: '<strong class="text-white font-medium">CDMX Commercial Offices</strong><br/>San Borja 613 Int. 702, Col. Del Valle Sur, C.P. 03104',
       divs: 'Sectors',
       s1: 'Government & Relief Aid',

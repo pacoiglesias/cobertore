@@ -229,7 +229,7 @@ export default function RootLayout({
                   "knowsLanguage": ["es", "en"],
                   "address": {
                     "@type": "PostalAddress",
-                    "streetAddress": "Calle El Grullo",
+                    "streetAddress": "Calle El Grullo 7",
                     "addressLocality": "Santa Ana Chiautempan",
                     "addressRegion": "Tlaxcala",
                     "postalCode": "90800",
@@ -244,8 +244,14 @@ export default function RootLayout({
                     {
                       "@type": "OpeningHoursSpecification",
                       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                      "opens": "07:00",
+                      "closes": "19:00"
+                    },
+                    {
+                      "@type": "OpeningHoursSpecification",
+                      "dayOfWeek": "Saturday",
                       "opens": "09:00",
-                      "closes": "18:00"
+                      "closes": "17:00"
                     }
                   ],
                   "areaServed": [
