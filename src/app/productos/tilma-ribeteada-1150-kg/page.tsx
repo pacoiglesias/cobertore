@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
   // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
   title: "Tilma Ribeteada 1.150 KG por Mayoreo",
-  description: "Tilma Ribeteada de 1.150 KG por mayoreo. Acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
+  description: "Tilma Ribeteada de 1.150 KG por mayoreo: un cobertor industrial con acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
   alternates: {
     canonical: '/productos/tilma-ribeteada-1150-kg',
   },
   // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
   openGraph: {
     title: "Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL Cobertores",
-    description: "Tilma Ribeteada de 1.150 KG por mayoreo. Acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
+    description: "Tilma Ribeteada de 1.150 KG por mayoreo: un cobertor industrial con acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
     url: "https://cobertores.com/productos/tilma-ribeteada-1150-kg",
     siteName: "MANO FIL Cobertores",
     images: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL Cobertores",
-    description: "Tilma Ribeteada de 1.150 KG por mayoreo. Acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
+    description: "Tilma Ribeteada de 1.150 KG por mayoreo: un cobertor industrial con acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
     images: ["/products/tilma-ribeteada.webp"],
   },
 };
@@ -55,7 +55,7 @@ const jsonLd = {
       "@type": "ListItem",
       "position": 2,
       "name": "Productos",
-      "item": "https://cobertores.com/#productos"
+      "item": "https://cobertores.com/productos"
     },
     {
       "@type": "ListItem",
@@ -87,7 +87,7 @@ export default function ProductPage() {
           <p className="text-amber-500 tracking-widest uppercase text-xs font-bold mb-4">Hotelería y reposición programada</p>
           <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Tilma Ribeteada 1.150 KG por Mayoreo</h1>
           <p className="text-slate-400 font-light leading-relaxed text-lg">
-            Acabados reforzados por ultrasonido perimetral y vida útil prolongada. La Tilma Ribeteada de 1.150 KG está diseñada para soportar lavados constantes sin perder forma.
+            La Tilma Ribeteada de 1.150 KG es un cobertor industrial con acabados reforzados por ultrasonido perimetral y vida útil prolongada, diseñado para soportar lavados constantes sin perder forma.
           </p>
         </div>
 

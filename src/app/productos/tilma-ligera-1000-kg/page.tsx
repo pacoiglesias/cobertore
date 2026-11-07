@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
   // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
   title: "Tilma Ligera 1.000 KG por Mayoreo",
-  description: "Tilma Ligera de 1.000 KG por mayoreo. Optimización de peso y volumen para distribución ágil, programas sociales y gobierno.",
+  description: "Tilma Ligera de 1.000 KG por mayoreo: un cobertor industrial de peso y volumen optimizados para distribución ágil, programas sociales y gobierno.",
   alternates: {
     canonical: '/productos/tilma-ligera-1000-kg',
   },
   // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
   openGraph: {
     title: "Tilma Ligera 1.000 KG por Mayoreo | MANO FIL Cobertores",
-    description: "Tilma Ligera de 1.000 KG por mayoreo. Optimización de peso y volumen para distribución ágil, programas sociales y gobierno.",
+    description: "Tilma Ligera de 1.000 KG por mayoreo: un cobertor industrial de peso y volumen optimizados para distribución ágil, programas sociales y gobierno.",
     url: "https://cobertores.com/productos/tilma-ligera-1000-kg",
     siteName: "MANO FIL Cobertores",
     images: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Tilma Ligera 1.000 KG por Mayoreo | MANO FIL Cobertores",
-    description: "Tilma Ligera de 1.000 KG por mayoreo. Optimización de peso y volumen para distribución ágil, programas sociales y gobierno.",
+    description: "Tilma Ligera de 1.000 KG por mayoreo: un cobertor industrial de peso y volumen optimizados para distribución ágil, programas sociales y gobierno.",
     images: ["/products/tilma-eco-1kg.webp"],
   },
 };
@@ -55,7 +55,7 @@ const jsonLd = {
       "@type": "ListItem",
       "position": 2,
       "name": "Productos",
-      "item": "https://cobertores.com/#productos"
+      "item": "https://cobertores.com/productos"
     },
     {
       "@type": "ListItem",
@@ -87,7 +87,7 @@ export default function ProductPage() {
           <p className="text-amber-500 tracking-widest uppercase text-xs font-bold mb-4">Logística ágil</p>
           <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Tilma Ligera 1.000 KG por Mayoreo</h1>
           <p className="text-slate-400 font-light leading-relaxed text-lg">
-            Optimización de peso y volumen. La Tilma Ligera de 1.000 KG es perfecta para distribución ágil: ocupa menos, pesa menos y se mueve más rápido.
+            La Tilma Ligera de 1.000 KG es un cobertor industrial de peso y volumen optimizados, perfecta para distribución ágil: ocupa menos, pesa menos y se mueve más rápido.
           </p>
         </div>
 

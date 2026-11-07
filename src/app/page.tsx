@@ -9,9 +9,6 @@ import { db } from '../lib/firebase';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 import { AuthorityRibbon } from '../components/landing/AuthorityRibbon';
-import { DualNavigation } from '../components/landing/DualNavigation';
-import { Heritage } from '../components/landing/Heritage';
-import { Sustainability } from '../components/landing/Sustainability';
 import { FAQ } from '../components/landing/FAQ';
 import { FloatingWhatsApp } from '../components/landing/FloatingWhatsApp';
 import { RefreshCw } from 'lucide-react';
@@ -65,14 +62,14 @@ const playSuccessSound = () => {
 
 const translations = {
   es: {
-    nav: { home: 'Inicio', catalog: 'Catálogo', divisions: 'Divisiones', legacy: 'Legado', faq: 'Preguntas', portal: 'Portal Privado' },
+    nav: { home: 'Inicio', catalog: 'Catálogo', guide: 'Guía', faq: 'Preguntas', portal: 'Portal Privado' },
     hero: {
       since: 'Suministro Textil Especializado • Desde 1962',
       title1: 'Cobertores por Mayoreo.',
-      title2: 'Fábrica Textil desde 1962.',
+      title2: 'Fábrica Textil en Tlaxcala desde 1962.',
       desc: 'Infraestructura textil de alto rendimiento. En Mano Fil S.A. suministramos cobertores y tilmas a escala corporativa, garantizando capacidad de respuesta inmediata.',
       btnCatalog: 'Ver Catálogo',
-      btnMore: 'Nuestra Trayectoria'
+      btnMore: 'Guía de Cobertores'
     },
     products: {
       tag: 'Línea Industrial',
@@ -97,6 +94,16 @@ const translations = {
       realEstateTitle: 'Desarrollo Inmobiliario',
       realEstateDesc: 'Proyectamos y comercializamos parques industriales, naves logísticas y complejos comerciales con estándares de nivel internacional.',
       realEstateBtn: 'Sector Inmobiliario'
+    },
+    grupo: {
+      eyebrow: 'Dos divisiones, un mismo grupo',
+      title: 'Cobertores por mayoreo y patrimonio inmobiliario, bajo una sola disciplina corporativa.',
+      textilTitle: 'División Textil · Cobertores.com',
+      textilDesc: 'Cobertores, blancos para el hogar, hilos y telas técnicas. Suministramos volúmenes corporativos por mayoreo desde 1962, desde nuestro centro de distribución en Santa Ana Chiautempan, Tlaxcala.',
+      textilBtn: 'Ver catálogo',
+      realTitle: 'División Inmobiliaria',
+      realDesc: 'Naves industriales, desarrollos comerciales y activos residenciales estratégicos, planeados con el mismo rigor operativo desde 1962.',
+      realBtn: 'Solicitar información'
     },
     history: {
       tag: 'Legado Corporativo',
@@ -163,14 +170,14 @@ const translations = {
     wip: 'Módulo en mantenimiento'
   },
   en: {
-    nav: { home: 'Home', catalog: 'Catalog', divisions: 'Divisions', legacy: 'Legacy', faq: 'FAQ', portal: 'Private Portal' },
+    nav: { home: 'Home', catalog: 'Catalog', guide: 'Guide', faq: 'FAQ', portal: 'Private Portal' },
     hero: {
       since: 'Specialized Textile Supply • Since 1962',
       title1: 'Wholesale Blankets.',
-      title2: 'Textile Factory since 1962.',
+      title2: 'Textile Factory in Tlaxcala since 1962.',
       desc: 'High-performance textile infrastructure. At Mano Fil S.A. we supply blankets and tilmas on a corporate scale, ensuring immediate response capacity.',
       btnCatalog: 'View Catalog',
-      btnMore: 'Discover More'
+      btnMore: 'Blanket Guide'
     },
     products: {
       tag: 'Premium Collection',
@@ -195,6 +202,16 @@ const translations = {
       realEstateTitle: 'Real Estate Development',
       realEstateDesc: 'We design and commercialize industrial parks, logistics warehouses, and commercial plazas with international standards.',
       realEstateBtn: 'View Developments'
+    },
+    grupo: {
+      eyebrow: 'Two divisions, one group',
+      title: 'Wholesale blankets and real estate equity, under one corporate discipline.',
+      textilTitle: 'Textile Division · Cobertores.com',
+      textilDesc: 'Blankets, home textiles, industrial yarns and technical fabrics. We supply corporate wholesale volumes since 1962, from our distribution center in Santa Ana Chiautempan, Tlaxcala.',
+      textilBtn: 'View catalog',
+      realTitle: 'Real Estate Division',
+      realDesc: 'Industrial warehouses, commercial developments and strategic residential assets, planned with the same operational rigor since 1962.',
+      realBtn: 'Request information'
     },
     history: {
       tag: 'Corporate Legacy',
@@ -440,9 +457,8 @@ export default function LandingPage() {
           
           <div className="hidden lg:flex gap-10 text-xs font-bold tracking-widest uppercase text-slate-400">
             <a href="#hero" className="hover:text-amber-500 transition-colors">{t.nav.home}</a>
-            <a href="#productos" className="hover:text-amber-500 transition-colors">{t.nav.catalog}</a>
-            <a href="#divisiones" className="hover:text-amber-500 transition-colors">{t.nav.divisions}</a>
-            <a href="#herencia" className="hover:text-amber-500 transition-colors">{t.nav.legacy}</a>
+            <a href="/productos" className="hover:text-amber-500 transition-colors">{t.nav.catalog}</a>
+            <a href="/guia-cobertores-por-mayoreo" className="hover:text-amber-500 transition-colors">{t.nav.guide}</a>
             <a href="#faq" className="hover:text-amber-500 transition-colors">{t.nav.faq}</a>
           </div>
           
@@ -490,25 +506,18 @@ export default function LandingPage() {
                   {t.nav.home} <ChevronRight className="w-4 h-4 text-amber-500" />
                 </a>
                 <a 
-                  href="#productos" 
+                  href="/productos" 
                   onClick={() => setMobileMenuOpen(false)}
                   className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
                 >
                   {t.nav.catalog} <ChevronRight className="w-4 h-4 text-amber-500" />
                 </a>
                 <a 
-                  href="#divisiones" 
+                  href="/guia-cobertores-por-mayoreo" 
                   onClick={() => setMobileMenuOpen(false)}
                   className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
                 >
-                  {t.nav.divisions} <ChevronRight className="w-4 h-4 text-amber-500" />
-                </a>
-                <a 
-                  href="#herencia" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="hover:text-amber-500 transition-colors flex items-center justify-between py-2 border-b border-white/5"
-                >
-                  {t.nav.legacy} <ChevronRight className="w-4 h-4 text-amber-500" />
+                  {t.nav.guide} <ChevronRight className="w-4 h-4 text-amber-500" />
                 </a>
                 <a 
                   href="#faq" 
@@ -564,7 +573,7 @@ export default function LandingPage() {
         
         <div className="absolute inset-0 z-0 opacity-40">
           <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] via-transparent to-[#070b14] z-10"></div>
-          <img src="/hero-bg.webp" alt="Industria y Textil" className="w-full h-full object-cover mix-blend-luminosity opacity-30" />
+          <img src="/hero-bg.webp" alt="Fábrica de cobertores por mayoreo en Tlaxcala — Mano Fil" className="w-full h-full object-cover mix-blend-luminosity opacity-30" />
         </div>
 
         {/* Central Content */}
@@ -593,7 +602,7 @@ export default function LandingPage() {
                   {t.hero.btnCatalog} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </a>
-              <a href="#herencia" className="bg-white/5 hover:bg-white/10 text-white border border-white/20 hover:border-amber-500/50 px-8 md:px-12 py-4 rounded-full text-xs font-bold tracking-widest uppercase transition-all backdrop-blur-md flex items-center justify-center hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+              <a href="/guia-cobertores-por-mayoreo" className="bg-white/5 hover:bg-white/10 text-white border border-white/20 hover:border-amber-500/50 px-8 md:px-12 py-4 rounded-full text-xs font-bold tracking-widest uppercase transition-all backdrop-blur-md flex items-center justify-center hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 {t.hero.btnMore}
               </a>
             </motion.div>
@@ -730,9 +739,41 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <DualNavigation lang={lang} />
-      <Heritage lang={lang} />
-      <Sustainability lang={lang} />
+      {/* Grupo: dos divisiones en UN bloque corto (SEO nov 2026). La home es de
+          cobertores: la parte inmobiliaria queda resumida aquí, sin secciones
+          propias, y la historia completa vive en la guía de cobertores. */}
+      <section id="divisiones" className="py-20 md:py-24 relative bg-[#0a0f1d] border-t border-white/5 z-10">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="max-w-3xl mb-10 md:mb-12">
+            <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">{t.grupo.eyebrow}</h4>
+            <h2 className="text-3xl md:text-4xl font-serif text-white drop-shadow-xl">{t.grupo.title}</h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.8 }} className="bg-white/[0.03] border border-white/5 rounded-3xl p-8 hover:bg-white/[0.05] hover:border-amber-500/30 transition-all duration-300">
+              <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center mb-5 border border-amber-500/20">
+                <Factory className="w-6 h-6 text-amber-500" />
+              </div>
+              <h3 className="text-xl font-serif text-white mb-3">{t.grupo.textilTitle}</h3>
+              <p className="text-slate-400 font-light leading-relaxed mb-6">{t.grupo.textilDesc}</p>
+              <a href="/productos" className="text-amber-500 hover:text-amber-400 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2 transition-colors">
+                {t.grupo.textilBtn} <ArrowRight className="w-4 h-4" />
+              </a>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.8 }} className="bg-white/[0.03] border border-white/5 rounded-3xl p-8 hover:bg-white/[0.05] hover:border-amber-500/30 transition-all duration-300">
+              <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-5 border border-white/10">
+                <Building2 className="w-6 h-6 text-slate-300" />
+              </div>
+              <h3 className="text-xl font-serif text-white mb-3">{t.grupo.realTitle}</h3>
+              <p className="text-slate-400 font-light leading-relaxed mb-6">{t.grupo.realDesc}</p>
+              <a href="#contacto" className="text-amber-500 hover:text-amber-400 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2 transition-colors">
+                {t.grupo.realBtn} <ArrowRight className="w-4 h-4" />
+              </a>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
       {/* Sección de Noticias (SEO) */}
       {latestNews.length > 0 && (

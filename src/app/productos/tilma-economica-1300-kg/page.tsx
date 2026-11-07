@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
   // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
   title: "Tilma Económica 1.300 KG por Mayoreo",
-  description: "Tilma Económica de 1.300 KG por mayoreo. Tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
+  description: "Tilma Económica de 1.300 KG por mayoreo: un cobertor industrial de tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
   alternates: {
     canonical: '/productos/tilma-economica-1300-kg',
   },
   // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
   openGraph: {
     title: "Tilma Económica 1.300 KG por Mayoreo | MANO FIL Cobertores",
-    description: "Tilma Económica de 1.300 KG por mayoreo. Tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
+    description: "Tilma Económica de 1.300 KG por mayoreo: un cobertor industrial de tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
     url: "https://cobertores.com/productos/tilma-economica-1300-kg",
     siteName: "MANO FIL Cobertores",
     images: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Tilma Económica 1.300 KG por Mayoreo | MANO FIL Cobertores",
-    description: "Tilma Económica de 1.300 KG por mayoreo. Tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
+    description: "Tilma Económica de 1.300 KG por mayoreo: un cobertor industrial de tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
     images: ["/products/tilma-eco-1-3kg.webp"],
   },
 };
@@ -55,7 +55,7 @@ const jsonLd = {
       "@type": "ListItem",
       "position": 2,
       "name": "Productos",
-      "item": "https://cobertores.com/#productos"
+      "item": "https://cobertores.com/productos"
     },
     {
       "@type": "ListItem",
@@ -87,7 +87,7 @@ export default function ProductPage() {
           <p className="text-amber-500 tracking-widest uppercase text-xs font-bold mb-4">Distribución masiva</p>
           <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Tilma Económica 1.300 KG por Mayoreo</h1>
           <p className="text-slate-400 font-light leading-relaxed text-lg">
-            Tejido compacto y duradero. La Tilma Económica de 1.300 KG soporta uso industrial y lavados constantes, por lo que es el modelo más solicitado para distribución masiva.
+            La Tilma Económica de 1.300 KG es un cobertor industrial de tejido compacto y duradero. Soporta uso industrial y lavados constantes, por lo que es el modelo más solicitado para distribución masiva.
           </p>
         </div>
 
