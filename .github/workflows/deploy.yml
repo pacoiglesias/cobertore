@@ -49,7 +49,7 @@ jobs:
       WIF_PROVIDER: 'projects/406682059694/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
       WIF_SERVICE_ACCOUNT: 'cobertores-deploy@cobertores-web.iam.gserviceaccount.com'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v4
         with:
