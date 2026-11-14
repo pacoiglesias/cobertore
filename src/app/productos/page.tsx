@@ -36,7 +36,10 @@ export const metadata: Metadata = {
   },
 };
 
-// BreadcrumbList + ItemList del catálogo (sin Product: precios solo por cotización).
+// BreadcrumbList + ItemList del catálogo + los 4 Product (P1-1, auditoría
+// SEO 14 nov 2026). Los Product van SIN Offer (precios solo por cotización;
+// la decisión de precio «desde», P1-2, sigue pendiente de Paco) y enlazan por
+// @id a los de cada ficha y a la Organization del layout.
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -51,11 +54,63 @@ const jsonLd = {
       "@type": "ItemList",
       "name": "Catálogo de cobertores por mayoreo",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Tilma Económica 1.300 KG", "url": "https://cobertores.com/productos/tilma-economica-1300-kg" },
-        { "@type": "ListItem", "position": 2, "name": "Manta Térmica 2.000 KG", "url": "https://cobertores.com/productos/manta-termica-2000-kg" },
-        { "@type": "ListItem", "position": 3, "name": "Tilma Ribeteada 1.150 KG", "url": "https://cobertores.com/productos/tilma-ribeteada-1150-kg" },
-        { "@type": "ListItem", "position": 4, "name": "Tilma Ligera 1.000 KG", "url": "https://cobertores.com/productos/tilma-ligera-1000-kg" }
+        { "@type": "ListItem", "position": 1, "name": "Cobertor Tilma Económica 1.300 KG", "url": "https://cobertores.com/productos/tilma-economica-1300-kg" },
+        { "@type": "ListItem", "position": 2, "name": "Cobertor Manta Térmica 2.000 KG", "url": "https://cobertores.com/productos/manta-termica-2000-kg" },
+        { "@type": "ListItem", "position": 3, "name": "Cobertor Tilma Ribeteada 1.150 KG", "url": "https://cobertores.com/productos/tilma-ribeteada-1150-kg" },
+        { "@type": "ListItem", "position": 4, "name": "Cobertor Tilma Ligera 1.000 KG", "url": "https://cobertores.com/productos/tilma-ligera-1000-kg" }
       ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://cobertores.com/productos/tilma-economica-1300-kg#producto",
+      "name": "Cobertor Tilma Económica 1.300 KG",
+      "description": "Cobertor industrial de tejido compacto y duradero, para distribución masiva, programas sociales, gobierno y hotelería. Soporta uso industrial y lavados constantes.",
+      "url": "https://cobertores.com/productos/tilma-economica-1300-kg",
+      "image": "https://cobertores.com/products/tilma-eco-1-3kg.webp",
+      "category": "Cobertores por mayoreo",
+      "material": "Fibras 100% regeneradas (mezcla de acrílico, lana, poliéster y otras fibras)",
+      "weight": { "@type": "QuantitativeValue", "value": 1.3, "unitCode": "KGM" },
+      "brand": { "@type": "Brand", "name": "Mano Fil" },
+      "manufacturer": { "@id": "https://cobertores.com/#organization" }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://cobertores.com/productos/manta-termica-2000-kg#producto",
+      "name": "Cobertor Manta Térmica 2.000 KG",
+      "description": "Cobertor industrial de mayor gramaje del catálogo, con aislamiento térmico de grado superior para frío extremo, contingencias, programas invernales y hotelería premium.",
+      "url": "https://cobertores.com/productos/manta-termica-2000-kg",
+      "image": "https://cobertores.com/products/manta-eco-2kg.webp",
+      "category": "Cobertores por mayoreo",
+      "material": "Fibras 100% regeneradas (mezcla de acrílico, lana, poliéster y otras fibras)",
+      "weight": { "@type": "QuantitativeValue", "value": 2, "unitCode": "KGM" },
+      "brand": { "@type": "Brand", "name": "Mano Fil" },
+      "manufacturer": { "@id": "https://cobertores.com/#organization" }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://cobertores.com/productos/tilma-ribeteada-1150-kg#producto",
+      "name": "Cobertor Tilma Ribeteada 1.150 KG",
+      "description": "Cobertor industrial con acabados reforzados por ultrasonido perimetral y vida útil prolongada, diseñado para soportar lavados constantes sin perder forma. Ideal para hotelería.",
+      "url": "https://cobertores.com/productos/tilma-ribeteada-1150-kg",
+      "image": "https://cobertores.com/products/tilma-ribeteada.webp",
+      "category": "Cobertores por mayoreo",
+      "material": "Fibras 100% regeneradas (mezcla de acrílico, lana, poliéster y otras fibras)",
+      "weight": { "@type": "QuantitativeValue", "value": 1.15, "unitCode": "KGM" },
+      "brand": { "@type": "Brand", "name": "Mano Fil" },
+      "manufacturer": { "@id": "https://cobertores.com/#organization" }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://cobertores.com/productos/tilma-ligera-1000-kg#producto",
+      "name": "Cobertor Tilma Ligera 1.000 KG",
+      "description": "Cobertor industrial de peso y volumen optimizados para distribución ágil, programas sociales y gobierno: ocupa menos, pesa menos y se mueve más rápido.",
+      "url": "https://cobertores.com/productos/tilma-ligera-1000-kg",
+      "image": "https://cobertores.com/products/tilma-eco-1kg.webp",
+      "category": "Cobertores por mayoreo",
+      "material": "Fibras 100% regeneradas (mezcla de acrílico, lana, poliéster y otras fibras)",
+      "weight": { "@type": "QuantitativeValue", "value": 1, "unitCode": "KGM" },
+      "brand": { "@type": "Brand", "name": "Mano Fil" },
+      "manufacturer": { "@id": "https://cobertores.com/#organization" }
     }
   ]
 };
@@ -63,7 +118,7 @@ const jsonLd = {
 const PRODUCTS = [
   {
     href: "/productos/tilma-economica-1300-kg",
-    title: "Tilma Económica 1.300 KG",
+    title: "Cobertor Tilma Económica 1.300 KG",
     weight: "1.300 KG",
     img: "/products/tilma-eco-1-3kg.webp",
     alt: "Tilma Económica 1.300 KG, un cobertor industrial por mayoreo",
@@ -71,7 +126,7 @@ const PRODUCTS = [
   },
   {
     href: "/productos/manta-termica-2000-kg",
-    title: "Manta Térmica 2.000 KG",
+    title: "Cobertor Manta Térmica 2.000 KG",
     weight: "2.000 KG",
     img: "/products/manta-eco-2kg.webp",
     alt: "Manta Térmica 2.000 KG, un cobertor industrial por mayoreo",
@@ -79,7 +134,7 @@ const PRODUCTS = [
   },
   {
     href: "/productos/tilma-ribeteada-1150-kg",
-    title: "Tilma Ribeteada 1.150 KG",
+    title: "Cobertor Tilma Ribeteada 1.150 KG",
     weight: "1.150 KG",
     img: "/products/tilma-ribeteada.webp",
     alt: "Tilma Ribeteada 1.150 KG, un cobertor industrial por mayoreo",
@@ -87,7 +142,7 @@ const PRODUCTS = [
   },
   {
     href: "/productos/tilma-ligera-1000-kg",
-    title: "Tilma Ligera 1.000 KG",
+    title: "Cobertor Tilma Ligera 1.000 KG",
     weight: "1.000 KG",
     img: "/products/tilma-eco-1kg.webp",
     alt: "Tilma Ligera 1.000 KG, un cobertor industrial por mayoreo",
@@ -135,7 +190,7 @@ export default function ProductosPage() {
                 <h2 className="font-serif text-2xl text-white mb-3">{p.title}</h2>
                 <p className="text-slate-400 text-sm font-light leading-relaxed flex-grow">{p.desc}</p>
                 <span className="mt-5 text-amber-500 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2 group-hover:text-amber-400">
-                  Ver ficha técnica <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  Ver la ficha del cobertor <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </div>
             </Link>
@@ -166,6 +221,7 @@ export default function ProductosPage() {
             <ul className="mt-4 space-y-3">
               <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/sectores/gobierno" className="text-white font-medium hover:text-amber-500 transition-colors">Cobertores para gobierno y ayuda humanitaria</Link></li>
               <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/sectores/hoteleria" className="text-white font-medium hover:text-amber-500 transition-colors">Blancos y cobertores para hotelería</Link></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/sectores/hospitales" className="text-white font-medium hover:text-amber-500 transition-colors">Cobertores para hospitales y clínicas</Link></li>
               <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/sectores/licitaciones" className="text-white font-medium hover:text-amber-500 transition-colors">Cobertores para licitaciones públicas</Link></li>
             </ul>
           </section>

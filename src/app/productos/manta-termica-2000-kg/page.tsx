@@ -39,30 +39,48 @@ export const metadata: Metadata = {
   },
 };
 
-// Sin marcado Product: precios solo por cotización, sin cifras públicas.
-// Un Product sin offers, review ni aggregateRating lo marca Search Console
-// como fragmento de producto no válido. Se conserva solo BreadcrumbList.
+// BreadcrumbList + Product (P1-1, auditoría SEO 14 nov 2026). El Product va
+// SIN Offer: los precios son solo por cotización y la decisión de publicar
+// precio «desde» (P1-2) sigue pendiente de Paco; no se inventa ninguna cifra.
+// El fabricante enlaza por @id a la Organization que declara el layout.
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Inicio",
-      "item": "https://cobertores.com"
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Inicio",
+          "item": "https://cobertores.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Productos",
+          "item": "https://cobertores.com/productos"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Cobertor Manta Térmica 2.000 KG",
+          "item": "https://cobertores.com/productos/manta-termica-2000-kg"
+        }
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Productos",
-      "item": "https://cobertores.com/productos"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Manta Térmica 2.000 KG",
-      "item": "https://cobertores.com/productos/manta-termica-2000-kg"
+      "@type": "Product",
+      "@id": "https://cobertores.com/productos/manta-termica-2000-kg#producto",
+      "name": "Cobertor Manta Térmica 2.000 KG",
+      "description": "Cobertor industrial de mayor gramaje del catálogo, con aislamiento térmico de grado superior para frío extremo, contingencias, programas invernales y hotelería premium.",
+      "url": "https://cobertores.com/productos/manta-termica-2000-kg",
+      "image": "https://cobertores.com/products/manta-eco-2kg.webp",
+      "category": "Cobertores por mayoreo",
+      "material": "Fibras 100% regeneradas (mezcla de acrílico, lana, poliéster y otras fibras)",
+      "weight": { "@type": "QuantitativeValue", "value": 2, "unitCode": "KGM" },
+      "brand": { "@type": "Brand", "name": "Mano Fil" },
+      "manufacturer": { "@id": "https://cobertores.com/#organization" }
     }
   ]
 };
@@ -150,6 +168,8 @@ export default function ProductPage() {
               <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/productos/tilma-economica-1300-kg" className="text-white font-medium hover:text-amber-500 transition-colors">Tilma Económica 1.300 KG</Link></li>
               <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/productos/tilma-ribeteada-1150-kg" className="text-white font-medium hover:text-amber-500 transition-colors">Tilma Ribeteada 1.150 KG</Link></li>
               <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/productos/tilma-ligera-1000-kg" className="text-white font-medium hover:text-amber-500 transition-colors">Tilma Ligera 1.000 KG</Link></li>
+                          <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/productos" className="text-white font-medium hover:text-amber-500 transition-colors">Catálogo completo de cobertores por mayoreo</Link></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/guia-cobertores-por-mayoreo" className="text-white font-medium hover:text-amber-500 transition-colors">Guía de cobertores por mayoreo</Link></li>
             </ul>
           </section>
 
