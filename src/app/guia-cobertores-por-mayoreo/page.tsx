@@ -53,7 +53,7 @@ const jsonLd = {
       "author": { "@type": "Organization", "name": "Mano Fil S.A.", "url": "https://cobertores.com" },
       "publisher": { "@type": "Organization", "name": "Mano Fil S.A.", "url": "https://cobertores.com" },
       "datePublished": "2026-11-06",
-      "dateModified": "2026-11-06",
+      "dateModified": "2026-11-14",
       "mainEntityOfPage": "https://cobertores.com/guia-cobertores-por-mayoreo",
       "inLanguage": "es-MX"
     }
@@ -142,6 +142,7 @@ export default function GuiaCobertoresPage() {
             <ul className="mt-4 space-y-3">
               <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Gobierno y ayuda humanitaria:</strong> suministro textil para protección civil, programas gubernamentales, DIF y brigadas de ayuda humanitaria en contingencias climáticas (heladas, inundaciones y sismos). Más en <Link href="/sectores/gobierno" className="text-white font-medium hover:text-amber-500 transition-colors">cobertores para gobierno</Link>.</span></li>
               <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Hotelería:</strong> blancos y cobertores para hoteles, con modelos de alta durabilidad ante lavados constantes. Más en <Link href="/sectores/hoteleria" className="text-white font-medium hover:text-amber-500 transition-colors">cobertores para hotelería</Link>.</span></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Hospitales y clínicas:</strong> cobertores industriales para lavandería constante y rotación diaria. Más en <Link href="/sectores/hospitales" className="text-white font-medium hover:text-amber-500 transition-colors">cobertores para hospitales y clínicas</Link>.</span></li>
               <li className="flex gap-3"><span className="text-amber-500">—</span><span><strong className="text-white font-medium">Licitaciones públicas:</strong> suministro por lotes programados con capacidad de respuesta inmediata. Más en <Link href="/sectores/licitaciones" className="text-white font-medium hover:text-amber-500 transition-colors">cobertores para licitaciones</Link>.</span></li>
             </ul>
           </section>
@@ -160,6 +161,17 @@ export default function GuiaCobertoresPage() {
               Realizamos envíos a toda la República Mexicana y exportaciones a Estados Unidos, Canadá,
               Centroamérica y el Caribe, con fletes consolidados y viajes completos dedicados.
             </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl text-white font-medium mb-4 flex items-center gap-3">
+              <BookOpen className="w-6 h-6 text-amber-500" /> Guías relacionadas
+            </h2>
+            <ul className="mt-4 space-y-3">
+              <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/guias/cuanto-cuesta-un-cobertor-por-mayoreo" className="text-white font-medium hover:text-amber-500 transition-colors">Cuánto cuesta un cobertor por mayoreo y de qué depende</Link></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/guias/gramajes-de-cobertores" className="text-white font-medium hover:text-amber-500 transition-colors">Gramajes de cobertores: cuál elegir para gobierno, hoteles y programas sociales</Link></li>
+              <li className="flex gap-3"><span className="text-amber-500">—</span><Link href="/guias/cobertores-para-programas-de-invierno" className="text-white font-medium hover:text-amber-500 transition-colors">Cobertores para programas de invierno: guía para dependencias</Link></li>
+            </ul>
           </section>
 
           <section>

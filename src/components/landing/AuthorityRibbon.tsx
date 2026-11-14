@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Factory, Building2, ShieldCheck, MapPin } from 'lucide-react';
+import { Factory, ShieldCheck, MapPin } from 'lucide-react';
 
 interface AuthorityRibbonProps {
   lang?: 'es' | 'en';
@@ -8,12 +8,12 @@ interface AuthorityRibbonProps {
 
 const STATS = {
   es: [
-    { icon: Building2, value: "300,000 m²", label: "Superficie desarrollada y administrada" },
+    { icon: Factory, value: "4 modelos", label: "Cobertores de línea por mayoreo" },
     { icon: ShieldCheck, value: "60+", label: "Años de operación ininterrumpida" },
     { icon: MapPin, value: "+15 países", label: "Cobertura de exportación" },
   ],
   en: [
-    { icon: Building2, value: "300,000 m²", label: "Developed & managed facilities" },
+    { icon: Factory, value: "4 models", label: "Wholesale blanket product line" },
     { icon: ShieldCheck, value: "60+", label: "Years of continuous operation" },
     { icon: MapPin, value: "15+ Countries", label: "International export reach" },
   ],

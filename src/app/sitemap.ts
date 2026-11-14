@@ -8,17 +8,21 @@ export const dynamic = "force-static";
 // cambiadas" aunque su contenido no hubiera cambiado.
 // Al modificar una página, actualizar su fecha aquí con la del cambio.
 const LAST_MODIFIED: Record<string, string> = {
-  '/': '2026-11-06', // arreglos SEO nov 2026 (título/H1/alt, home 100% cobertores)
-  '/productos': '2026-11-06', // nuevo hub de catálogo (SEO nov 2026)
-  '/guia-cobertores-por-mayoreo': '2026-11-06', // nueva guía informativa (SEO nov 2026)
+  '/': '2026-11-14', // P1-3: bloque grupo corto + cinta sin cifra inmobiliaria (auditoría SEO 14 nov 2026)
+  '/productos': '2026-11-14', // P1-1 Product en JSON-LD + P1-5 anclas «cobertor» (14 nov 2026)
+  '/guia-cobertores-por-mayoreo': '2026-11-14', // guías relacionadas + enlace a hospitales (14 nov 2026)
+  '/guias/cuanto-cuesta-un-cobertor-por-mayoreo': '2026-11-14', // artículo nuevo del clúster (P1-4)
+  '/guias/gramajes-de-cobertores': '2026-11-14', // artículo nuevo del clúster (P1-4)
+  '/guias/cobertores-para-programas-de-invierno': '2026-11-14', // artículo nuevo del clúster (P1-4)
   '/seguimiento': '2026-10-04',
   '/sectores/gobierno': '2026-11-05', // OG propio + título sin duplicar (b5a05ba/6a7017d)
-  '/sectores/hoteleria': '2026-11-05', // OG propio + título sin duplicar (b5a05ba/6a7017d)
+  '/sectores/hoteleria': '2026-11-14', // bloque Airbnb + FAQ propia (P1-4, 14 nov 2026)
+  '/sectores/hospitales': '2026-11-14', // página nueva del clúster por sector (P1-4)
   '/sectores/licitaciones': '2026-11-05', // OG propio + título sin duplicar (b5a05ba/6a7017d)
-  '/productos/tilma-economica-1300-kg': '2026-11-06', // «cobertor» en descripción y párrafo (SEO nov 2026)
-  '/productos/manta-termica-2000-kg': '2026-11-06', // «cobertor» en descripción y párrafo (SEO nov 2026)
-  '/productos/tilma-ribeteada-1150-kg': '2026-11-06', // «cobertor» en descripción y párrafo (SEO nov 2026)
-  '/productos/tilma-ligera-1000-kg': '2026-11-06', // «cobertor» en descripción y párrafo (SEO nov 2026)
+  '/productos/tilma-economica-1300-kg': '2026-11-14', // título/H1 «Cobertor» (P0) + Product JSON-LD (P1-1)
+  '/productos/manta-termica-2000-kg': '2026-11-14', // título/H1 «Cobertor» (P0) + Product JSON-LD (P1-1)
+  '/productos/tilma-ribeteada-1150-kg': '2026-11-14', // título/H1 «Cobertor» (P0) + Product JSON-LD (P1-1)
+  '/productos/tilma-ligera-1000-kg': '2026-11-14', // título/H1 «Cobertor» (P0) + Product JSON-LD (P1-1)
   '/privacidad': '2026-10-04',
   '/terminos': '2026-10-04',
   '/cookies': '2026-10-04',
@@ -42,9 +46,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry('/', 'weekly', 1.0),
     entry('/productos', 'weekly', 0.9),
     entry('/guia-cobertores-por-mayoreo', 'weekly', 0.8),
+    entry('/guias/cuanto-cuesta-un-cobertor-por-mayoreo', 'weekly', 0.7),
+    entry('/guias/gramajes-de-cobertores', 'weekly', 0.7),
+    entry('/guias/cobertores-para-programas-de-invierno', 'weekly', 0.7),
     entry('/seguimiento', 'weekly', 0.7),
     entry('/sectores/gobierno', 'weekly', 0.8),
     entry('/sectores/hoteleria', 'weekly', 0.8),
+    entry('/sectores/hospitales', 'weekly', 0.8),
     entry('/sectores/licitaciones', 'weekly', 0.8),
     entry('/productos/tilma-economica-1300-kg', 'weekly', 0.8),
     entry('/productos/manta-termica-2000-kg', 'weekly', 0.8),

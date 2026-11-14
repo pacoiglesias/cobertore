@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Factory, Leaf, Award, MapPin, Phone, Mail, ChevronRight, ArrowRight, ShieldCheck, TrendingUp, Globe, Hammer, Star, Send, Loader2, Clock, Menu, X } from 'lucide-react';
+import { Factory, Leaf, Award, MapPin, Phone, Mail, ChevronRight, ArrowRight, ShieldCheck, TrendingUp, Globe, Hammer, Star, Send, Loader2, Clock, Menu, X } from 'lucide-react';
 import { ManoFilLogo } from '../components/ManoFilLogo';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db, functions } from '../lib/firebase';
@@ -96,14 +96,10 @@ const translations = {
       realEstateBtn: 'Sector Inmobiliario'
     },
     grupo: {
-      eyebrow: 'Dos divisiones, un mismo grupo',
-      title: 'Cobertores por mayoreo y patrimonio inmobiliario, bajo una sola disciplina corporativa.',
-      textilTitle: 'División Textil · Cobertores.com',
-      textilDesc: 'Cobertores, blancos para el hogar, hilos y telas técnicas. Suministramos volúmenes corporativos por mayoreo desde 1962, desde nuestro centro de distribución en Santa Ana Chiautempan, Tlaxcala.',
-      textilBtn: 'Ver catálogo',
-      realTitle: 'División Inmobiliaria',
-      realDesc: 'Naves industriales, desarrollos comerciales y activos residenciales estratégicos, planeados con el mismo rigor operativo desde 1962.',
-      realBtn: 'Solicitar información'
+      eyebrow: 'El grupo Mano Fil',
+      title: 'Una fábrica de cobertores, respaldada por un grupo corporativo.',
+      desc: 'Este sitio es la fábrica: catálogo y cotización de cobertores por mayoreo. El grupo también desarrolla patrimonio inmobiliario, con su propia página fuera de este catálogo.',
+      btn: 'Conocer el grupo'
     },
     history: {
       tag: 'Legado Corporativo',
@@ -204,14 +200,10 @@ const translations = {
       realEstateBtn: 'View Developments'
     },
     grupo: {
-      eyebrow: 'Two divisions, one group',
-      title: 'Wholesale blankets and real estate equity, under one corporate discipline.',
-      textilTitle: 'Textile Division · Cobertores.com',
-      textilDesc: 'Blankets, home textiles, industrial yarns and technical fabrics. We supply corporate wholesale volumes since 1962, from our distribution center in Santa Ana Chiautempan, Tlaxcala.',
-      textilBtn: 'View catalog',
-      realTitle: 'Real Estate Division',
-      realDesc: 'Industrial warehouses, commercial developments and strategic residential assets, planned with the same operational rigor since 1962.',
-      realBtn: 'Request information'
+      eyebrow: 'The Mano Fil group',
+      title: 'A blanket factory, backed by one corporate group.',
+      desc: 'This site is the factory: the wholesale blanket catalog and quoting. The group also develops real estate, with its own page outside this catalog.',
+      btn: 'Meet the group'
     },
     history: {
       tag: 'Corporate Legacy',
@@ -732,39 +724,19 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Grupo: dos divisiones en UN bloque corto (SEO nov 2026). La home es de
-          cobertores: la parte inmobiliaria queda resumida aquí, sin secciones
-          propias, y la historia completa vive en la guía de cobertores. */}
-      <section id="divisiones" className="py-20 md:py-24 relative bg-[#0a0f1d] border-t border-white/5 z-10">
+            {/* Grupo (P1-3, auditoría SEO 14 nov 2026): la home es 100% cobertores.
+          Lo inmobiliario vive en su página propia (/grupo); aquí queda solo
+          un bloque corto con el enlace. */}
+      <section id="grupo" className="py-16 md:py-20 relative bg-[#0a0f1d] border-t border-white/5 z-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="max-w-3xl mb-10 md:mb-12">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="max-w-3xl">
             <h4 className="text-amber-500 tracking-[0.3em] uppercase text-xs font-bold mb-4">{t.grupo.eyebrow}</h4>
-            <h2 className="text-3xl md:text-4xl font-serif text-white drop-shadow-xl">{t.grupo.title}</h2>
+            <h2 className="text-3xl md:text-4xl font-serif text-white drop-shadow-xl mb-4">{t.grupo.title}</h2>
+            <p className="text-slate-400 font-light leading-relaxed mb-6">{t.grupo.desc}</p>
+            <a href="/grupo" className="text-amber-500 hover:text-amber-400 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2 transition-colors">
+              {t.grupo.btn} <ArrowRight className="w-4 h-4" />
+            </a>
           </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.8 }} className="bg-white/[0.03] border border-white/5 rounded-3xl p-8 hover:bg-white/[0.05] hover:border-amber-500/30 transition-all duration-300">
-              <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center mb-5 border border-amber-500/20">
-                <Factory className="w-6 h-6 text-amber-500" />
-              </div>
-              <h3 className="text-xl font-serif text-white mb-3">{t.grupo.textilTitle}</h3>
-              <p className="text-slate-400 font-light leading-relaxed mb-6">{t.grupo.textilDesc}</p>
-              <a href="/productos" className="text-amber-500 hover:text-amber-400 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2 transition-colors">
-                {t.grupo.textilBtn} <ArrowRight className="w-4 h-4" />
-              </a>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.8 }} className="bg-white/[0.03] border border-white/5 rounded-3xl p-8 hover:bg-white/[0.05] hover:border-amber-500/30 transition-all duration-300">
-              <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-5 border border-white/10">
-                <Building2 className="w-6 h-6 text-slate-300" />
-              </div>
-              <h3 className="text-xl font-serif text-white mb-3">{t.grupo.realTitle}</h3>
-              <p className="text-slate-400 font-light leading-relaxed mb-6">{t.grupo.realDesc}</p>
-              <a href="#contacto" className="text-amber-500 hover:text-amber-400 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2 transition-colors">
-                {t.grupo.realBtn} <ArrowRight className="w-4 h-4" />
-              </a>
-            </motion.div>
-          </div>
         </div>
       </section>
 
