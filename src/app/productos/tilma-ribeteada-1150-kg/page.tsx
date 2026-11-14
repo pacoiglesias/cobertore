@@ -6,16 +6,17 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
-  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
-  title: "Tilma Ribeteada 1.150 KG por Mayoreo",
+  // Título exacto con "absolute" (auditoría SEO 14 nov 2026, P0-1): pasa por
+  // encima de la plantilla del layout ("%s | MANO FIL Cobertores") para servir
+  // literalmente el <title> aprobado, con "Cobertor" al frente.
+  title: { absolute: "Cobertor Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL" },
   description: "Tilma Ribeteada de 1.150 KG por mayoreo: un cobertor industrial con acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
   alternates: {
     canonical: '/productos/tilma-ribeteada-1150-kg',
   },
   // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
   openGraph: {
-    title: "Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL Cobertores",
+    title: "Cobertor Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL",
     description: "Tilma Ribeteada de 1.150 KG por mayoreo: un cobertor industrial con acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
     url: "https://cobertores.com/productos/tilma-ribeteada-1150-kg",
     siteName: "MANO FIL Cobertores",
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL Cobertores",
+    title: "Cobertor Tilma Ribeteada 1.150 KG por Mayoreo | MANO FIL",
     description: "Tilma Ribeteada de 1.150 KG por mayoreo: un cobertor industrial con acabados reforzados por ultrasonido perimetral y alta durabilidad ante lavados constantes para hotelería.",
     images: ["/products/tilma-ribeteada.webp"],
   },
@@ -85,7 +86,7 @@ export default function ProductPage() {
             <Layers className="w-8 h-8 text-amber-500" />
           </div>
           <p className="text-amber-500 tracking-widest uppercase text-xs font-bold mb-4">Hotelería y reposición programada</p>
-          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Tilma Ribeteada 1.150 KG por Mayoreo</h1>
+          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Cobertor Tilma Ribeteada de 1.150 KG</h1>
           <p className="text-slate-400 font-light leading-relaxed text-lg">
             La Tilma Ribeteada de 1.150 KG es un cobertor industrial con acabados reforzados por ultrasonido perimetral y vida útil prolongada, diseñado para soportar lavados constantes sin perder forma.
           </p>
