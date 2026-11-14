@@ -6,16 +6,17 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
-  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
-  title: "Manta Térmica 2.000 KG por Mayoreo",
+  // Título exacto con "absolute" (auditoría SEO 14 nov 2026, P0-1): pasa por
+  // encima de la plantilla del layout ("%s | MANO FIL Cobertores") para servir
+  // literalmente el <title> aprobado, con "Cobertor" al frente.
+  title: { absolute: "Cobertor Manta Térmica 2.000 KG por Mayoreo | MANO FIL" },
   description: "Manta Térmica de 2.000 KG por mayoreo: el cobertor industrial de mayor gramaje del catálogo, para frío extremo, contingencias, programas invernales y hotelería premium.",
   alternates: {
     canonical: '/productos/manta-termica-2000-kg',
   },
   // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
   openGraph: {
-    title: "Manta Térmica 2.000 KG por Mayoreo | MANO FIL Cobertores",
+    title: "Cobertor Manta Térmica 2.000 KG por Mayoreo | MANO FIL",
     description: "Manta Térmica de 2.000 KG por mayoreo: el cobertor industrial de mayor gramaje del catálogo, para frío extremo, contingencias, programas invernales y hotelería premium.",
     url: "https://cobertores.com/productos/manta-termica-2000-kg",
     siteName: "MANO FIL Cobertores",
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Manta Térmica 2.000 KG por Mayoreo | MANO FIL Cobertores",
+    title: "Cobertor Manta Térmica 2.000 KG por Mayoreo | MANO FIL",
     description: "Manta Térmica de 2.000 KG por mayoreo: el cobertor industrial de mayor gramaje del catálogo, para frío extremo, contingencias, programas invernales y hotelería premium.",
     images: ["/products/manta-eco-2kg.webp"],
   },
@@ -85,7 +86,7 @@ export default function ProductPage() {
             <Flame className="w-8 h-8 text-amber-500" />
           </div>
           <p className="text-amber-500 tracking-widest uppercase text-xs font-bold mb-4">Frío extremo y emergencias</p>
-          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Manta Térmica 2.000 KG por Mayoreo</h1>
+          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Cobertor Manta Térmica de 2.000 KG</h1>
           <p className="text-slate-400 font-light leading-relaxed text-lg">
             Aislamiento térmico de grado superior. La Manta Térmica de 2.000 KG es el cobertor industrial de mayor gramaje del catálogo y está pensada para frío extremo y situaciones de emergencia.
           </p>

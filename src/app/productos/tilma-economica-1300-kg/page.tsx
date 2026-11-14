@@ -6,16 +6,17 @@ import { ManoFilLogo } from '../../../components/ManoFilLogo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  // Sin " | MANO FIL": la plantilla del layout ya añade "| MANO FIL Cobertores"
-  // y antes el título salía duplicado ("... | MANO FIL | MANO FIL Cobertores").
-  title: "Tilma Económica 1.300 KG por Mayoreo",
+  // Título exacto con "absolute" (auditoría SEO 14 nov 2026, P0-1): pasa por
+  // encima de la plantilla del layout ("%s | MANO FIL Cobertores") para servir
+  // literalmente el <title> aprobado, con "Cobertor" al frente.
+  title: { absolute: "Cobertor Tilma Económica 1.300 KG por Mayoreo | MANO FIL" },
   description: "Tilma Económica de 1.300 KG por mayoreo: un cobertor industrial de tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
   alternates: {
     canonical: '/productos/tilma-economica-1300-kg',
   },
   // OG/Twitter propios: antes heredaban título, descripción e imagen de la home.
   openGraph: {
-    title: "Tilma Económica 1.300 KG por Mayoreo | MANO FIL Cobertores",
+    title: "Cobertor Tilma Económica 1.300 KG por Mayoreo | MANO FIL",
     description: "Tilma Económica de 1.300 KG por mayoreo: un cobertor industrial de tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
     url: "https://cobertores.com/productos/tilma-economica-1300-kg",
     siteName: "MANO FIL Cobertores",
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tilma Económica 1.300 KG por Mayoreo | MANO FIL Cobertores",
+    title: "Cobertor Tilma Económica 1.300 KG por Mayoreo | MANO FIL",
     description: "Tilma Económica de 1.300 KG por mayoreo: un cobertor industrial de tejido compacto y duradero para distribución masiva, programas sociales, gobierno y hotelería.",
     images: ["/products/tilma-eco-1-3kg.webp"],
   },
@@ -85,7 +86,7 @@ export default function ProductPage() {
             <Package className="w-8 h-8 text-amber-500" />
           </div>
           <p className="text-amber-500 tracking-widest uppercase text-xs font-bold mb-4">Distribución masiva</p>
-          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Tilma Económica 1.300 KG por Mayoreo</h1>
+          <h1 className="text-4xl md:text-5xl font-serif text-white mb-4">Cobertor Tilma Económica de 1.300 KG</h1>
           <p className="text-slate-400 font-light leading-relaxed text-lg">
             La Tilma Económica de 1.300 KG es un cobertor industrial de tejido compacto y duradero. Soporta uso industrial y lavados constantes, por lo que es el modelo más solicitado para distribución masiva.
           </p>
